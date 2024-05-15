@@ -1,42 +1,31 @@
 package bean;
 
-import Websocket.Notifier;
-import bean.UserBean;
 import dao.TimeOutDao;
-import dao.UserDao;
-import dto.LogOutNotification;
-import dto.NotificationDto;
-import entities.TimeOutEntity;
-import entities.UserEntity;
+
 import jakarta.ejb.EJB;
-import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
 import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import service.ObjectMapperContextResolver;
 import org.apache.logging.log4j.*;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.HashMap;
 
 @Singleton
 public class TimerBean {
 
     @EJB
-    private UserDao userDao;
-    @Inject
-    Notifier notifier;
+    //private UserDao userDao;
+
+
     @Inject
     TimeOutDao timeOutDao;
-    @EJB
-    private UserBean userBean;
-    private Gson gson = new Gson();
-    private static final Logger logger = LogManager.getLogger(TimerBean.class);
-    @Schedule(hour = "*", minute = "*", second = "*/30", persistent = false)
 
-    public void checkTimeouts() {
+   // private UserBean userBean;
+    //private Gson gson = new Gson();
+    //private static final Logger logger = LogManager.getLogger(TimerBean.class);
+   // @Schedule(hour = "*", minute = "*", second = "*/30", persistent = false)
+
+   /* public void checkTimeouts() {
         logger.info("Checking for timeouts...");
         HashMap<String, LocalDateTime> tokensAndTimeouts = userDao.findAllTokensAndTimeouts();
         TimeOutEntity timeOutEntity = timeOutDao.findTimeOutById(1);
@@ -65,5 +54,5 @@ public class TimerBean {
             timeOutDao.createTimeOut(timeOutEntity);
         }
 
-    }
+    }*/
 }

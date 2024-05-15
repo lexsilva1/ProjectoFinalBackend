@@ -1,26 +1,43 @@
 package entities;
 
 import jakarta.persistence.*;
-import jdk.jfr.Name;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name="TimeOut")
-@NamedQuery(name = "TimeOut.findAll", query = "SELECT t FROM TimeOutEntity t")
 public class TimeOutEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id", nullable = false, unique = true, updatable = false)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
-    @Column(name="timeout", nullable = false, unique = false)
-    private int timeout;
+    @Column(name = "lastActivity", nullable = false, unique = true)
+    private LocalDateTime lastActivity;
 
-
-    public int getTimeout() {
-        return timeout;
+    public TimeOutEntity() {
     }
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+
+    public TimeOutEntity(int id, String token, LocalDateTime lastActivity) {
+        this.id = id;
+
+        this.lastActivity = lastActivity;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+
+    public LocalDateTime getLastActivity() {
+        return lastActivity;
+    }
+
+    public void setLastActivity(LocalDateTime lastActivity) {
+        this.lastActivity = lastActivity;
     }
 }

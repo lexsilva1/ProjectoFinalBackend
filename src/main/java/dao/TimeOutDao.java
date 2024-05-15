@@ -7,7 +7,7 @@ import jakarta.persistence.PersistenceContext;
 
 @Stateless
 public class TimeOutDao extends AbstractDao<TimeOutEntity> {
-    @PersistenceContext
+  @PersistenceContext
     private EntityManager em;
     public TimeOutDao() {
         super(TimeOutEntity.class);

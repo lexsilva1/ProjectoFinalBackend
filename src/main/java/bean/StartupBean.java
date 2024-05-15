@@ -9,16 +9,13 @@ import org.apache.logging.log4j.Logger;
 @Singleton
 @Startup
 public class StartupBean {
-    @Inject
-    UserBean userBean;
-    @Inject
-    TaskBean taskBean;
-    @Inject
+
+   /* @Inject
     TimerBean timerBean;
-    private static final Logger logger = LogManager.getLogger(StartupBean.class);
+    private static final Logger logger = LogManager.getLogger(StartupBean.class);*/
 
 
-    @PostConstruct
+  /*  @PostConstruct
     public void init() {
         logger.info("Creating default users, categories and tasks...");
         userBean.createDefaultUsers();
@@ -26,5 +23,5 @@ public class StartupBean {
         taskBean.createDefaultTasks();
         userBean.startRemovingExpiredUsers();
         timerBean.createTimeout(300);
-    }
+    }*/
 }

@@ -1,6 +1,5 @@
 package bean;
-import dto.UnconfirmedUser;
-import dto.User;
+
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.mail.*;
@@ -17,8 +16,8 @@ import java.util.Properties;
 @Stateless
 public class EmailBean {
 
-    @EJB
-    private UserBean userBean;
+ /*   @EJB
+   // private UserBean userBean;
     private static final Logger logger = LogManager.getLogger(EmailBean.class);
     private final String username = "lexsilva0386@outlook.com";
     private final String password = System.getenv("SMTP_PASSWORD");
@@ -60,9 +59,9 @@ public class EmailBean {
         }
         logger.info("Email sent to " + to + ": " + sent);
         return sent;
-    }
+    }*/
 
-    public boolean sendConfirmationEmail(UnconfirmedUser user, String confirmationToken, LocalDateTime creationDate) {
+   /* public boolean sendConfirmationEmail(UnconfirmedUser user, String confirmationToken, LocalDateTime creationDate) {
         boolean sent = false;
 
         String userEmail = user.getEmail();
@@ -104,5 +103,5 @@ public class EmailBean {
         }
         logger.info("Password reset email sent to " + userEmail + ": " + sent);
         return sent;
-    }
+    }*/
 }
