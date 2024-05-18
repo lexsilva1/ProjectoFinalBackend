@@ -15,9 +15,22 @@ public class SkillEntity implements Serializable {
     private int id;
     @Column
     private String name;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "skill_type")
+    private SkillType skillType;
     @ManyToMany(mappedBy = "skills")
     private Set<UserEntity> users;
 
+
+    public enum SkillType {
+        KNOWLEDGE,
+        SOFTWARE,
+        HARDWARE,
+        TOOLS,
+    }
+    public SkillType getSkillType() {
+        return skillType;
+    }
     public SkillEntity() {
     }
 

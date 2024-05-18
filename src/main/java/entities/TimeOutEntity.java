@@ -18,7 +18,7 @@ public class TimeOutEntity implements Serializable {
     public TimeOutEntity() {
     }
 
-    public TimeOutEntity(int id, String token, LocalDateTime lastActivity) {
+    public TimeOutEntity(int id, LocalDateTime lastActivity) {
         this.id = id;
 
         this.lastActivity = lastActivity;

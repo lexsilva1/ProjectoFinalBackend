@@ -17,7 +17,17 @@ public class InterestEntity implements Serializable {
     private String name;
     @ManyToMany(mappedBy = "interests")
     private Set<UserEntity> users;
-
+    @Column (name = "interest_type", nullable = false, unique = false)
+    private InterestType interestType;
+    public enum InterestType {
+        KNOWLEDGE,
+        CAUSES,
+        THEMES,
+        OTHER,
+    }
+    public InterestType getInterestType() {
+        return interestType;
+    }
     public InterestEntity() {
     }
 

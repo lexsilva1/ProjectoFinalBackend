@@ -22,4 +22,18 @@ public class ProjectUserEntity implements Serializable {
 
     @Column(name = "is_project_manager")
     private boolean isProjectManager;
+    @Column(name = "approval_status")
+    private ApprovalStatus approvalStatus;
+
+    private enum ApprovalStatus {
+        INVITED,
+        APPLIED,
+        MEMBER
+    }
+    public ApprovalStatus getApprovalStatus() {
+        return approvalStatus;
+    }
+    public void setApprovalStatus(ApprovalStatus approvalStatus) {
+        this.approvalStatus = approvalStatus;
+    }
 }

@@ -15,7 +15,7 @@ public class UserEntity implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column (name="id", nullable = false, unique = true, updatable = false)
     int id;
-    @Column (name="nickname", nullable = true , unique = false)
+    @Column (name="nickname", nullable = true , unique = true)
     String nickname;
     @Column (name="firstName", nullable = false, unique = false)
     String firstName;

@@ -39,6 +39,14 @@ public class ProjectEntity implements Serializable {
     @ManyToOne
     @JoinColumn (name = "lab_id", nullable = false, unique = true, updatable = false)
     private LabEntity lab;
+    @Column (name="maxMembers", nullable = false, unique = false, updatable = true )
+    int maxMembers;
+    @OneToOne
+    @PrimaryKeyJoinColumn (name = "creator_id", referencedColumnName = "id")
+    UserEntity creator;
+    @OneToOne
+    @PrimaryKeyJoinColumn (name = "lab_id", referencedColumnName = "id")
+    LabEntity labEntity;
 
     public enum Status {
         PLANNING(100),
