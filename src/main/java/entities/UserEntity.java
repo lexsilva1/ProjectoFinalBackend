@@ -8,9 +8,11 @@ import java.util.Set;
 import jakarta.persistence.*;
 @Entity
 @Table(name="Users")
-@NamedQuery(name = "UserEntity.getUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")
-@NamedQuery(name = "UserEntity.getUserByToken", query = "SELECT u FROM UserEntity u WHERE u.token = :token")
-@NamedQuery(name = "UserEntity.getUserByAuxToken", query = "SELECT u FROM UserEntity u WHERE u.auxToken = :auxToken")
+@NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")
+@NamedQuery(name = "User.findUserByToken", query = "SELECT u FROM UserEntity u WHERE u.token = :token")
+@NamedQuery(name = "User.findUserByAuxToken", query = "SELECT u FROM UserEntity u WHERE u.auxToken = :auxToken")
+@NamedQuery(name = "User.updateToken", query = "UPDATE UserEntity u SET u.token = :token WHERE u.email = :email")
+@NamedQuery(name = "User.findUserByNickname", query = "SELECT u FROM UserEntity u WHERE u.nickname = :nickname")
 
 public class UserEntity implements Serializable{
     @Id
