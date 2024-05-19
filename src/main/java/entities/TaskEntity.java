@@ -38,6 +38,9 @@ public class TaskEntity implements Serializable {
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
     @ManyToOne
+    @JoinColumn(name = "created_by")
+    private UserEntity createdBy;
+    @ManyToOne
     @JoinColumn(name = "responsible_user_id")
     private UserEntity responsibleUser;
 

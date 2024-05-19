@@ -13,7 +13,7 @@ public class LabEntity implements Serializable {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
     @Column
-    private String location;
+    private Lab location;
 
     public LabEntity() {
     }
@@ -26,11 +26,19 @@ public class LabEntity implements Serializable {
         this.id = id;
     }
 
-    public String getLocation() {
+    public Lab getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(Lab location) {
         this.location = location;
+    }
+    public enum Lab{
+        LISBOA,
+        COIMBRA,
+        PORTO,
+        TOMAR,
+        VISEU,
+        VILA_REAL
     }
 }

@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 
 @Table(name = "chat")
 @Entity
+@NamedQuery(name = "ChatEntity.getChatByProject", query = "SELECT c FROM ChatEntity c WHERE c.project = :project")
+@NamedQuery(name = "ChatEntity.getChatByReceiver", query = "SELECT c FROM ChatEntity c WHERE c.receiver = :receiver")
 public class ChatEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
