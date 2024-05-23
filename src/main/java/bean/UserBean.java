@@ -19,7 +19,9 @@ public class UserBean {
     @Inject
     private EncryptHelper encryptHelper;
     @Inject
-    LabDao labDao;
+    private LabDao labDao;
+    @Inject
+    private EmailBean emailBean;
     public UserBean() {
     }
 
@@ -97,7 +99,10 @@ public class UserBean {
         user.setEmail(email);
         user.setPwdHash(encryptHelper.encryptPassword(password));
         user.setCreationDate(LocalDateTime.now());
+        user.setAuxToken(encryptHelper.generateToken());
+        user.setActive(true);
         userDao.persist(user);
+        emailBean.sendConfirmationEmail(user);
     }
     public boolean isEmailValid(String email) {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");

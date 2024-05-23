@@ -8,6 +8,7 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.util.JsonUtils;
 
 
 import java.time.LocalDateTime;
@@ -20,7 +21,7 @@ public class EmailBean {
     @EJB
     private UserBean userBean;
     //private static final Logger logger = LogManager.getLogger(EmailBean.class);
-    private final String username = "forgexperiemntalprojects@outlook.com";
+    private final String username = "forgexperimentalproject@hotmail.com";
     private final String password = System.getenv("SMTP_PASSWORD");
     private final String host = "smtp-mail.outlook.com";
     private final int port = 587;
@@ -40,18 +41,21 @@ public class EmailBean {
         Session session = Session.getInstance(props, new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
+
                 return new PasswordAuthentication(username, password);
             }
         });
 
         try {
-            System.out.println("Sending email to " + to + "...");
+
+            System.out.println("Sending emailer to " + to + "...");
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSubject(subject);
             message.setText(body);
             System.out.println("Sending email...");
+
             Transport.send(message);
             sent = true;
         } catch (MessagingException e) {
@@ -62,12 +66,12 @@ public class EmailBean {
         return sent;
     }
 
-    public boolean sendConfirmationEmail(UserEntity user, String auxToken, LocalDateTime creationDate) {
+    public boolean sendConfirmationEmail(UserEntity user) {
         boolean sent = false;
 
         String userEmail = user.getEmail();
         String subject = "ForgeXpereimental Projects - Account Confirmation";
-        String confirmationLink = "http://localhost:5173/Confirmation/" + auxToken;
+        String confirmationLink = "http://localhost:5173/Confirmation/" + user.getAuxToken();
         String body = "You have registered with ForgeXpereimental Projects "  + ",\n\n"
                 + "Please click on the link below to confirm your account.\n\n"
                 + "Confirmation Link: " + confirmationLink;
@@ -78,7 +82,7 @@ public class EmailBean {
         } else {
             // Verifica se já se passaram mais de 48 horas desde a criação do user
             LocalDateTime now = LocalDateTime.now();
-            long hoursSinceCreation = ChronoUnit.HOURS.between(creationDate, now);
+            long hoursSinceCreation = ChronoUnit.HOURS.between(user.getCreationDate(), now);
             if (hoursSinceCreation > 48) {
                 //logger.info("User " + user.getUsername() + " has not confirmed their account within 48 hours. Removing user...");
                 userBean.removeUser(user.getEmail());
