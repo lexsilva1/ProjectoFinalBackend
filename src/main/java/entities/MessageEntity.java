@@ -2,30 +2,29 @@ package entities;
 
 import jakarta.persistence.*;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Table(name = "chat")
 @Entity
-@NamedQuery(name = "ChatEntity.getChatByProject", query = "SELECT c FROM ChatEntity c WHERE c.project = :project")
-public class ChatEntity implements Serializable {
+@Table(name = "message")
+public class MessageEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_id", nullable = false, unique = true, updatable = false)
-    private int chatId;
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, unique = true, updatable = false)
+    private int id;
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private UserEntity sender;
     @ManyToOne
-    @JoinColumn (name = "project_id")
+    @JoinColumn(name = "project_id")
     private ProjectEntity project;
+    @ManyToOne
+    @JoinColumn(name = "receiver_id")
+    private UserEntity receiver;
     @Column(name = "message", nullable = false, unique = false)
     private String message;
     @Column(name = "time", nullable = false, unique = false)
     private LocalDateTime time;
     @Column(name = "is_read", nullable = false, unique = false)
     private boolean isRead;
-
-
 
 }

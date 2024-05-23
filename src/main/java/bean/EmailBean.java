@@ -1,5 +1,6 @@
 package bean;
 
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.mail.*;
@@ -16,10 +17,10 @@ import java.util.Properties;
 @Stateless
 public class EmailBean {
 
- /*   @EJB
-   // private UserBean userBean;
-    private static final Logger logger = LogManager.getLogger(EmailBean.class);
-    private final String username = "lexsilva0386@outlook.com";
+    @EJB
+    private UserBean userBean;
+    //private static final Logger logger = LogManager.getLogger(EmailBean.class);
+    private final String username = "forgexperiemntalprojects@outlook.com";
     private final String password = System.getenv("SMTP_PASSWORD");
     private final String host = "smtp-mail.outlook.com";
     private final int port = 587;
@@ -57,51 +58,51 @@ public class EmailBean {
             sent = false;
             e.printStackTrace();
         }
-        logger.info("Email sent to " + to + ": " + sent);
+        //logger.info("Email sent to " + to + ": " + sent);
         return sent;
-    }*/
+    }
 
-   /* public boolean sendConfirmationEmail(UnconfirmedUser user, String confirmationToken, LocalDateTime creationDate) {
+    public boolean sendConfirmationEmail(UserEntity user, String auxToken, LocalDateTime creationDate) {
         boolean sent = false;
 
         String userEmail = user.getEmail();
-        String subject = "Scrum - Account Confirmation";
-        String confirmationLink = "http://localhost:5173/Confirmation/" + confirmationToken;
-        String body = "You have been invited to register with our Scrum Platform "  + ",\n\n"
+        String subject = "ForgeXpereimental Projects - Account Confirmation";
+        String confirmationLink = "http://localhost:5173/Confirmation/" + auxToken;
+        String body = "You have registered with ForgeXpereimental Projects "  + ",\n\n"
                 + "Please click on the link below to confirm your account.\n\n"
                 + "Confirmation Link: " + confirmationLink;
 
         if (sendEmail(userEmail, subject, body)) {
-            logger.info("Confirmation email sent to " + userEmail);
+            //logger.info("Confirmation email sent to " + userEmail);
             sent = true;
         } else {
             // Verifica se já se passaram mais de 48 horas desde a criação do user
             LocalDateTime now = LocalDateTime.now();
             long hoursSinceCreation = ChronoUnit.HOURS.between(creationDate, now);
             if (hoursSinceCreation > 48) {
-                logger.info("User " + user.getUsername() + " has not confirmed their account within 48 hours. Removing user...");
-                userBean.removeUser(user.getUsername());
-                logger.info("User " + user.getUsername() + " removed.");
+                //logger.info("User " + user.getUsername() + " has not confirmed their account within 48 hours. Removing user...");
+                userBean.removeUser(user.getEmail());
+                //logger.info("User " + user.getUsername() + " removed.");
             }
         }
-        logger.info("Confirmation email sent to " + userEmail + ": " + sent);
+        //logger.info("Confirmation email sent to " + userEmail + ": " + sent);
         return sent;
     }
-   public boolean sendPasswordResetEmail(User user) {
+   public boolean sendPasswordResetEmail(UserEntity user) {
         boolean sent = false;
 
         String userEmail = user.getEmail();
         String subject = "Scrum - Password Reset";
-        String resetLink = "http://localhost:5173/PasswordReset/" + user.getPasswordResetToken();
-        String body = "You have requested a password reset for your Scrum Platform account " + user.getName() + ",\n\n"
+        String resetLink = "http://localhost:5173/PasswordReset/" + user.getAuxToken();
+        String body = "You have requested a password reset for your Scrum Platform account " + user.getFirstName() + ",\n\n"
                 + "Please click on the link below to reset your password.\n\n"
                 + "Password Reset Link: " + resetLink;
 
         if (sendEmail(userEmail, subject, body)) {
-            logger.info("Password reset email sent to " + userEmail);
+            //logger.info("Password reset email sent to " + userEmail);
             sent = true;
         }
-        logger.info("Password reset email sent to " + userEmail + ": " + sent);
+        //logger.info("Password reset email sent to " + userEmail + ": " + sent);
         return sent;
-    }*/
+    }
 }

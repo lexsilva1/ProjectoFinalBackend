@@ -1,7 +1,7 @@
 package bean;
 
 import dao.TimeOutDao;
-
+import entities.TimeOutEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
@@ -45,14 +45,14 @@ public class TimerBean {
                 logger.info("Sent logout notification to user with token " + token);
             }
         }
-    }
-    public void createTimeout(int timeout) {
-        logger.info("Creating timeout...");
+    }*/
+    public void createTimeout(int lastActivity) {
+
         if(timeOutDao.findTimeOutById(1) == null) {
             TimeOutEntity timeOutEntity = new TimeOutEntity();
-            timeOutEntity.setTimeout(timeout);
+            timeOutEntity.setLastActivity(lastActivity);
             timeOutDao.createTimeOut(timeOutEntity);
         }
 
-    }*/
+    }
 }

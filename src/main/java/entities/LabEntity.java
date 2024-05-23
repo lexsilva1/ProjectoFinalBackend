@@ -5,15 +5,17 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "interests")
+@Table(name = "Labs")
+@NamedQuery(name = "LabEntity.findLabByLocation", query = "SELECT l FROM LabEntity l WHERE l.location = :location")
 public class LabEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
-    @Column
+    @Column(name = "location", nullable = false, unique = true)
     private Lab location;
+
 
     public LabEntity() {
     }
@@ -33,6 +35,9 @@ public class LabEntity implements Serializable {
     public void setLocation(Lab location) {
         this.location = location;
     }
+
+
+
     public enum Lab{
         LISBOA,
         COIMBRA,
@@ -41,4 +46,5 @@ public class LabEntity implements Serializable {
         VISEU,
         VILA_REAL
     }
+
 }

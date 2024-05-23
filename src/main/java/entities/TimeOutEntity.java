@@ -13,12 +13,12 @@ public class TimeOutEntity implements Serializable {
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
     @Column(name = "lastActivity", nullable = false, unique = true)
-    private LocalDateTime lastActivity;
+    private int lastActivity;
 
     public TimeOutEntity() {
     }
 
-    public TimeOutEntity(int id, LocalDateTime lastActivity) {
+    public TimeOutEntity(int id, int lastActivity) {
         this.id = id;
 
         this.lastActivity = lastActivity;
@@ -33,11 +33,11 @@ public class TimeOutEntity implements Serializable {
     }
 
 
-    public LocalDateTime getLastActivity() {
+    public int getLastActivity() {
         return lastActivity;
     }
 
-    public void setLastActivity(LocalDateTime lastActivity) {
+    public void setLastActivity(int lastActivity) {
         this.lastActivity = lastActivity;
     }
 }

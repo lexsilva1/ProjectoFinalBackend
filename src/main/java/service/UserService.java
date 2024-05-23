@@ -1,13 +1,9 @@
 package service;
-
 import bean.EmailBean;
 import bean.UserBean;
-import jakarta.inject.Inject;
+import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import java.lang.String;
@@ -16,23 +12,53 @@ import java.lang.String;
 public class UserService {
     @Context
     private HttpServletRequest request;
-    @Inject
+    @EJB
     UserBean userBean;
-    @Inject
+
+    @EJB
     EmailBean emailBean;
 
-    @POST
-    @Path("/logout")
-    @Produces("application/json")
-    public Response logout(@HeaderParam("token") String token) {
-        userBean.logout(token);
-        return Response.status(200).build();
-    }
+
     @POST
     @Path("/login")
     @Produces("application/json")
     public Response login(@HeaderParam("email") String email, @HeaderParam("password") String password) {
         String token = userBean.login(email, password);
-        return Response.status(200).entity(token).build();
+        if(token != null) {
+            return Response.status(200).entity(token).build();
+        } else
+            return Response.status(404).entity("user not found").build();
+
+    }
+    @POST
+    @Path("/logout")
+    @Produces("application/json")
+    public Response logout(@HeaderParam("token") String token) {
+        if(userBean.logout(token)) {
+            return Response.status(200).entity("logout successful").build();
+        } else
+            return Response.status(404).entity("user not found").build();
+    }
+    @GET
+    @Path("")
+    @Produces("application/json")
+    public Response findAllUsers(@HeaderParam("token") String token){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        return Response.status(200).entity(userBean.findAllUsers()).build();
+    }
+    @POST
+    @Path("/register")
+    @Produces("application/json")
+    public Response register(@HeaderParam("email") String email, @HeaderParam("password") String password) {
+        if(userBean.findUserByEmail(email) != null) {
+            return Response.status(404).entity("email already in use").build();
+        }
+        if(!userBean.isPasswordValid(password)  || !userBean.isEmailValid(email)) {
+            return Response.status(401).entity("invalid credentials").build();
+        }
+        userBean.register(email, password);
+        return Response.status(200).entity("user registered").build();
     }
 }

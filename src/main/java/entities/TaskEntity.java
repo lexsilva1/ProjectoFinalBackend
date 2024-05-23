@@ -8,6 +8,9 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "tasks")
+/**
+ * TaskEntity class
+ */
 public class TaskEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)

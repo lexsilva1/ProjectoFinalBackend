@@ -1,102 +1,106 @@
 package bean;
 
-import dao.UserDao;
+import dao.LabDao;
+import entities.LabEntity;
 import entities.UserEntity;
-
-import jakarta.enterprise.context.RequestScoped;
+import jakarta.ejb.Stateless;
+import dao.UserDao;
 import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
 import utilities.EncryptHelper;
 
-@Singleton
-public class UserBean {
-    public UserBean() {
-    }
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
+@Stateless
+public class UserBean {
     @Inject
     private UserDao userDao;
     @Inject
     private EncryptHelper encryptHelper;
-
-    public void logout(String token) {
-        UserEntity user = userDao.findUserByToken(token);
-        if (user != null) {
-            user.setToken(null);
-            userDao.updateToken(user);
-        }
+    @Inject
+    LabDao labDao;
+    public UserBean() {
     }
 
-    public void forcedLogout(String token) {
-        UserEntity user = userDao.findUserByToken(token);
-        if (user != null) {
-            user.setToken(null);
-            userDao.updateToken(user);
+    public void createDefaultUsers() {
+        if(userDao.findUserByEmail("admin@admin.com") == null) {
+            UserEntity admin = new UserEntity();
+            admin.setFirstName("admin");
+            admin.setLastName("admin");
+            admin.setEmail("admin@admin.com");
+            admin.setPwdHash(encryptHelper.encryptPassword("admin"));
+            admin.setLocation(labDao.findLabByLocation(LabEntity.Lab.COIMBRA));
+            admin.setCreationDate(LocalDateTime.now());
+            admin.setIsConfirmed(LocalDate.now());
+            admin.setActive(true);
+            admin.setRole(UserEntity.Role.Admin);
+            userDao.persist(admin);
+        }
+
+    }
+    public void removeUser(String email) {
+        UserEntity user = userDao.findUserByEmail(email);
+        if(user != null) {
+            userDao.remove(user);
         }
     }
-
+    public List<UserEntity> findAllUsers() {
+        return userDao.findAll();
+    }
     public String login(String email, String password) {
         UserEntity user = userDao.findUserByEmail(email);
-        String password1 = encryptHelper.encryptPassword(password);
-        if (user != null && user.getPwdHash().equals(password1)) {
+        if(user != null && user.isActive() && encryptHelper.checkPassword(password, user.getPwdHash())) {
             String token = generateToken();
             user.setToken(token);
-            userDao.updateToken(user);
             return token;
         }
         return null;
     }
+    public boolean logout(String token) {
+        UserEntity user = userDao.findUserByToken(token);
+        if(user != null) {
+            user.setToken(null);
+            return true;
+        }
+        return false;
+    }
 
     public String generateToken() {
-        return java.util.UUID.randomUUID().toString();
+        return encryptHelper.generateToken();
     }
-
+    public UserEntity getUserByToken(String token) {
+        return userDao.findUserByToken(token);
+    }
+    public UserEntity getUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
+    }
     public boolean isPasswordValid(String password) {
-        // Check if password is at least 8 characters long
-        if (password.length() < 8) {
-            return false;
-        }
-        // Check if password contains at least one digit
-        if (!password.matches(".*\\d.*")) {
-            return false;
-        }
-        // Check if password contains at least one lowercase letter
-        if (!password.matches(".*[a-z].*")) {
-            return false;
-        }
-        // Check if password contains at least one uppercase letter
-        if (!password.matches(".*[A-Z].*")) {
-            return false;
-        }
-        // Check if password contains at least one special character
-        if (!password.matches(".*[!@#$%^&*].*")) {
-            return false;
-        }
-        // If all conditions are met, return true
-        return true;
+        if(password.length() <= 8){
+        return false;
+        } else if (!password.matches(".*[a-z].*")){
+        return false;
+        } else if (!password.matches(".*[A-Z].*")){
+        return false;
+        } else if (!password.matches(".*[0-9].*")){
+        return false;
+        } else return password.matches(".*[!@#$%^&*].*");
+    }
+    public UserEntity findUserByToken(String token) {
+        return userDao.findUserByToken(token);
+    }
+    public UserEntity findUserByEmail(String email) {
+        return userDao.findUserByEmail(email);
+    }
+    public void register(String email, String password) {
+        UserEntity user = new UserEntity();
+        user.setEmail(email);
+        user.setPwdHash(encryptHelper.encryptPassword(password));
+        user.setCreationDate(LocalDateTime.now());
+        userDao.persist(user);
     }
     public boolean isEmailValid(String email) {
-        // Check if email is valid
-        if (!email.matches("^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$")) {
-            return false;
-        }
-        // If email is valid, return true
-        return true;
+        return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     }
-    public boolean isEmailAvailable(String email) {
-        // Check if email is available
-        if (userDao.findUserByEmail(email) != null) {
-            return false;
-        }
-        // If email is available, return true
-        return true;
-    }
-    public boolean isNicknameAvailable(String nickname) {
-        // Check if nickname is available
-        if (userDao.findUserByNickname(nickname) != null) {
-            return false;
-        }
-        // If nickname is available, return true
-        return true;
-    }
+
 }

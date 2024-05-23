@@ -33,5 +33,11 @@ public class EncryptHelper {
         }
         return s.toString();
     }
+    public boolean checkPassword(String plainPassword, String hashedPassword) {
+        return encryptPassword(plainPassword).equals(hashedPassword);
+    }
+    public String generateToken() {
+        return encryptPassword(String.valueOf(System.currentTimeMillis()));
+    }
 
 }

@@ -21,9 +21,9 @@ public class UserEntity implements Serializable{
     int id;
     @Column (name="nickname", nullable = true , unique = true)
     String nickname;
-    @Column (name="firstName", nullable = false, unique = false)
+    @Column (name="firstName", nullable = true, unique = false)
     String firstName;
-    @Column (name="lastName", nullable = false, unique = false)
+    @Column (name="lastName", nullable = true, unique = false)
     String lastName;
     @Column (name="email", nullable = false, unique = true)
     String email;
@@ -40,7 +40,7 @@ public class UserEntity implements Serializable{
     Role role;
     @Column (name="isActive", nullable = false, unique = false)
     boolean isActive;
-    @Column (name="isConfirmed", nullable = false, unique = false)
+    @Column (name="isConfirmed", nullable = true, unique = false)
     LocalDate isConfirmed;
     @Column (name="passwordResetToken", nullable = true, unique = true)
     String auxToken;
@@ -84,6 +84,24 @@ public class UserEntity implements Serializable{
 
         public int getValue() {
             return value;
+        }
+    }
+    @PrePersist
+    @PreUpdate
+    private void validate() {
+        if (isConfirmed != null) {
+            if (firstName == null || lastName == null || location == null) {
+                throw new IllegalStateException("First name, last name, and location cannot be null when isConfirmed is not null");
+            }
+        }
+    }
+
+    // Inner class for entity listener
+    public static class UserEntityListener {
+        @PrePersist
+        @PreUpdate
+        public void validateUser(UserEntity user) {
+            user.validate();
         }
     }
     public int getId() {
