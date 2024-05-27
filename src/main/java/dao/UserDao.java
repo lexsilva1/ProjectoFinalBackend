@@ -8,6 +8,7 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 import jakarta.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -54,5 +55,17 @@ public class UserDao extends AbstractDao<UserEntity>{
     }
     public List<UserEntity> findAllUsers() {
         return em.createQuery("SELECT u FROM UserEntity u").getResultList();
+    }
+    public UserEntity findUserByAuxToken(String auxToken) {
+        try {
+            return (UserEntity) em.createNamedQuery("User.findUserByAuxToken").setParameter("auxToken", auxToken)
+                    .getSingleResult();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+    public List<UserEntity> findTimedOutUsers(LocalDateTime time) {
+        return em.createNamedQuery("User.findTimedOutUsers").setParameter("time", time).getResultList();
     }
 }

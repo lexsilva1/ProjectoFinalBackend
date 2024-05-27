@@ -21,12 +21,20 @@ public class StartupBean {
     TimerBean timerBean;
     @Inject
     LabBean labBean;
+    @Inject
+    SkillBean skillBean;
+    @Inject
+    ProjectBean projectBean;
+    @Inject
+    InterestBean interestBean;
 
 
     @PostConstruct
     public void init() {
         labBean.createDefaultLocations();
         userBean.createDefaultUsers();
-        timerBean.createTimeout(300);
+        skillBean.createDefaultSkills();
+        interestBean.createDefaultInterests();
+        projectBean.createDefaultProjects();
     }
 }

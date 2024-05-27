@@ -1,6 +1,8 @@
 package service;
 import bean.EmailBean;
 import bean.UserBean;
+import dto.UserConfirmation;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -58,7 +60,23 @@ public class UserService {
         if(!userBean.isPasswordValid(password)  || !userBean.isEmailValid(email)) {
             return Response.status(401).entity("invalid credentials").build();
         }
-        userBean.register(email, password);
-        return Response.status(200).entity("user registered").build();
+        if(userBean.register(email, password)){
+            return Response.status(200).entity("user registered").build();
+        }else {
+            return Response.status(400).entity("Something went wrong").build();
+        }
+
+    }
+    @POST
+    @Path("/confirm")
+    @Produces("application/json")
+    public Response confirm(@HeaderParam("token") String token, UserConfirmation userConfirmation) {
+        UserEntity user = userBean.confirmUser(token,userConfirmation);
+        if(user == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        String loginToken = userBean.firstLogin(user);
+        userBean.setLastActivity(user);
+        return Response.status(200).entity(loginToken).build();
     }
 }

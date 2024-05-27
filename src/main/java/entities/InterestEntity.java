@@ -7,6 +7,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "interests")
+@NamedQuery(name = "InterestEntity.findInterestByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")
+@NamedQuery(name = "InterestEntity.findInterestByType", query = "SELECT i FROM InterestEntity i WHERE i.interestType = :interestType")
+
 public class InterestEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -37,5 +40,25 @@ public class InterestEntity implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserEntity> users) {
+        this.users = users;
+    }
+
+    public void setInterestType(InterestType interestType) {
+        this.interestType = interestType;
     }
 }

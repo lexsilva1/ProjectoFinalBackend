@@ -7,6 +7,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "project_user")
+@NamedQuery(name = "ProjectUserEntity.findProjectUserByUserAndProject", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.user = :user AND pu.project = :project")
+@NamedQuery(name = "ProjectUserEntity.findProjectUserByProject", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.project = :project")
+@NamedQuery(name = "ProjectUserEntity.findProjectUserByUser", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.user = :user")
 public class ProjectUserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,7 +28,7 @@ public class ProjectUserEntity implements Serializable {
     @Column(name = "approval_status")
     private ApprovalStatus approvalStatus;
 
-    private enum ApprovalStatus {
+    public enum ApprovalStatus {
         INVITED,
         APPLIED,
         MEMBER
@@ -35,5 +38,37 @@ public class ProjectUserEntity implements Serializable {
     }
     public void setApprovalStatus(ApprovalStatus approvalStatus) {
         this.approvalStatus = approvalStatus;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
+
+    public boolean isProjectManager() {
+        return isProjectManager;
+    }
+
+    public void setProjectManager(boolean projectManager) {
+        isProjectManager = projectManager;
     }
 }

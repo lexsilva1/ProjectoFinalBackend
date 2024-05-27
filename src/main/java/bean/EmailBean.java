@@ -48,7 +48,7 @@ public class EmailBean {
 
         try {
 
-            System.out.println("Sending emailer to " + to + "...");
+            System.out.println("Sending email to " + to + "...");
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));

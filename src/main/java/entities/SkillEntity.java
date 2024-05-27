@@ -7,6 +7,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Skills")
+@NamedQuery(name = "SkillEntity.findSkillByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")
+@NamedQuery(name = "SkillEntity.findSkillByType", query = "SELECT s FROM SkillEntity s WHERE s.skillType = :skillType")
 public class SkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,5 +50,17 @@ public class SkillEntity implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setSkillType(SkillType skillType) {
+        this.skillType = skillType;
+    }
+
+    public Set<UserEntity> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<UserEntity> users) {
+        this.users = users;
     }
 }

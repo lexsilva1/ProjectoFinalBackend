@@ -7,6 +7,13 @@ import java.util.Set;
 
 @Entity
 @Table(name = "Projects")
+@NamedQuery(name = "ProjectEntity.findProjectByName", query = "SELECT p FROM ProjectEntity p WHERE p.name = :name")
+@NamedQuery(name = "ProjectEntity.findProjectsByLab", query = "SELECT p FROM ProjectEntity p WHERE p.lab = :lab")
+@NamedQuery(name = "ProjectEntity.findProjectBySkill", query = "SELECT p FROM ProjectEntity p WHERE p.skills = :skills")
+@NamedQuery(name = "ProjectEntity.findProjectByInterest", query = "SELECT p FROM ProjectEntity p WHERE p.interests = :interests")
+@NamedQuery(name = "ProjectEntity.findProjectByStatus", query = "SELECT p FROM ProjectEntity p WHERE p.status = :status")
+@NamedQuery(name = "ProjectEntity.findProjectByCreator", query = "SELECT p FROM ProjectEntity p WHERE p.creator = :creator")
+@NamedQuery(name = "ProjectEntity.findAllProjects", query = "SELECT p FROM ProjectEntity p")
 public class ProjectEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,9 +51,8 @@ public class ProjectEntity implements Serializable {
     @OneToOne
     @PrimaryKeyJoinColumn (name = "creator_id", referencedColumnName = "id")
     UserEntity creator;
-    @OneToOne
-    @PrimaryKeyJoinColumn (name = "lab_id", referencedColumnName = "id")
-    LabEntity labEntity;
+    @Column (name = "image", nullable = true, unique = false, updatable = true)
+    private String image;
 
     public enum Status {
         PLANNING(100),
@@ -66,4 +72,94 @@ public class ProjectEntity implements Serializable {
         }
 
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Set<ProjectUserEntity> getProjectUsers() {
+        return projectUsers;
+    }
+
+    public void setProjectUsers(Set<ProjectUserEntity> projectUsers) {
+        this.projectUsers = projectUsers;
+    }
+
+    public Set<SkillEntity> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<SkillEntity> skills) {
+        this.skills = skills;
+    }
+
+    public Set<InterestEntity> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<InterestEntity> interests) {
+        this.interests = interests;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LabEntity getLab() {
+        return lab;
+    }
+
+    public void setLab(LabEntity lab) {
+        this.lab = lab;
+    }
+
+    public int getMaxMembers() {
+        return maxMembers;
+    }
+
+    public void setMaxMembers(int maxMembers) {
+        this.maxMembers = maxMembers;
+    }
+
+    public UserEntity getCreator() {
+        return creator;
+    }
+
+    public void setCreator(UserEntity creator) {
+        this.creator = creator;
+    }
+
+
 }
