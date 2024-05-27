@@ -1,8 +1,12 @@
 package dao;
+import entities.ProjectEntity;
 import entities.ProjectUserEntity;
+import entities.UserEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
+
+import java.util.List;
 
 @Stateless
 public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
@@ -21,10 +25,19 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
-    public ProjectUserEntity findProjectUserByUser(ProjectUserEntity user) {
+    public ProjectUserEntity findProjectUserByUser(UserEntity user) {
         try {
             return (ProjectUserEntity) em.createNamedQuery("ProjectUserEntity.findProjectUserByUser").setParameter("user", user)
                     .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+    public List<UserEntity> findAllProjectUsers(ProjectEntity project) {
+        try {
+            return em.createNamedQuery("ProjectUserEntity.findAllProjectUsers").setParameter("project", project)
+                    .getResultList();
 
         } catch (Exception e) {
             return null;

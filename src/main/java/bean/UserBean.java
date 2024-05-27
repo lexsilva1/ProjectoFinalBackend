@@ -1,8 +1,12 @@
 package bean;
 
 import dao.LabDao;
+import dao.ProjectUserDao;
+import dto.ProjectUserDto;
 import dto.UserConfirmation;
+import dto.UserDto;
 import entities.LabEntity;
+import entities.ProjectUserEntity;
 import entities.UserEntity;
 import jakarta.ejb.Stateless;
 import dao.UserDao;
@@ -23,6 +27,8 @@ public class UserBean {
     private LabDao labDao;
     @Inject
     private EmailBean emailBean;
+    @Inject
+    private ProjectUserDao projectUserDao;
     public UserBean() {
     }
     /**
@@ -187,5 +193,24 @@ public class UserBean {
         LocalDateTime time=LocalDateTime.now().minusMinutes(5);
         return userDao.findTimedOutUsers(time);
     }
-
+    public UserDto convertToDto(UserEntity user) {
+        UserDto userDto = new UserDto();
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setNickname(user.getNickname());
+        userDto.setBio(user.getBio());
+        userDto.setLabLocation(user.getLocation().getLocation().name());
+        userDto.setUserPhoto(user.getUserPhoto());
+        return userDto;
+    }
+    public ProjectUserDto convertToProjectUserDto(UserEntity user) {
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByUser(user);
+        ProjectUserDto projectUserDto = new ProjectUserDto();
+        projectUserDto.setFirstName(user.getFirstName());
+        projectUserDto.setLastName(user.getLastName());
+        projectUserDto.setNickname(user.getNickname());
+        projectUserDto.setUserPhoto(user.getUserPhoto());
+        projectUserDto.setProjectManager(projectUser.isProjectManager());
+        return projectUserDto;
+    }
 }

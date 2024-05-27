@@ -1,10 +1,14 @@
 package bean;
 
 import dao.*;
+import dto.ProjectUserDto;
+import dto.UserDto;
 import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import dto.ProjectDto;
+
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,6 +27,7 @@ public class ProjectBean {
     ProjectUserDao projectUserDao;
     @Inject
     InterestDao interestDao;
+
 
     public void createDefaultProjects() {
         if(projectDao.findProjectByName("Forge X") == null) {
@@ -56,8 +61,13 @@ public class ProjectBean {
     public List<ProjectEntity> findProjectsByLab(ProjectEntity lab) {
         return projectDao.findProjectsByLab(lab);
     }
-    public List<ProjectEntity> findAllProjects() {
-        return projectDao.findAllProjects();
+    public List<ProjectDto> findAllProjects() {
+        List<ProjectEntity> projects = projectDao.findAll();
+        List<ProjectDto> projectDtos = new ArrayList<>();
+        for (ProjectEntity project : projects) {
+            projectDtos.add(convertToDto(project));
+        }
+        return projectDtos;
     }
     public ProjectDto convertToDto(ProjectEntity project) {
         ProjectDto projectDto = new ProjectDto();
@@ -66,20 +76,35 @@ public class ProjectBean {
         projectDto.setImage(project.getImage());
         projectDto.setStatus(project.getStatus().ordinal());
         projectDto.setLab(project.getLab().getLocation().ordinal());
-        int[] skills = new int[project.getSkills().size()];
-        int i = 0;
+        Set<String> skills = new LinkedHashSet<>();
         for (SkillEntity skill : project.getSkills()) {
-            skills[i] = skill.getType().ordinal();
-            i++;
+            skills.add(skill.getName());
         }
-        projectDto.setSkills(skills);
-        int[] interests = new int[project.getInterests().size()];
-        i = 0;
+        projectDto.setSkills(skills.toArray(new String[0]));
+        Set<String> interests = new LinkedHashSet<>();
         for (InterestEntity interest : project.getInterests()) {
-            interests[i] = interest.getType().ordinal();
-            i++;
+            interests.add(interest.getName());
         }
-        projectDto.setInterests(interests);
+        projectDto.setInterests(interests.toArray(new String[0]));
+        List<ProjectUserDto> teamMembers = new ArrayList<>();
+        for (ProjectUserEntity projectUser : project.getProjectUsers()) {
+            teamMembers.add(userBean.convertToProjectUserDto(projectUser.getUser()));
+        }
+        projectDto.setTeamMembers(teamMembers);
         return projectDto;
     }
+
+
+
+    public List<UserDto> findProjectUsers(ProjectEntity project) {
+        List<UserEntity> projectUsers = projectUserDao.findAllProjectUsers(project);
+        List<UserDto> users = new ArrayList<>();
+        for (UserEntity user : projectUsers) {
+            users.add(userBean.convertToDto(user));
+        }
+
+        return users;
+    }
+
+
 }
