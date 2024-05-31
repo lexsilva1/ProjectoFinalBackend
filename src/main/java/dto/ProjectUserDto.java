@@ -7,7 +7,7 @@ public class ProjectUserDto {
     private String nickname;
     private String userPhoto;
     private boolean isProjectManager;
-
+    private int userId;
     public int getId() {
         return id;
     }
@@ -54,5 +54,13 @@ public class ProjectUserDto {
 
     public void setProjectManager(boolean projectManager) {
         isProjectManager = projectManager;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

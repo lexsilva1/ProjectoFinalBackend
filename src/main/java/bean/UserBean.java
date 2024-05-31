@@ -15,6 +15,7 @@ import utilities.EncryptHelper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -57,9 +58,32 @@ public class UserBean {
             userDao.remove(user);
         }
     }
-    public List<UserEntity> findAllUsers() {
-        return userDao.findAll();
+    public List<UserDto> findAllUsers() {
+        userDao.findAll();
+        List <UserDto> userDtos = new ArrayList<>();
+        for(UserEntity user : userDao.findAll()) {
+            userDtos.add(convertToUserDto(user));
+        }
+        return userDtos;
     }
+    public UserDto convertToUserDto(UserEntity user) {
+        UserDto userDto = new UserDto();
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
+        userDto.setNickname(user.getNickname());
+        userDto.setBio(user.getBio());
+        userDto.setLabLocation(user.getLocation().getLocation().name());
+        userDto.setUserPhoto(user.getUserPhoto());
+        userDto.setRole(user.getRole());
+        return userDto;
+    }
+    /**
+     * Logs in the user
+     * @param email
+     * @param password
+     * @return
+     */
+
     public String login(String email, String password) {
         UserEntity user = userDao.findUserByEmail(email);
         if(user != null && user.isActive() && encryptHelper.checkPassword(password, user.getPwdHash())) {
@@ -205,12 +229,16 @@ public class UserBean {
     }
     public ProjectUserDto convertToProjectUserDto(UserEntity user) {
         ProjectUserEntity projectUser = projectUserDao.findProjectUserByUser(user);
+        if(projectUser == null) {
+            return null;
+        }
         ProjectUserDto projectUserDto = new ProjectUserDto();
         projectUserDto.setFirstName(user.getFirstName());
         projectUserDto.setLastName(user.getLastName());
         projectUserDto.setNickname(user.getNickname());
         projectUserDto.setUserPhoto(user.getUserPhoto());
         projectUserDto.setProjectManager(projectUser.isProjectManager());
+        projectUserDto.setUserId(user.getId());
         return projectUserDto;
     }
 }

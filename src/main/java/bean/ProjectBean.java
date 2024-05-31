@@ -2,11 +2,16 @@ package bean;
 
 import dao.*;
 import dto.ProjectUserDto;
+import dto.SkillDto;
 import dto.UserDto;
 import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import dto.ProjectDto;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -27,6 +32,8 @@ public class ProjectBean {
     ProjectUserDao projectUserDao;
     @Inject
     InterestDao interestDao;
+    @Inject
+    UserDao UserDao;
 
 
     public void createDefaultProjects() {
@@ -58,17 +65,7 @@ public class ProjectBean {
     public ProjectEntity findProjectByName(String name) {
         return projectDao.findProjectByName(name);
     }
-    public List<ProjectEntity> findProjectsByLab(ProjectEntity lab) {
-        return projectDao.findProjectsByLab(lab);
-    }
-    public List<ProjectDto> findAllProjects() {
-        List<ProjectEntity> projects = projectDao.findAll();
-        List<ProjectDto> projectDtos = new ArrayList<>();
-        for (ProjectEntity project : projects) {
-            projectDtos.add(convertToDto(project));
-        }
-        return projectDtos;
-    }
+
     public ProjectDto convertToDto(ProjectEntity project) {
         ProjectDto projectDto = new ProjectDto();
         projectDto.setName(project.getName());
@@ -105,6 +102,65 @@ public class ProjectBean {
 
         return users;
     }
+    public List<SkillDto> findProjectSkills(ProjectEntity project) {
+        List<SkillEntity> projectSkills = projectDao.findProjectSkills(project);
+        List<SkillDto> skills = new ArrayList<>();
+        for (SkillEntity skill : projectSkills) {
+            skills.add(convertToSkillDto(skill));
+        }
+        return skills;
+    }
+    public SkillDto convertToSkillDto(SkillEntity skill) {
+        SkillDto skillDto = new SkillDto();
+        skillDto.setName(skill.getName());
+        skillDto.setSkillType(skill.getSkillType().getDeclaringClass().getTypeName());
+        skillDto.setId(skill.getId()); // Correct usage
+        return skillDto;
+    }
+    public List<ProjectDto> findProjects(String projectName, String projectLab, String projectSkill, String projectInterest, int projectStatus, int projectUser) {
+        List<ProjectEntity> projectEntities = projectDao.findProjects(projectName, projectLab, projectSkill, projectInterest, projectStatus, projectUser);
 
+        List<ProjectDto> projectDtos = new ArrayList<>();
+        for (ProjectEntity projectEntity : projectEntities) {
+            projectDtos.add(convertToDto(projectEntity));
+        }
+        return projectDtos;
+    }
+    public void createProject(ProjectDto projectDto, String token) {
+        
+        ProjectEntity project = new ProjectEntity();
+        project.setName(projectDto.getName());
+        project.setDescription(projectDto.getDescription());
+        project.setImage(projectDto.getImage());
+        project.setStatus(ProjectEntity.Status.values()[projectDto.getStatus()]);
+        project.setLab(labDao.findLabByLocation(LabEntity.Lab.values()[projectDto.getLab()]));
+        List<SkillEntity> skills = new ArrayList<>();
+        for (String skillName : projectDto.getSkills()) {
+            SkillEntity skill = skillDao.findSkillByName(skillName);
+            if (skill != null) {
+                skills.add(skill);
+            }
+        }
+        project.setSkills(new LinkedHashSet<>(skills));
+        List<InterestEntity> interests = new ArrayList<>();
+        for (String interestName : projectDto.getInterests()) {
+            InterestEntity interest = interestDao.findInterestByName(interestName);
+            if (interest != null) {
+                interests.add(interest);
+            }
+        }
+        project.setInterests(new LinkedHashSet<>(interests));
+        project.setCreator(userBean.findUserByToken(token));
+        for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
+            ProjectUserEntity projectUser = new ProjectUserEntity();
+            projectUser.setProject(project);
+            projectUser.setUser(UserDao.findUserById(projectUserDto.getUserId()));
+            projectUser.setProjectManager(projectUserDto.isProjectManager());
+            projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            projectUserDao.persist(projectUser);
+        }
+        projectDao.persist(project);
+
+       }
 
 }

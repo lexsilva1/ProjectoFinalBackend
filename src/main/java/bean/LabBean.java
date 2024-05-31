@@ -1,10 +1,14 @@
 package bean;
 
 import dao.LabDao;
+import dto.LabDto;
 import entities.LabEntity;
 import jakarta.ejb.Singleton;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class LabBean {
@@ -47,6 +51,19 @@ private LabDao labDao;
             labDao.persist(lab6);
         }
 
+    }
+    public List<LabDto> findAllLabs() {
+        List<LabEntity> labEntities = labDao.findAllLabs();
+        List<LabDto> labDtos = new ArrayList<>();
+        for(LabEntity lab : labEntities) {
+            labDtos.add(convertToDto(lab.getLocation()));
+        }
+        return labDtos;
+    }
+    public LabDto convertToDto(LabEntity.Lab labEntity) {
+        LabDto labDto = new LabDto();
+        labDto.setLocation(labEntity.name());
+        return labDto;
     }
 }
 

@@ -5,6 +5,8 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.List;
+
 @Stateless
 public class LabDao extends AbstractDao<LabEntity>{
     @PersistenceContext
@@ -27,5 +29,12 @@ public class LabDao extends AbstractDao<LabEntity>{
             return null;
         }
 
+    }
+    public List<LabEntity> findAllLabs() {
+        try {
+            return em.createNamedQuery("LabEntity.findAllLabs").getResultList();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

@@ -1,12 +1,16 @@
 package dto;
 
+import entities.UserEntity;
+
 public class UserDto {
+    private int userId;
     private String firstName;
     private String lastName;
     private String nickname;
     private String bio;
     private String labLocation;
     private String userPhoto;
+    private UserEntity.Role role;
 
     public UserDto() {
     }
@@ -57,5 +61,21 @@ public class UserDto {
 
     public void setUserPhoto(String userPhoto) {
         this.userPhoto = userPhoto;
+    }
+
+    public UserEntity.Role getRole() {
+        return role;
+    }
+
+    public void setRole(UserEntity.Role role) {
+        this.role = role;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

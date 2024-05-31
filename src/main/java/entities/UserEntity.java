@@ -14,7 +14,7 @@ import jakarta.persistence.*;
 @NamedQuery(name = "User.updateToken", query = "UPDATE UserEntity u SET u.token = :token WHERE u.email = :email")
 @NamedQuery(name = "User.findUserByNickname", query = "SELECT u FROM UserEntity u WHERE u.nickname = :nickname")
 @NamedQuery(name = "User.findTimedOutUsers", query = "SELECT u FROM UserEntity u WHERE u.lastActivity < :time")
-
+@NamedQuery(name = "User.findUserById", query = "SELECT u FROM UserEntity u WHERE u.id = :id")
 public class UserEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

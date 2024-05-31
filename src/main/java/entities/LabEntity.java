@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "Labs")
 @NamedQuery(name = "LabEntity.findLabByLocation", query = "SELECT l FROM LabEntity l WHERE l.location = :location")
+@NamedQuery(name = "LabEntity.findAllLabs", query = "SELECT l FROM LabEntity l")
 public class LabEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -46,5 +47,6 @@ public class LabEntity implements Serializable {
         VISEU,
         VILA_REAL
     }
+
 
 }

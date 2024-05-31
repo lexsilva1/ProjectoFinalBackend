@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "message")
 public class MessageEntity {
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
@@ -14,9 +15,6 @@ public class MessageEntity {
     @ManyToOne
     @JoinColumn(name = "sender_id")
     private UserEntity sender;
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private ProjectEntity project;
     @ManyToOne
     @JoinColumn(name = "receiver_id")
     private UserEntity receiver;

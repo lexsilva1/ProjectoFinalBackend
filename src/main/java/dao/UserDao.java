@@ -68,4 +68,13 @@ public class UserDao extends AbstractDao<UserEntity>{
     public List<UserEntity> findTimedOutUsers(LocalDateTime time) {
         return em.createNamedQuery("User.findTimedOutUsers").setParameter("time", time).getResultList();
     }
+    public UserEntity findUserById(int id) {
+        try {
+            return (UserEntity) em.createNamedQuery("User.findUserById").setParameter("id", id)
+                    .getSingleResult();
+
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
 }
