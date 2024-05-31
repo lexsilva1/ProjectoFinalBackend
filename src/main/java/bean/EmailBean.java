@@ -97,7 +97,7 @@ public class EmailBean {
 
         String userEmail = user.getEmail();
         String subject = "Scrum - Password Reset";
-        String resetLink = "http://localhost:5173/PasswordReset/" + user.getAuxToken();
+        String resetLink = "http://localhost:3000/PasswordReset/" + user.getAuxToken();
         String body = "You have requested a password reset for your Scrum Platform account " + user.getFirstName() + ",\n\n"
                 + "Please click on the link below to reset your password.\n\n"
                 + "Password Reset Link: " + resetLink;
