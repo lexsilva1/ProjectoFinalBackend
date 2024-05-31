@@ -71,7 +71,7 @@ public class EmailBean {
 
         String userEmail = user.getEmail();
         String subject = "ForgeXpereimental Projects - Account Confirmation";
-        String confirmationLink = "http://localhost:5173/Confirmation/" + user.getAuxToken();
+        String confirmationLink = "http://localhost:3000/Confirmation/" + user.getAuxToken();
         String body = "You have registered with ForgeXpereimental Projects "  + ",\n\n"
                 + "Please click on the link below to confirm your account.\n\n"
                 + "Confirmation Link: " + confirmationLink;
