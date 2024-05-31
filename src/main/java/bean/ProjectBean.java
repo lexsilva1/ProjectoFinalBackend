@@ -1,13 +1,10 @@
 package bean;
 
 import dao.*;
-import dto.ProjectUserDto;
-import dto.SkillDto;
-import dto.UserDto;
+import dto.*;
 import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import dto.ProjectDto;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -34,6 +31,10 @@ public class ProjectBean {
     InterestDao interestDao;
     @Inject
     UserDao UserDao;
+    @Inject
+    ResourceDao resourceDao;
+    @Inject
+    ProjectResourceDao projectResourceDao;
 
 
     public void createDefaultProjects() {
@@ -127,18 +128,24 @@ public class ProjectBean {
         return projectDtos;
     }
     public void createProject(ProjectDto projectDto, String token) {
-        
+
         ProjectEntity project = new ProjectEntity();
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());
         project.setImage(projectDto.getImage());
-        project.setStatus(ProjectEntity.Status.values()[projectDto.getStatus()]);
+        project.setStatus(ProjectEntity.Status.PLANNING);
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.values()[projectDto.getLab()]));
         List<SkillEntity> skills = new ArrayList<>();
         for (String skillName : projectDto.getSkills()) {
             SkillEntity skill = skillDao.findSkillByName(skillName);
             if (skill != null) {
                 skills.add(skill);
+            }else{
+                skill = new SkillEntity();
+                skill.setName(skillName);
+                skillDao.persist(skill);
+                skills.add(skill);
+
             }
         }
         project.setSkills(new LinkedHashSet<>(skills));
@@ -147,19 +154,47 @@ public class ProjectBean {
             InterestEntity interest = interestDao.findInterestByName(interestName);
             if (interest != null) {
                 interests.add(interest);
+            }else {
+                interest = new InterestEntity();
+                interest.setName(interestName);
+                interestDao.persist(interest);
+                interests.add(interest);
             }
         }
         project.setInterests(new LinkedHashSet<>(interests));
         project.setCreator(userBean.findUserByToken(token));
-        for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
-            ProjectUserEntity projectUser = new ProjectUserEntity();
-            projectUser.setProject(project);
-            projectUser.setUser(UserDao.findUserById(projectUserDto.getUserId()));
-            projectUser.setProjectManager(projectUserDto.isProjectManager());
-            projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
-            projectUserDao.persist(projectUser);
-        }
+        project.setMaxMembers(projectDto.getTeamMembers().size());
         projectDao.persist(project);
+        for(int i = 0; i < project.getMaxMembers(); i++) {
+            for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
+                ProjectUserEntity projectUser = new ProjectUserEntity();
+                projectUser.setProject(project);
+                projectUser.setUser(UserDao.findUserById(projectUserDto.getUserId()));
+                projectUser.setProjectManager(projectUserDto.isProjectManager());
+                projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+                projectUser.setProjectManager(projectUserDto.isProjectManager());
+                projectUserDao.persist(projectUser);
+            }
+        }
+
+        for(ResourceDto resourceDto : projectDto.getBillOfMaterials()){
+            ResourceEntity resource = resourceDao.findResourceByName(resourceDto.getName());
+
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject_id(project.getId());
+            projectResource.setResource_id(resource.getId());
+            if(resource.getStock() < resourceDto.getQuantity()){
+                projectResource.setQuantity(resource.getStock());
+                resource.setStock(0);
+                resourceDao.merge(resource);
+            }
+            resource.setStock(resource.getStock() - resourceDto.getQuantity());
+            resourceDao.merge(resource);
+            projectResource.setQuantity(resourceDto.getQuantity());
+
+            projectResourceDao.persist(projectResource);
+
+        }
 
        }
 

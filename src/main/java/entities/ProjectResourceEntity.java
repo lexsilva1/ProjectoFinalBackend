@@ -17,4 +17,36 @@ public class ProjectResourceEntity implements Serializable {
     private int quantity;
     @JoinColumn(name = "project_id", nullable = false, unique = true, updatable = false)
     private int project_id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getResource_id() {
+        return resource_id;
+    }
+
+    public void setResource_id(int resource_id) {
+        this.resource_id = resource_id;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public int getProject_id() {
+        return project_id;
+    }
+
+    public void setProject_id(int project_id) {
+        this.project_id = project_id;
+    }
 }

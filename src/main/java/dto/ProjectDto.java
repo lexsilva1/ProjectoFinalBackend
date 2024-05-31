@@ -12,6 +12,7 @@ public class ProjectDto {
     private String [] skills;
     private String [] interests;
     private List<ProjectUserDto> teamMembers;
+    private List<ResourceDto> billOfMaterials;
 
 
 
@@ -82,5 +83,11 @@ public class ProjectDto {
         this.teamMembers = teamMembers;
     }
 
+    public List<ResourceDto> getBillOfMaterials() {
+        return billOfMaterials;
+    }
 
+    public void setBillOfMaterials(List<ResourceDto> billOfMaterials) {
+        this.billOfMaterials = billOfMaterials;
+    }
 }

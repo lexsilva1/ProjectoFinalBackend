@@ -6,6 +6,11 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "resources")
+@NamedQuery(name = "Resource.findResourceById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
+@NamedQuery(name = "Resource.findResourceByName", query = "SELECT r FROM ResourceEntity r WHERE r.name = :name")
+@NamedQuery(name = "Resource.findResourceByType", query = "SELECT r FROM ResourceEntity r WHERE r.type = :type")
+@NamedQuery(name = "Resource.findResourceBySupplier", query = "SELECT r FROM ResourceEntity r WHERE r.supplier = :supplier")
+
 public class ResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -31,5 +36,79 @@ public class ResourceEntity implements Serializable {
     public enum ResourceType {
         COMPONENT,
         RESOURCE
+    }
+    public ResourceEntity() {
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public ResourceType getType() {
+        return type;
+    }
+
+    public void setType(ResourceType type) {
+        this.type = type;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
+
+    public String getSupplier() {
+        return supplier;
+    }
+
+    public void setSupplier(String supplier) {
+        this.supplier = supplier;
+    }
+
+    public String getSupplierContact() {
+        return supplierContact;
+    }
+
+    public void setSupplierContact(String supplierContact) {
+        this.supplierContact = supplierContact;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
+    }
+
+    public String getObservations() {
+        return observations;
+    }
+
+    public void setObservations(String observations) {
+        this.observations = observations;
     }
 }

@@ -1,7 +1,10 @@
 package service;
 
 import bean.LabBean;
+import dao.UserDao;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
+import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.HeaderParam;
@@ -17,6 +20,8 @@ public class LabService {
     private HttpServletRequest request;
     @EJB
     LabBean labBean;
+    @Inject
+    UserDao userDao;
 
 
     @GET
@@ -25,7 +30,14 @@ public class LabService {
     public Response findAllLabs(@HeaderParam("token") String token){
         if(token == null) {
             return Response.status(403).entity("not allowed").build();
+        }else{
+            UserEntity user = userDao.findUserByToken(token);
+            UserEntity user2 = userDao.findUserByAuxToken(token);
+            if(user == null && user2 == null){
+                return Response.status(404).entity("not found").build();
+            }
         }
+
         return Response .status(200).entity(labBean.findAllLabs()).build();
     }
 }
