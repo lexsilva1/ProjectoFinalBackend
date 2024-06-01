@@ -72,7 +72,7 @@ public class ProjectBean {
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setImage(project.getImage());
-        projectDto.setStatus(project.getStatus().ordinal());
+        projectDto.setStatus(project.getStatus().name());
         projectDto.setLab(project.getLab().getLocation().ordinal());
         Set<String> skills = new LinkedHashSet<>();
         for (SkillEntity skill : project.getSkills()) {
