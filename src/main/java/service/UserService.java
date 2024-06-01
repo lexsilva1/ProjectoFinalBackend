@@ -24,6 +24,7 @@ public class UserService {
     @Path("/login")
     @Produces("application/json")
     public Response login(@HeaderParam("email") String email, @HeaderParam("password") String password) {
+        System.out.println("login");
         String token = userBean.login(email, password);
         if(token != null) {
             return Response.status(200).entity(token).build();

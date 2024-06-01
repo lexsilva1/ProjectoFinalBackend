@@ -13,6 +13,9 @@ public class ApplicationConfig extends Application{
         Set<Class<?>> resources = new HashSet<>();
         resources.add(FileUploadResource.class);
         resources.add(MultiPartFeature.class);
+        resources.add(UserService.class);
+        resources.add(LabService.class);
+        resources.add(ProjectService.class);
         return resources;
     }
 }
