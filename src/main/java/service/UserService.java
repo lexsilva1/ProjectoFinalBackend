@@ -1,5 +1,5 @@
 package service;
-import bean.EmailBean;
+
 import bean.UserBean;
 import dto.UserConfirmation;
 import entities.UserEntity;
@@ -17,8 +17,7 @@ public class UserService {
     @EJB
     UserBean userBean;
 
-    @EJB
-    EmailBean emailBean;
+
 
 
     @POST
