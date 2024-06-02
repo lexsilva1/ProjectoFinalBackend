@@ -1,9 +1,13 @@
 package bean;
 
 import dao.SkillDao;
+import dto.SkillDto;
 import entities.SkillEntity;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class SkillBean {
@@ -161,5 +165,20 @@ public class SkillBean {
             defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
             skillDao.persist(defaultSkill);
         }
+    }
+
+    public List<SkillDto> findAllSkills(){
+        List<SkillEntity> skills = skillDao.findAllSkills();
+        List<SkillDto> skillDtos = new ArrayList<>();
+        for(SkillEntity skill : skills){
+            skillDtos.add(toSkillDtos(skill));
+        }
+        return skillDtos;
+    }
+    public SkillDto toSkillDtos(SkillEntity skill){
+        SkillDto skillDto = new SkillDto();
+        skillDto.setId(skill.getId());
+        skillDto.setName(skill.getName());
+        return skillDto;
     }
 }

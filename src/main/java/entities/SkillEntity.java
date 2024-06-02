@@ -9,7 +9,7 @@ import java.util.Set;
 @Table(name = "Skills")
 @NamedQuery(name = "SkillEntity.findSkillByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")
 @NamedQuery(name = "SkillEntity.findSkillByType", query = "SELECT s FROM SkillEntity s WHERE s.skillType = :skillType")
-
+@NamedQuery(name = "SkillEntity.findAllSkills", query = "SELECT s FROM SkillEntity s")
 public class SkillEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
