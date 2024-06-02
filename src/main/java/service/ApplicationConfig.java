@@ -17,6 +17,7 @@ public class ApplicationConfig extends Application{
         resources.add(LabService.class);
         resources.add(ProjectService.class);
         resources.add(SkillService.class);
+        resources.add(InterestService.class);
         return resources;
     }
 }
