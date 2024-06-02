@@ -59,7 +59,7 @@ public class ProjectBean {
             defaultProjectUser.setUser(userBean.findUserByEmail("admin@admin.com"));
             defaultProjectUser.setProjectManager(true);
             defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
-            defaultProject.setImage("../multimedia/Images/avatarProject.png");
+            defaultProject.setImage("../multimedia/Images/avatarProject.C598D5E0664CA8233C756D939D50BB469E464EE7B863F4D60D855D9821A77A52.png");
             projectUserDao.persist(defaultProjectUser);
             projectDao.persist(defaultProject);
         }
