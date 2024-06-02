@@ -1,9 +1,13 @@
 package bean;
 
 import dao.InterestDao;
+import dto.InterestDto;
 import entities.InterestEntity;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Stateless
 public class InterestBean {
@@ -13,67 +17,99 @@ public class InterestBean {
     public InterestBean() {
     }
 
-    public void createDefaultInterests(){
+    public void createDefaultInterests() {
         // Create default interests
-        if(interestDao.findInterestByName("Sustainability") == null){
+        if (interestDao.findInterestByName("Sustainability") == null) {
             InterestEntity interest1 = new InterestEntity();
             interest1.setName("Sustainability");
             interest1.setInterestType(InterestEntity.InterestType.CAUSES);
             interestDao.persist(interest1);
         }
-        if(interestDao.findInterestByName("Education") == null){
+        if (interestDao.findInterestByName("Education") == null) {
             InterestEntity interest2 = new InterestEntity();
             interest2.setName("Education");
             interest2.setInterestType(InterestEntity.InterestType.CAUSES);
             interestDao.persist(interest2);
         }
-        if(interestDao.findInterestByName("Health") == null){
+        if (interestDao.findInterestByName("Health") == null) {
             InterestEntity interest3 = new InterestEntity();
             interest3.setName("Health");
             interest3.setInterestType(InterestEntity.InterestType.CAUSES);
             interestDao.persist(interest3);
         }
-        if(interestDao.findInterestByName("Technology") == null){
+        if (interestDao.findInterestByName("Technology") == null) {
             InterestEntity interest4 = new InterestEntity();
             interest4.setName("Technology");
             interest4.setInterestType(InterestEntity.InterestType.KNOWLEDGE);
             interestDao.persist(interest4);
         }
-        if(interestDao.findInterestByName("Science") == null){
+        if (interestDao.findInterestByName("Science") == null) {
             InterestEntity interest5 = new InterestEntity();
             interest5.setName("Science");
             interest5.setInterestType(InterestEntity.InterestType.KNOWLEDGE);
             interestDao.persist(interest5);
         }
-        if(interestDao.findInterestByName("Arts") == null){
+        if (interestDao.findInterestByName("Arts") == null) {
             InterestEntity interest6 = new InterestEntity();
             interest6.setName("Arts");
             interest6.setInterestType(InterestEntity.InterestType.KNOWLEDGE);
             interestDao.persist(interest6);
         }
-        if(interestDao.findInterestByName("Sports") == null){
+        if (interestDao.findInterestByName("Sports") == null) {
             InterestEntity interest7 = new InterestEntity();
             interest7.setName("Sports");
             interest7.setInterestType(InterestEntity.InterestType.THEMES);
             interestDao.persist(interest7);
         }
-        if(interestDao.findInterestByName("Music") == null){
+        if (interestDao.findInterestByName("Music") == null) {
             InterestEntity interest8 = new InterestEntity();
             interest8.setName("Music");
             interest8.setInterestType(InterestEntity.InterestType.THEMES);
             interestDao.persist(interest8);
         }
-        if(interestDao.findInterestByName("Cinema") == null){
+        if (interestDao.findInterestByName("Cinema") == null) {
             InterestEntity interest9 = new InterestEntity();
             interest9.setName("Cinema");
             interest9.setInterestType(InterestEntity.InterestType.THEMES);
             interestDao.persist(interest9);
         }
-        if(interestDao.findInterestByName("Other") == null){
+        if (interestDao.findInterestByName("Other") == null) {
             InterestEntity interest10 = new InterestEntity();
             interest10.setName("Other");
             interest10.setInterestType(InterestEntity.InterestType.OTHER);
             interestDao.persist(interest10);
         }
     }
+
+    public List<InterestDto> findAllInterests() {
+        List<InterestEntity> interests = interestDao.findAllInterests();
+        List<InterestDto> interestDtos = new ArrayList<>();
+        for (InterestEntity interest : interests) {
+            InterestDto interestDto = new InterestDto();
+            interestDto.setId(interest.getId());
+            interestDto.setName(interest.getName());
+            interestDto.setInterestType(interest.getInterestType().toString());
+            interestDtos.add(interestDto);
+        }
+        return interestDtos;
+    }
+
+    public InterestDto toInterestDto(InterestEntity interest) {
+        InterestDto interestDto = new InterestDto();
+        interestDto.setId(interest.getId());
+        interestDto.setName(interest.getName());
+        interestDto.setInterestType(interest.getInterestType().toString());
+        return interestDto;
+    }
+
+    public InterestEntity findInterestByName(String name) {
+        return interestDao.findInterestByName(name);
+    }
+    public void createInterest(InterestDto interestDto){
+        InterestEntity interest = new InterestEntity();
+        interest.setName(interestDto.getName());
+        interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
+        interestDao.persist(interest);
+    }
 }
+

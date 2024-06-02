@@ -33,4 +33,11 @@ public class InterestDao extends AbstractDao<InterestEntity> {
             return null;
         }
     }
+    public List<InterestEntity> findAllInterests() {
+        try {
+            return em.createNamedQuery("InterestEntity.findAllInterests").getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

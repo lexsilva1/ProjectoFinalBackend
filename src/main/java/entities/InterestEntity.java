@@ -9,7 +9,7 @@ import java.util.Set;
 @Table(name = "interests")
 @NamedQuery(name = "InterestEntity.findInterestByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")
 @NamedQuery(name = "InterestEntity.findInterestByType", query = "SELECT i FROM InterestEntity i WHERE i.interestType = :interestType")
-
+@NamedQuery(name = "InterestEntity.findAllInterests", query = "SELECT i FROM InterestEntity i")
 public class InterestEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

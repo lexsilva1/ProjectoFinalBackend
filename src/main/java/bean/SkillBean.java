@@ -179,6 +179,16 @@ public class SkillBean {
         SkillDto skillDto = new SkillDto();
         skillDto.setId(skill.getId());
         skillDto.setName(skill.getName());
+        skillDto.setSkillType(skill.getSkillType().toString());
         return skillDto;
+    }
+    public SkillEntity findSkillByName(String name){
+        return skillDao.findSkillByName(name);
+    }
+    public void createSkill(SkillDto skillDto){
+        SkillEntity skill = new SkillEntity();
+        skill.setName(skillDto.getName());
+        skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
+        skillDao.persist(skill);
     }
 }
