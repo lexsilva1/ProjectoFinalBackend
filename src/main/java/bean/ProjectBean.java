@@ -197,5 +197,12 @@ public class ProjectBean {
         }
 
        }
+       public List<String> findAllStatus(){
+        List<String> status = new ArrayList<>();
+        for(ProjectEntity.Status s : ProjectEntity.Status.values()){
+            status.add(s.name());
+        }
+        return status;
+       }
 
 }

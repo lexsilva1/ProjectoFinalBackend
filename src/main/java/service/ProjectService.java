@@ -70,4 +70,10 @@ public class ProjectService {
         projectBean.createProject(projectDto,token);
         return Response.status(200).entity("project created").build();
     }
+    @GET
+    @Path("/allStatus")
+    @Produces ("application/json")
+    public Response findAllStatus(){
+        return Response.status(200).entity(projectBean.findAllStatus()).build();
+    }
 }
