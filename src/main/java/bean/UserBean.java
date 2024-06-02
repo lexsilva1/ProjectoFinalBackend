@@ -214,7 +214,7 @@ public class UserBean {
         userDao.merge(user);
     }
     public List<UserEntity> findTimedOutUsers() {
-        LocalDateTime time=LocalDateTime.now().minusMinutes(5);
+        LocalDateTime time=LocalDateTime.now().minusMinutes(30);
         return userDao.findTimedOutUsers(time);
     }
     public UserDto convertToDto(UserEntity user) {
