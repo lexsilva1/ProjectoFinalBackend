@@ -78,4 +78,5 @@ public class UserDto {
     public void setUserId(int userId) {
         this.userId = userId;
     }
+
 }

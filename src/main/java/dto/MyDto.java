@@ -6,6 +6,8 @@ public class MyDto {
     private String nickname;
     private int role;
     private String image;
+    private String token;
+    private int id;
 
     public MyDto() {
     }
@@ -48,5 +50,21 @@ public class MyDto {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

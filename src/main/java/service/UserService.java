@@ -1,6 +1,7 @@
 package service;
 
 import bean.UserBean;
+import dto.MyDto;
 import dto.UserConfirmation;
 import dto.UserDto;
 import entities.UserEntity;
@@ -26,9 +27,9 @@ public class UserService {
     @Produces("application/json")
     public Response login(@HeaderParam("email") String email, @HeaderParam("password") String password) {
         System.out.println("login");
-        String token = userBean.login(email, password);
-        if(token != null) {
-            return Response.status(200).entity(token).build();
+        MyDto myInfo = userBean.login(email, password);
+        if(myInfo.getToken() != null) {
+            return Response.status(200).entity(myInfo).build();
         } else
             return Response.status(404).entity("user not found").build();
 

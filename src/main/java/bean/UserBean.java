@@ -2,6 +2,7 @@ package bean;
 
 import dao.LabDao;
 import dao.ProjectUserDao;
+import dto.MyDto;
 import dto.ProjectUserDto;
 import dto.UserConfirmation;
 import dto.UserDto;
@@ -75,7 +76,18 @@ public class UserBean {
         userDto.setLabLocation(user.getLocation().getLocation().name());
         userDto.setUserPhoto(user.getUserPhoto());
         userDto.setRole(user.getRole());
+        userDto.setUserId(user.getId());
         return userDto;
+    }
+    public MyDto convertToMyDto(UserEntity user) {
+        MyDto myDto = new MyDto();
+        myDto.setFirstName(user.getFirstName());
+        myDto.setLastName(user.getLastName());
+        myDto.setNickname(user.getNickname());
+        myDto.setImage(user.getUserPhoto());
+        myDto.setToken(user.getToken());
+        myDto.setId(user.getId());
+        return myDto;
     }
     /**
      * Logs in the user
@@ -84,13 +96,14 @@ public class UserBean {
      * @return
      */
 
-    public String login(String email, String password) {
+    public MyDto login(String email, String password) {
         UserEntity user = userDao.findUserByEmail(email);
         if(user != null && user.isActive() && encryptHelper.checkPassword(password, user.getPwdHash())) {
             String token = generateToken();
             user.setToken(token);
             setLastActivity(user);
-            return token;
+            MyDto userDto = convertToMyDto(user);
+            return userDto;
         }
         return null;
     }/**

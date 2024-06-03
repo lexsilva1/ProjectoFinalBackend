@@ -1,7 +1,7 @@
 package service;
 import jakarta.ws.rs.ApplicationPath;
 import jakarta.ws.rs.core.Application;
-import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -11,8 +11,7 @@ public class ApplicationConfig extends Application{
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new HashSet<>();
-        resources.add(FileUploadResource.class);
-        resources.add(MultiPartFeature.class);
+        resources.add(MultipartFormDataInput.class);
         resources.add(UserService.class);
         resources.add(LabService.class);
         resources.add(ProjectService.class);
