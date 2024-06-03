@@ -35,9 +35,10 @@ public class PhotoUploadService {
     @Path("/file")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadPhoto(@HeaderParam("token") String token, MultipartFormDataInput input) {
-        UserEntity user = userBean.findUserByToken(token);
+
         UserEntity user2 = userBean.findUserByAuxToken(token);
-        if (user == null && user2 == null) {
+
+        if (user2 == null) {
             return Response.status(403).entity("not allowed").build();
         }
 
@@ -49,8 +50,8 @@ public class PhotoUploadService {
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                String fileName = user.getId() + ".jpg";
-                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + user.getId();
+                String fileName = user2.getId() + ".jpg";
+                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + user2.getId();
                 java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
                 if (!Files.exists(userDirectoryPath)) {
                     Files.createDirectories(userDirectoryPath);
@@ -63,14 +64,14 @@ public class PhotoUploadService {
                 String photoPath = photoBean.uploadPhoto(filePath);
 
                 if (photoPath == null) {
-                    return Response.status(500).entity("Error uploading photo").build();
+                    return Response.status(500).entity("Error uploading photo1").build();
                 }
 
                 return Response.status(200).entity(photoPath).build();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return Response.status(500).entity("Error uploading photo").build();
+                return Response.status(500).entity("Error uploading photo2").build();
             }
         }
 

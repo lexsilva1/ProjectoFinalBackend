@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 @Stateless
 public class PhotoUploadBean {
 
@@ -17,10 +18,14 @@ public class PhotoUploadBean {
 
     public void ensureDirectoryExists() {
         Path path = Paths.get(System.getProperty("user.dir"), "bin", RELATIVE_PATH);
+        ensureDirectoryExists(path);
+    }
+
+    private void ensureDirectoryExists(Path path) {
         if (!Files.exists(path)) {
             try {
                 Files.createDirectories(path);
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
@@ -36,21 +41,18 @@ public class PhotoUploadBean {
 
     public boolean isImageValid(Path imagePath) throws IOException {
         String mimeType = Files.probeContentType(imagePath);
-        return mimeType.equals("image/jpeg") || mimeType.equals("image/png");
+        return "image/jpeg".equals(mimeType) || "image/png".equals(mimeType);
     }
-    public void ensureDirectoryExists(Path path) {
-        if (!Files.exists(path)) {
-            try {
-                Files.createDirectories(path);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+
     public String uploadPhoto(Path filePath) {
         try {
             Path resizedPath = Paths.get(System.getProperty("user.dir"), "bin", RELATIVE_PATH, filePath.getFileName().toString());
             ensureDirectoryExists(resizedPath.getParent());
+
+            if (!isImageValid(filePath)) {
+                throw new IOException("Invalid image format");
+            }
+
             resizeImage(filePath, resizedPath);
             return resizedPath.toString();
         } catch (Exception e) {
@@ -58,5 +60,4 @@ public class PhotoUploadBean {
             return null;
         }
     }
-
 }

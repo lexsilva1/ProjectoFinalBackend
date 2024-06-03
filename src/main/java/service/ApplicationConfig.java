@@ -17,6 +17,7 @@ public class ApplicationConfig extends Application{
         resources.add(ProjectService.class);
         resources.add(SkillService.class);
         resources.add(InterestService.class);
+        resources.add(PhotoUploadService.class);
         return resources;
     }
 }
