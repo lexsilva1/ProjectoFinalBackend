@@ -1,5 +1,8 @@
 package bean;
 
+import entities.ProjectEntity;
+import entities.UserEntity;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import net.coobird.thumbnailator.Thumbnails;
 import javax.imageio.ImageIO;
@@ -11,6 +14,10 @@ import java.nio.file.Paths;
 
 @Stateless
 public class PhotoUploadBean {
+    @EJB
+    private UserBean userBean;
+    @EJB
+    private ProjectBean projectBean;
 
     static final String RELATIVE_PATH = "ProjectoFinalImages";
     private static final int AVATAR_WIDTH = 100;
@@ -59,5 +66,16 @@ public class PhotoUploadBean {
             e.printStackTrace();
             return null;
         }
+    }
+    public UserEntity confirmUserByToken(String token) {
+        UserEntity user = userBean.findUserByAuxToken(token);
+        if (user != null) {
+         return user;
+        }else {
+        return userBean.findUserByToken(token);
+        }
+    }
+    public ProjectEntity findProjectByName(String name) {
+        return projectBean.findProjectByName(name);
     }
 }

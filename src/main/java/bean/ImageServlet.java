@@ -17,7 +17,7 @@ public class ImageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String imageName = req.getParameter("imageName");
-        String filePath = System.getProperty("user.dir") + File.separator + "bin" + File.separator + photoUploadBean.RELATIVE_PATH + File.separator + imageName;
+        String filePath = System.getProperty("user.dir") + File.separator + photoUploadBean.RELATIVE_PATH + File.separator + imageName;
         File file = new File(filePath);
         resp.setContentType("image/jpeg");
         resp.setHeader("Content-Disposition", "inline");

@@ -32,11 +32,11 @@ public class PhotoUploadService {
     PhotoUploadBean photoBean;
 
     @POST
-    @Path("/file")
+    @Path("/userPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadPhoto(@HeaderParam("token") String token, MultipartFormDataInput input) {
 
-        UserEntity user2 = userBean.findUserByAuxToken(token);
+        UserEntity user2 = photoBean.confirmUserByToken(token);
 
         if (user2 == null) {
             return Response.status(403).entity("not allowed").build();
@@ -51,7 +51,7 @@ public class PhotoUploadService {
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
                 String fileName = user2.getId() + ".jpg";
-                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + user2.getId();
+                String uploadDirectory = System.getProperty("user.dir") + File.separator + "ProjectoFinalImages" + File.separator + user2.getId();
                 java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
                 if (!Files.exists(userDirectoryPath)) {
                     Files.createDirectories(userDirectoryPath);
