@@ -24,7 +24,7 @@ public class PhotoUploadBean {
     private static final int AVATAR_HEIGHT = 100;
 
     public void ensureDirectoryExists() {
-        Path path = Paths.get(System.getProperty("user.dir"), "bin", RELATIVE_PATH);
+        Path path = Paths.get(System.getProperty("user.dir"), RELATIVE_PATH);
         ensureDirectoryExists(path);
     }
 
@@ -53,7 +53,7 @@ public class PhotoUploadBean {
 
     public String uploadPhoto(Path filePath) {
         try {
-            Path resizedPath = Paths.get(System.getProperty("user.dir"), "bin", RELATIVE_PATH, filePath.getFileName().toString());
+            Path resizedPath = Paths.get(System.getProperty("user.dir"), RELATIVE_PATH, filePath.getFileName().toString());
             ensureDirectoryExists(resizedPath.getParent());
 
             if (!isImageValid(filePath)) {

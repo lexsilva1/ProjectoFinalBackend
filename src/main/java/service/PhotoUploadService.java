@@ -2,6 +2,7 @@ package service;
 
 import bean.PhotoUploadBean;
 import bean.UserBean;
+import entities.ProjectEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.Path;
@@ -29,6 +30,7 @@ public class PhotoUploadService {
     @EJB
     UserBean userBean;
     @EJB
+
     PhotoUploadBean photoBean;
 
     @POST
@@ -52,6 +54,52 @@ public class PhotoUploadService {
 
                 String fileName = user2.getId() + ".jpg";
                 String uploadDirectory = System.getProperty("user.dir") + File.separator + "ProjectoFinalImages" + File.separator + user2.getId();
+                java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
+                if (!Files.exists(userDirectoryPath)) {
+                    Files.createDirectories(userDirectoryPath);
+                }
+
+                java.nio.file.Path filePath = java.nio.file.Paths.get(uploadDirectory, fileName);
+                Files.write(filePath, bytes);
+
+                // Use the photoBean to handle the photo upload
+                String photoPath = photoBean.uploadPhoto(filePath);
+
+                if (photoPath == null) {
+                    return Response.status(500).entity("Error uploading photo1").build();
+                }
+
+                return Response.status(200).entity(photoPath).build();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return Response.status(500).entity("Error uploading photo2").build();
+            }
+        }
+
+        return Response.status(400).entity("No file found").build();
+    }
+    @POST
+    @Path("/projectPhoto")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public Response uploadProjectPhoto(@HeaderParam("name") String name, MultipartFormDataInput input) {
+
+        ProjectEntity project = photoBean.findProjectByName(name);
+
+        if (project == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+
+        Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
+        List<InputPart> inputParts = uploadForm.get("input");
+
+        for (InputPart inputPart : inputParts) {
+            try {
+                InputStream inputStream = inputPart.getBody(InputStream.class, null);
+                byte[] bytes = IOUtils.toByteArray(inputStream);
+
+                String fileName = project.getName() + ".jpg";
+                String uploadDirectory = System.getProperty("user.dir") + File.separator + "ProjectoFinalImages" + File.separator + project.getName();
                 java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
                 if (!Files.exists(userDirectoryPath)) {
                     Files.createDirectories(userDirectoryPath);
