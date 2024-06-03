@@ -2,6 +2,7 @@ package service;
 
 import bean.UserBean;
 import dto.UserConfirmation;
+import dto.UserDto;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
@@ -78,5 +79,18 @@ public class UserService {
         String loginToken = userBean.firstLogin(user);
         userBean.setLastActivity(user);
         return Response.status(200).entity(loginToken).build();
+    }
+    @GET
+    @Path("/{id}")
+    @Produces("application/json")
+    public Response findUserById(@HeaderParam("token") String token, @PathParam("id") int id) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        UserDto user = userBean.findUserDtoById(id);
+        if(user == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        return Response.status(200).entity(user).build();
     }
 }

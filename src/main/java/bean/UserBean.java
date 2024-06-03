@@ -241,4 +241,11 @@ public class UserBean {
         projectUserDto.setUserId(user.getId());
         return projectUserDto;
     }
+    public UserEntity findUserById(int id) {
+        return userDao.findUserById(id);
+    }
+    public UserDto findUserDtoById(int id) {
+        UserEntity user = findUserById(id);
+        return convertToDto(user);
+    }
 }
