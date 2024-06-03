@@ -261,4 +261,7 @@ public class UserBean {
         UserEntity user = findUserById(id);
         return convertToDto(user);
     }
+    public UserEntity findUserByAuxToken(String auxToken) {
+        return userDao.findUserByAuxToken(auxToken);
+    }
 }
