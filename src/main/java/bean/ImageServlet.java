@@ -1,6 +1,7 @@
 package bean;
 
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -9,17 +10,38 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 
+@WebServlet("/ProjectoFinalImages/*")
 public class ImageServlet extends HttpServlet {
 
-    private PhotoUploadBean photoUploadBean = new PhotoUploadBean();
+    private static final String SERVER_IMAGE_DIRECTORY = "C:/Users/xanos/OneDrive/Desktop/AoR/PAJ/wildfly/wildfly-30.0.1.Final/bin/ProjectoFinalImages"; // Change this to your server directory path
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String imageName = req.getParameter("imageName");
-        String filePath = System.getProperty("user.dir") + File.separator + photoUploadBean.RELATIVE_PATH + File.separator + imageName;
-        File file = new File(filePath);
-        resp.setContentType("image/jpeg");
+        String pathInfo = req.getPathInfo();
+        String imagePath = SERVER_IMAGE_DIRECTORY + pathInfo;
+
+        // Basic validation for imagePath to prevent path traversal attacks
+        if (pathInfo == null || pathInfo.contains("..")) {
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid image path");
+            return;
+        }
+
+        File file = new File(imagePath);
+
+        if (!file.exists() || !file.isFile()) {
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND, "Image not found");
+            return;
+        }
+
+        String mimeType = Files.probeContentType(file.toPath());
+        if (mimeType == null || !mimeType.startsWith("image")) {
+            resp.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, "Unsupported image type");
+            return;
+        }
+
+        resp.setContentType(mimeType);
         resp.setHeader("Content-Disposition", "inline");
         resp.setContentLength((int) file.length());
 

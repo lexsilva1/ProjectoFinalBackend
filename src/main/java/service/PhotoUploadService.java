@@ -3,25 +3,22 @@ package service;
 import bean.PhotoUploadBean;
 import bean.UserBean;
 import entities.ProjectEntity;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.apache.commons.io.IOUtils;
-import entities.UserEntity;
-import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.Response;
 
 import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
-
 import java.util.List;
 import java.util.Map;
-
 
 @Path("/upload")
 public class PhotoUploadService {
@@ -30,17 +27,15 @@ public class PhotoUploadService {
     @EJB
     UserBean userBean;
     @EJB
-
     PhotoUploadBean photoBean;
 
     @POST
     @Path("/userPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadPhoto(@HeaderParam("token") String token, MultipartFormDataInput input) {
+        UserEntity user = photoBean.confirmUserByToken(token);
 
-        UserEntity user2 = photoBean.confirmUserByToken(token);
-
-        if (user2 == null) {
+        if (user == null) {
             return Response.status(403).entity("not allowed").build();
         }
 
@@ -52,8 +47,8 @@ public class PhotoUploadService {
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                String fileName = user2.getId() + ".jpg";
-                String uploadDirectory = System.getProperty("user.dir") + File.separator + "ProjectoFinalImages" + File.separator + user2.getId();
+                String fileName = user.getId() + ".jpg";
+                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + user.getId();
                 java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
                 if (!Files.exists(userDirectoryPath)) {
                     Files.createDirectories(userDirectoryPath);
@@ -66,24 +61,28 @@ public class PhotoUploadService {
                 String photoPath = photoBean.uploadPhoto(filePath);
 
                 if (photoPath == null) {
-                    return Response.status(500).entity("Error uploading photo1").build();
+                    return Response.status(500).entity("Error uploading photo").build();
                 }
 
-                return Response.status(200).entity(photoPath).build();
+                // Construct the URL to return to the client
+                String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
+                        request.getContextPath() + "/ProjectoFinalImages/" + user.getId() + "/" + fileName;
+
+                return Response.status(200).entity(photoUrl).build();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return Response.status(500).entity("Error uploading photo2").build();
+                return Response.status(500).entity("Error uploading photo").build();
             }
         }
 
         return Response.status(400).entity("No file found").build();
     }
+
     @POST
     @Path("/projectPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadProjectPhoto(@HeaderParam("name") String name, MultipartFormDataInput input) {
-
         ProjectEntity project = photoBean.findProjectByName(name);
 
         if (project == null) {
@@ -99,7 +98,7 @@ public class PhotoUploadService {
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
                 String fileName = project.getName() + ".jpg";
-                String uploadDirectory = System.getProperty("user.dir") + File.separator + "ProjectoFinalImages" + File.separator + project.getName();
+                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + project.getName();
                 java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
                 if (!Files.exists(userDirectoryPath)) {
                     Files.createDirectories(userDirectoryPath);
@@ -112,17 +111,22 @@ public class PhotoUploadService {
                 String photoPath = photoBean.uploadPhoto(filePath);
 
                 if (photoPath == null) {
-                    return Response.status(500).entity("Error uploading photo1").build();
+                    return Response.status(500).entity("Error uploading photo").build();
                 }
 
-                return Response.status(200).entity(photoPath).build();
+                // Construct the URL to return to the client
+                String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
+                        request.getContextPath() + "/ProjectoFinalImages/" + project.getName() + "/" + fileName;
+
+                return Response.status(200).entity(photoUrl).build();
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return Response.status(500).entity("Error uploading photo2").build();
+                return Response.status(500).entity("Error uploading photo").build();
             }
         }
 
         return Response.status(400).entity("No file found").build();
     }
 }
+

@@ -11,7 +11,7 @@
 
     <servlet-mapping>
         <servlet-name>ImageServlet</servlet-name>
-        <url-pattern>/images/*</url-pattern>
+        <url-pattern>/ProjectoFinalImages/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
