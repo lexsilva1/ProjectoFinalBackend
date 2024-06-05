@@ -65,8 +65,7 @@ public class PhotoUploadService {
                 }
 
                 // Construct the URL to return to the client
-                String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                        request.getContextPath() + "/ProjectoFinalImages/" + user.getId() + "/" + fileName;
+                String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/ProjectoFinalImages/" + fileName;
 
                 return Response.status(200).entity(photoUrl).build();
 
