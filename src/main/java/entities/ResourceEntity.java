@@ -31,7 +31,7 @@ public class ResourceEntity implements Serializable {
     private String supplierContact;
     @Column (name = " stock", nullable = false, unique = false)
     private int stock;
-    @Column (name = "observations", nullable = false, unique = false)
+    @Column (name = "observations", nullable = true, unique = false)
     private String observations;
     public enum ResourceType {
         COMPONENT,
