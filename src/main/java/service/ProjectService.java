@@ -1,8 +1,10 @@
 package service;
 
 import bean.ProjectBean;
+import bean.TaskBean;
 import bean.UserBean;
 import dto.ProjectDto;
+import dto.TaskDto;
 import entities.ProjectEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,6 +20,8 @@ public class ProjectService {
     ProjectBean projectBean;
     @EJB
     UserBean userBean;
+    @EJB
+    TaskBean taskBean;
 
 
 
@@ -73,5 +77,15 @@ public class ProjectService {
     @Produces ("application/json")
     public Response findAllStatus(){
         return Response.status(200).entity(projectBean.findAllStatus()).build();
+    }
+    @POST
+    @Path("/{projectName}/tasks")
+    @Produces("application/json")
+    public Response createTask(@HeaderParam("token") String token, @PathParam("projectName") String projectName, TaskDto taskDto){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        taskBean.createTask(token,projectName,taskDto);
+        return Response.status(200).entity("task created").build();
     }
 }

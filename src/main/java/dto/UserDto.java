@@ -2,6 +2,8 @@ package dto;
 
 import entities.UserEntity;
 
+import java.util.List;
+
 public class UserDto {
     private int userId;
     private String firstName;
@@ -11,6 +13,10 @@ public class UserDto {
     private String labLocation;
     private String userPhoto;
     private UserEntity.Role role;
+    private List<String> skills;
+    private List<String> interests;
+    private List<String> projects;
+    private boolean isPrivate;
 
     public UserDto() {
     }
@@ -79,4 +85,35 @@ public class UserDto {
         this.userId = userId;
     }
 
+    public List<String> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<String> skills) {
+        this.skills = skills;
+    }
+
+    public List<String> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(List<String> interests) {
+        this.interests = interests;
+    }
+
+    public List<String> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<String> projects) {
+        this.projects = projects;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
 }

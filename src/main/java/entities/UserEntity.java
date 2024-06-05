@@ -51,6 +51,8 @@ public class UserEntity implements Serializable{
     LocalDateTime creationDate;
     @Column (name="bio", nullable = true, unique = false)
     String bio;
+    @Column (name="isPrivate", nullable = false, unique = false)
+    boolean isPrivate;
     @ManyToOne
     @JoinColumn(name = "location_id")
     private LabEntity location;
@@ -244,6 +246,38 @@ public class UserEntity implements Serializable{
 
     public void setLocation(LabEntity location) {
         this.location = location;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate;
+    }
+
+    public void setPrivate(boolean aPrivate) {
+        isPrivate = aPrivate;
+    }
+
+    public Set<InterestEntity> getInterests() {
+        return interests;
+    }
+
+    public void setInterests(Set<InterestEntity> interests) {
+        this.interests = interests;
+    }
+
+    public Set<SkillEntity> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(Set<SkillEntity> skills) {
+        this.skills = skills;
+    }
+
+    public Set<ProjectUserEntity> getProjectUsers() {
+        return projectUsers;
+    }
+
+    public void setProjectUsers(Set<ProjectUserEntity> projectUsers) {
+        this.projectUsers = projectUsers;
     }
 }
 

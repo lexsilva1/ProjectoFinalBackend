@@ -6,9 +6,7 @@ import dto.MyDto;
 import dto.ProjectUserDto;
 import dto.UserConfirmation;
 import dto.UserDto;
-import entities.LabEntity;
-import entities.ProjectUserEntity;
-import entities.UserEntity;
+import entities.*;
 import jakarta.ejb.Stateless;
 import dao.UserDao;
 import jakarta.inject.Inject;
@@ -18,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class UserBean {
@@ -238,6 +237,25 @@ public class UserBean {
         userDto.setBio(user.getBio());
         userDto.setLabLocation(user.getLocation().getLocation().name());
         userDto.setUserPhoto(user.getUserPhoto());
+        userDto.setRole(user.getRole());
+        userDto.setUserId(user.getId());
+        userDto.setPrivate(user.isPrivate());
+        List <String> projects = new ArrayList<>();
+        for(ProjectUserEntity projectUser : user.getProjectUsers()) {
+            projects.add(projectUser.getProject().getName());
+        }
+        userDto.setProjects(projects);
+        List <String> skills = new ArrayList<>();
+        Set<SkillEntity> userSkills = user.getSkills();
+        for(SkillEntity skill : userSkills) {
+            skills.add(skill.getName());
+        }
+        userDto.setSkills(skills);
+        List <String> interests = new ArrayList<>();
+        Set<InterestEntity> userInterests = user.getInterests();
+        for(InterestEntity interest : userInterests) {
+            interests.add(interest.getName());
+        }
         return userDto;
     }
     public ProjectUserDto convertToProjectUserDto(UserEntity user) {

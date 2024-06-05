@@ -60,7 +60,7 @@ public class TaskEntity implements Serializable {
             name = "task_project_users",
             joinColumns = @JoinColumn(name = "task_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-            private Set<UserEntity> projectUsers;
+            private Set<UserEntity> taskUsers;
     @Column (name = "creation_date", nullable = false, unique = false)
     LocalDate creationDate;
 
@@ -174,12 +174,12 @@ public class TaskEntity implements Serializable {
         this.externalExecutors = externalExecutors;
     }
 
-    public Set<UserEntity> getProjectUsers() {
-        return projectUsers;
+    public Set<UserEntity> getTaskUsers() {
+        return taskUsers;
     }
 
-    public void setProjectUsers(Set<UserEntity> projectUsers) {
-        this.projectUsers = projectUsers;
+    public void setTaskUsers(Set<UserEntity> projectUsers) {
+        this.taskUsers = projectUsers;
     }
 
     public LocalDate getCreationDate() {
