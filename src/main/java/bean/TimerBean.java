@@ -1,10 +1,6 @@
 package bean;
 
-import dao.TimeOutDao;
-import dao.UserDao;
-import entities.TimeOutEntity;
 import entities.UserEntity;
-import jakarta.ejb.EJB;
 import jakarta.ejb.Schedule;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
@@ -19,12 +15,7 @@ import java.util.List;
 @Singleton
 public class TimerBean {
 
-    @Inject
-    private UserDao userDao;
 
-
-    @Inject
-    TimeOutDao timeOutDao;
     @Inject
     private UserBean userBean;
 

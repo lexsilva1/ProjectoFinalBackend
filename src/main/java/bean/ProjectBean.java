@@ -35,6 +35,12 @@ public class ProjectBean {
     ResourceDao resourceDao;
     @Inject
     ProjectResourceDao projectResourceDao;
+    @Inject
+    TaskBean taskBean;
+    @Inject
+    TaskDao taskDao;
+    @Inject
+    ProjectTaskDao projectTaskDao;
 
 
     public void createDefaultProjects() {
@@ -59,8 +65,28 @@ public class ProjectBean {
             defaultProjectUser.setUser(userBean.findUserByEmail("admin@admin.com"));
             defaultProjectUser.setProjectManager(true);
             defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
-            projectUserDao.persist(defaultProjectUser);
+
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser)));
+            defaultProject.setStartDate(java.time.LocalDate.now().minusDays(5));
+            defaultProject.setEndDate(java.time.LocalDate.now().plusDays(30));
+            defaultProject.setCreatedAt(java.time.LocalDate.now());
+            TaskEntity task = new TaskEntity();
+            task.setTitle("Create the database");
+            task.setDescription("Create the database for the project");
+            task.setProject(defaultProject);
+            task.setResponsibleUser(userBean.findUserByEmail("admin@admin.com"));
+            task.setStatus(TaskEntity.Status.NOT_STARTED);
+            task.setStartDate(java.time.LocalDate.now().minusDays(5));
+            task.setEndDate(java.time.LocalDate.now().plusDays(30));
+            task.setCreationDate(java.time.LocalDate.now());
+            taskDao.persist(task);
             projectDao.persist(defaultProject);
+            ProjectTaskEntity projectTask = new ProjectTaskEntity();
+            projectTask.setProject_id(defaultProject.getId());
+            projectTask.setTask_id(task.getId());
+            projectTaskDao.persist(projectTask);
+            projectUserDao.persist(defaultProjectUser);
+
         }
     }
     public ProjectEntity findProjectByName(String name) {
@@ -88,6 +114,7 @@ public class ProjectBean {
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser.getUser()));
         }
+
         projectDto.setTeamMembers(teamMembers);
         return projectDto;
     }

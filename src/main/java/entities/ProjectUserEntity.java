@@ -20,7 +20,7 @@ public class ProjectUserEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
 

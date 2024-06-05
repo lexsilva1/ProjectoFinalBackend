@@ -3,6 +3,7 @@ package entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Set;
 
 @Entity
@@ -54,6 +55,17 @@ public class ProjectEntity implements Serializable {
     UserEntity creator;
     @Column (name = "image", nullable = true, unique = false, updatable = true)
     private String image;
+    @Column (name = "created_at", nullable = false, unique = false, updatable = false)
+    private LocalDate createdAt;
+    @Column (name = "start_date", nullable = true, unique = false, updatable = true)
+    private LocalDate startDate;
+    @Column ( name = "in_progress_date", nullable = true, unique = false, updatable = true)
+    private LocalDate inProgressDate;
+    @Column (name = "end_date", nullable = true, unique = false, updatable = true)
+    private LocalDate endDate;
+    @Column (name = "concluson_date", nullable = true, unique = false, updatable = true)
+    private LocalDate conclusionDate;
+
 
     public enum Status {
         PLANNING(100),
@@ -162,5 +174,43 @@ public class ProjectEntity implements Serializable {
         this.creator = creator;
     }
 
+    public LocalDate getCreatedAt() {
+        return createdAt;
+    }
 
+    public void setCreatedAt(LocalDate createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getInProgressDate() {
+        return inProgressDate;
+    }
+
+    public void setInProgressDate(LocalDate inProgressDate) {
+        this.inProgressDate = inProgressDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public LocalDate getConclusionDate() {
+        return conclusionDate;
+    }
+
+    public void setConclusionDate(LocalDate conclusionDate) {
+        this.conclusionDate = conclusionDate;
+    }
 }

@@ -64,4 +64,35 @@ public class TaskBean {
         taskDao.persist(task);
         return true;
     }
+    public TaskEntity createLastTask(String token, String title, String description, ProjectEntity project, UserEntity user, LocalDate startDate, LocalDate endDate,List<Integer> dependencies, List<Integer> users) {
+        TaskEntity task = new TaskEntity();
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setProject(project);
+        task.setResponsibleUser(user);
+        task.setStatus(TaskEntity.Status.NOT_STARTED);
+        task.setStartDate(project.getEndDate().minusDays(1));
+        task.setEndDate(project.getEndDate());
+        task.setCreationDate(LocalDate.now());
+        Set dependenciesSet = new HashSet();
+        for(Integer i : dependencies) {
+            TaskEntity dep = taskDao.find(i);
+            if(dep != null) {
+                dependenciesSet.add(dep);
+            }
+        }
+        task.setDependencies(dependenciesSet);
+        Set usersSet = new HashSet();
+        for(Integer i : users) {
+            UserEntity u = userBean.findUserById(i);
+            if(u != null) {
+                usersSet.add(u);
+            }
+        }
+
+        task.setCreatedBy(userBean.findUserByToken(token));
+
+        taskDao.persist(task);
+        return task;
+    }
 }

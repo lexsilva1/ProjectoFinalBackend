@@ -20,8 +20,8 @@ public class PhotoUploadBean {
     private ProjectBean projectBean;
 
     static final String RELATIVE_PATH = "ProjectoFinalImages";
-    private static final int AVATAR_WIDTH = 100;
-    private static final int AVATAR_HEIGHT = 100;
+    private static final int AVATAR_WIDTH = 300;
+    private static final int AVATAR_HEIGHT = 300;
 
     public void ensureDirectoryExists() {
         Path path = Paths.get(System.getProperty("user.dir"), RELATIVE_PATH);
