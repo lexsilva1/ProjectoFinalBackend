@@ -11,6 +11,12 @@ import java.io.Serializable;
 /**
  * TaskEntity class
  */
+@NamedQuery(name = "TaskEntity.findTaskByProject", query = "SELECT t FROM TaskEntity t WHERE t.project = :project")
+@NamedQuery(name = "TaskEntity.findTaskByUser", query = "SELECT t FROM TaskEntity t WHERE t.responsibleUser = :user")
+@NamedQuery(name = "TaskEntity.findTaskByStatus", query = "SELECT t FROM TaskEntity t WHERE t.status = :status")
+@NamedQuery(name = "TaskEntity.findTaskByDate", query = "SELECT t FROM TaskEntity t WHERE t.startDate = :date")
+@NamedQuery(name = "TaskEntity.findTaskByTitle", query = "SELECT t FROM TaskEntity t WHERE t.title = :title")
+
 public class TaskEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
