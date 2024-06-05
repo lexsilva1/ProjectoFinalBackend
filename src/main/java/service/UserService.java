@@ -94,4 +94,17 @@ public class UserService {
         }
         return Response.status(200).entity(user).build();
     }
+    @PUT
+    @Path("/{id}")
+    @Produces("application/json")
+    public Response updateUser(@HeaderParam("token") String token, @PathParam("id") int id, UserDto userDto) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        if(userBean.updateUser(id, userDto)) {
+            return Response.status(200).entity("user updated").build();
+        } else {
+            return Response.status(404).entity("user not found").build();
+        }
+    }
 }

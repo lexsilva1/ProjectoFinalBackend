@@ -264,4 +264,19 @@ public class UserBean {
     public UserEntity findUserByAuxToken(String auxToken) {
         return userDao.findUserByAuxToken(auxToken);
     }
+    public boolean updateUser(int id, UserDto userDto) {
+        UserEntity user = findUserById(id);
+        if(user == null) {
+            return false;
+        }
+        user.setFirstName(userDto.getFirstName());
+        user.setLastName(userDto.getLastName());
+        user.setNickname(userDto.getNickname());
+        user.setBio(userDto.getBio());
+        user.setLocation(labDao.findLabByLocation(LabEntity.Lab.valueOf(userDto.getLabLocation())));
+        user.setUserPhoto(userDto.getUserPhoto());
+        user.setBio(userDto.getBio());
+        userDao.merge(user);
+        return true;
+    }
 }

@@ -118,7 +118,7 @@ public class ProjectBean {
         skillDto.setId(skill.getId()); // Correct usage
         return skillDto;
     }
-    public List<ProjectDto> findProjects(String projectName, String projectLab, String projectSkill, String projectInterest, int projectStatus, int projectUser) {
+    public List<ProjectDto> findProjects(String projectName, String projectLab, String projectSkill, String projectInterest, int projectStatus, int projectUser, String token) {
         List<ProjectEntity> projectEntities = projectDao.findProjects(projectName, projectLab, projectSkill, projectInterest, projectStatus, projectUser);
 
         List<ProjectDto> projectDtos = new ArrayList<>();
