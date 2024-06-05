@@ -256,6 +256,7 @@ public class UserBean {
         for(InterestEntity interest : userInterests) {
             interests.add(interest.getName());
         }
+        userDto.setInterests(interests);
         return userDto;
     }
     public ProjectUserDto convertToProjectUserDto(UserEntity user) {
