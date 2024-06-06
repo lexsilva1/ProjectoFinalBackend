@@ -34,13 +34,12 @@ public class ProjectBean {
     @Inject
     ResourceDao resourceDao;
     @Inject
-    ProjectResourceDao projectResourceDao;
-    @Inject
     TaskBean taskBean;
     @Inject
     TaskDao taskDao;
     @Inject
     ProjectTaskDao projectTaskDao;
+
 
 
     public void createDefaultProjects() {
@@ -80,6 +79,10 @@ public class ProjectBean {
             task.setEndDate(java.time.LocalDate.now().plusDays(30));
             task.setCreationDate(java.time.LocalDate.now());
             taskDao.persist(task);
+            Set <ResourceEntity> resources = new LinkedHashSet<>();
+            ResourceEntity resource = resourceDao.findResourceByName("CPU");
+            resources.add(resource);
+            defaultProject.setResources(resources);
             projectDao.persist(defaultProject);
             ProjectTaskEntity projectTask = new ProjectTaskEntity();
             projectTask.setProject_id(defaultProject.getId());
@@ -204,24 +207,7 @@ public class ProjectBean {
             }
         }
 
-        for(ResourceDto resourceDto : projectDto.getBillOfMaterials()){
-            ResourceEntity resource = resourceDao.findResourceByName(resourceDto.getName());
 
-            ProjectResourceEntity projectResource = new ProjectResourceEntity();
-            projectResource.setProject_id(project.getId());
-            projectResource.setResource_id(resource.getId());
-            if(resource.getStock() < resourceDto.getQuantity()){
-                projectResource.setQuantity(resource.getStock());
-                resource.setStock(0);
-                resourceDao.merge(resource);
-            }
-            resource.setStock(resource.getStock() - resourceDto.getQuantity());
-            resourceDao.merge(resource);
-            projectResource.setQuantity(resourceDto.getQuantity());
-
-            projectResourceDao.persist(projectResource);
-
-        }
 
        }
        public List<String> findAllStatus(){

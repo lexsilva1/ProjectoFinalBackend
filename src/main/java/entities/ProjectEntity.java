@@ -41,7 +41,9 @@ public class ProjectEntity implements Serializable {
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "interest_id")
     )
+
     private Set<InterestEntity> interests;
+
     @Enumerated(EnumType.STRING)
     @Column( name = "status", nullable = false, unique = true, updatable = false)
     Status status;
@@ -65,6 +67,15 @@ public class ProjectEntity implements Serializable {
     private LocalDate endDate;
     @Column (name = "concluson_date", nullable = true, unique = false, updatable = true)
     private LocalDate conclusionDate;
+    @ManyToMany
+    @JoinTable(
+            name = "project_resources",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "resource_id")
+    )
+    private Set<ResourceEntity> resources;
+
+
 
 
     public enum Status {
@@ -212,5 +223,13 @@ public class ProjectEntity implements Serializable {
 
     public void setConclusionDate(LocalDate conclusionDate) {
         this.conclusionDate = conclusionDate;
+    }
+
+    public Set<ResourceEntity> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<ResourceEntity> resources) {
+        this.resources = resources;
     }
 }

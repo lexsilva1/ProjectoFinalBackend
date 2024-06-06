@@ -27,12 +27,14 @@ public class StartupBean {
     ProjectBean projectBean;
     @Inject
     InterestBean interestBean;
-
+    @Inject
+    ResourceBean resourceBean;
 
     @PostConstruct
     public void init() {
         labBean.createDefaultLocations();
         userBean.createDefaultUsers();
+        resourceBean.createDefaultResources();
         skillBean.createDefaultSkills();
         interestBean.createDefaultInterests();
         projectBean.createDefaultProjects();
