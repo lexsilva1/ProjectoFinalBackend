@@ -12,6 +12,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 @Path("/projects")
 public class ProjectService {
     @Context
@@ -94,6 +97,11 @@ public class ProjectService {
     public Response findProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
         ProjectEntity project = projectBean.findProjectByName(projectName);
         if(project == null) {
