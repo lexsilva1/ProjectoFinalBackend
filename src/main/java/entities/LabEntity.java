@@ -40,12 +40,12 @@ public class LabEntity implements Serializable {
 
 
     public enum Lab{
-        LISBOA,
-        COIMBRA,
-        PORTO,
-        TOMAR,
-        VISEU,
-        VILA_REAL
+        Lisboa,
+        Coimbra,
+        Porto,
+        Tomar,
+        Viseu,
+        Vila_Real
     }
 
 

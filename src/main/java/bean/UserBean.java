@@ -42,7 +42,7 @@ public class UserBean {
             admin.setLastName("admin");
             admin.setEmail("admin@admin.com");
             admin.setPwdHash(encryptHelper.encryptPassword("admin"));
-            admin.setLocation(labDao.findLabByLocation(LabEntity.Lab.COIMBRA));
+            admin.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             admin.setCreationDate(LocalDateTime.now());
             admin.setIsConfirmed(LocalDate.now());
             admin.setActive(true);

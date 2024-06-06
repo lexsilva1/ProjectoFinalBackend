@@ -79,12 +79,12 @@ public class ProjectEntity implements Serializable {
 
 
     public enum Status {
-        PLANNING(100),
-        READY(200),
-        APPROVED(300),
-        IN_PROGRESS(400),
-        COMPLETED(500),
-        CANCELLED(0);
+        Planning(100),
+        Ready(200),
+        Approved(300),
+        In_Progress(400),
+        Completed(500),
+        Cancelled(0);
 
         public final int value;
 

@@ -5,11 +5,6 @@ import dto.*;
 import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
-import jakarta.transaction.Transactional;
 
 import java.util.*;
 
@@ -48,7 +43,7 @@ public class ProjectBean {
         if(projectDao.findProjectByName("Forge X") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Forge X");
-            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.COIMBRA));
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.SOFTWARE);
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
@@ -106,8 +101,8 @@ public class ProjectBean {
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setImage(project.getImage());
-        projectDto.setStatus(project.getStatus().name().toLowerCase(Locale.ROOT));
-        projectDto.setLab(project.getLab().getLocation().name().toLowerCase(Locale.ROOT));
+        projectDto.setStatus(project.getStatus().name());
+        projectDto.setLab(project.getLab().getLocation().name());
         Set<String> skills = new LinkedHashSet<>();
         for (SkillEntity skill : project.getSkills()) {
             skills.add(skill.getName());

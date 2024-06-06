@@ -3,7 +3,6 @@ package bean;
 import dao.LabDao;
 import dto.LabDto;
 import entities.LabEntity;
-import jakarta.ejb.Singleton;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
@@ -19,35 +18,35 @@ private LabDao labDao;
 
     public void createDefaultLocations() {
         // Create default locations
-        if(labDao.findLabByLocation(LabEntity.Lab.LISBOA) == null) {
+        if(labDao.findLabByLocation(LabEntity.Lab.Lisboa) == null) {
             LabEntity lab1 = new LabEntity();
-            lab1.setLocation(LabEntity.Lab.LISBOA);
+            lab1.setLocation(LabEntity.Lab.Lisboa);
             labDao.persist(lab1);
         }
-        if(labDao.findLabByLocation(LabEntity.Lab.COIMBRA) == null) {
+        if(labDao.findLabByLocation(LabEntity.Lab.Coimbra) == null) {
 
             LabEntity lab2 = new LabEntity();
-            lab2.setLocation(LabEntity.Lab.COIMBRA);
+            lab2.setLocation(LabEntity.Lab.Coimbra);
             labDao.persist(lab2);
         }
-        if(labDao.findLabByLocation(LabEntity.Lab.PORTO) == null) {
+        if(labDao.findLabByLocation(LabEntity.Lab.Porto) == null) {
             LabEntity lab3 = new LabEntity();
-            lab3.setLocation(LabEntity.Lab.PORTO);
+            lab3.setLocation(LabEntity.Lab.Porto);
             labDao.persist(lab3);
         }
-        if(labDao.findLabByLocation(LabEntity.Lab.TOMAR) == null) {
+        if(labDao.findLabByLocation(LabEntity.Lab.Tomar) == null) {
             LabEntity lab4 = new LabEntity();
-            lab4.setLocation(LabEntity.Lab.TOMAR);
+            lab4.setLocation(LabEntity.Lab.Tomar);
             labDao.persist(lab4);
         }
-        if(labDao.findLabByLocation(LabEntity.Lab.VISEU) == null) {
+        if(labDao.findLabByLocation(LabEntity.Lab.Viseu) == null) {
             LabEntity lab5 = new LabEntity();
-            lab5.setLocation(LabEntity.Lab.VISEU);
+            lab5.setLocation(LabEntity.Lab.Viseu);
             labDao.persist(lab5);
         }
-        if(labDao.findLabByLocation(LabEntity.Lab.VILA_REAL) == null) {
+        if(labDao.findLabByLocation(LabEntity.Lab.Vila_Real) == null) {
             LabEntity lab6 = new LabEntity();
-            lab6.setLocation(LabEntity.Lab.VILA_REAL);
+            lab6.setLocation(LabEntity.Lab.Vila_Real);
             labDao.persist(lab6);
         }
 
