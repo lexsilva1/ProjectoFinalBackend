@@ -88,4 +88,19 @@ public class ProjectService {
         taskBean.createTask(token,projectName,taskDto);
         return Response.status(200).entity("task created").build();
     }
+    @GET
+    @Path("/{projectName}")
+    @Produces("application/json")
+    public Response findProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        ProjectEntity project = projectBean.findProjectByName(projectName);
+        if(project == null) {
+            return Response.status(404).entity("project not found").build();
+        }else{
+            ProjectDto projectDto = projectBean.convertToDto(project);
+            return Response.status(200).entity(projectDto).build();
+        }
+    }
 }

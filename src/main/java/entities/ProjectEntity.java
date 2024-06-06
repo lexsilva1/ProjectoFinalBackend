@@ -26,16 +26,16 @@ public class ProjectEntity implements Serializable {
     private String name;
     @Column(name = "description", nullable = false, unique = true, updatable = false)
     private String description;
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project" , fetch = FetchType.EAGER)
     private Set<ProjectUserEntity> projectUsers;
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_skills",
             joinColumns = @JoinColumn(name = "project_id"),
             inverseJoinColumns = @JoinColumn(name = "skill_id")
     )
     private Set<SkillEntity> skills;
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_interests",
             joinColumns = @JoinColumn(name = "project_id"),
@@ -47,7 +47,7 @@ public class ProjectEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column( name = "status", nullable = false, unique = true, updatable = false)
     Status status;
-    @ManyToOne
+    @ManyToOne (fetch = FetchType.EAGER)
     @JoinColumn (name = "lab_id", nullable = false, unique = true, updatable = false)
     private LabEntity lab;
     @Column (name="maxMembers", nullable = false, unique = false, updatable = true )

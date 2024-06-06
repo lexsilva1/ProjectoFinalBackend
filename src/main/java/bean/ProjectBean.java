@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
+import jakarta.transaction.Transactional;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -39,6 +40,8 @@ public class ProjectBean {
     TaskDao taskDao;
     @Inject
     ProjectTaskDao projectTaskDao;
+    @Inject
+    ProjectResourceDao projectResourceDao;
 
 
 
@@ -79,16 +82,19 @@ public class ProjectBean {
             task.setEndDate(java.time.LocalDate.now().plusDays(30));
             task.setCreationDate(java.time.LocalDate.now());
             taskDao.persist(task);
-            Set <ResourceEntity> resources = new LinkedHashSet<>();
-            ResourceEntity resource = resourceDao.findResourceByName("CPU");
-            resources.add(resource);
-            defaultProject.setResources(resources);
             projectDao.persist(defaultProject);
             ProjectTaskEntity projectTask = new ProjectTaskEntity();
             projectTask.setProject_id(defaultProject.getId());
             projectTask.setTask_id(task.getId());
             projectTaskDao.persist(projectTask);
             projectUserDao.persist(defaultProjectUser);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject_id(defaultProject.getId());
+            projectResource.setResource_id(resourceDao.findResourceByName("CPU").getId());
+            projectResource.setQuantity(5);
+            projectResourceDao.persist(projectResource);
+
+
 
         }
     }
@@ -157,6 +163,7 @@ public class ProjectBean {
         }
         return projectDtos;
     }
+
     public void createProject(ProjectDto projectDto, String token) {
 
         ProjectEntity project = new ProjectEntity();
