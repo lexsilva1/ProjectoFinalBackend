@@ -11,10 +11,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Stateless
 public class ProjectBean {
@@ -109,8 +106,8 @@ public class ProjectBean {
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
         projectDto.setImage(project.getImage());
-        projectDto.setStatus(project.getStatus().name());
-        projectDto.setLab(project.getLab().getLocation().name());
+        projectDto.setStatus(project.getStatus().name().toLowerCase(Locale.ROOT));
+        projectDto.setLab(project.getLab().getLocation().name().toLowerCase(Locale.ROOT));
         Set<String> skills = new LinkedHashSet<>();
         for (SkillEntity skill : project.getSkills()) {
             skills.add(skill.getName());
