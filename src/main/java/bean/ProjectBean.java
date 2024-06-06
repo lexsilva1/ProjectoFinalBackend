@@ -110,7 +110,7 @@ public class ProjectBean {
         projectDto.setDescription(project.getDescription());
         projectDto.setImage(project.getImage());
         projectDto.setStatus(project.getStatus().name());
-        projectDto.setLab(project.getLab().getLocation().ordinal());
+        projectDto.setLab(project.getLab().getLocation().name());
         Set<String> skills = new LinkedHashSet<>();
         for (SkillEntity skill : project.getSkills()) {
             skills.add(skill.getName());
@@ -180,7 +180,7 @@ public class ProjectBean {
         project.setDescription(projectDto.getDescription());
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.PLANNING);
-        project.setLab(labDao.findLabByLocation(LabEntity.Lab.values()[projectDto.getLab()]));
+        project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
         List<SkillEntity> skills = new ArrayList<>();
         for (String skillName : projectDto.getSkills()) {
             SkillEntity skill = skillDao.findSkillByName(skillName);

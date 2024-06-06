@@ -8,7 +8,7 @@ public class ProjectDto {
     private String description;
     private String image;
     private String status;
-    private int lab;
+    private String lab;
     private String [] skills;
     private String [] interests;
     private List<ProjectUserDto> teamMembers;
@@ -52,11 +52,11 @@ public class ProjectDto {
         this.status = status;
     }
 
-    public int getLab() {
+    public String getLab() {
         return lab;
     }
 
-    public void setLab(int lab) {
+    public void setLab(String lab) {
         this.lab = lab;
     }
 
