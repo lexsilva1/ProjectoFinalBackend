@@ -67,7 +67,7 @@ public class ProjectEntity implements Serializable {
     private LocalDate endDate;
     @Column (name = "concluson_date", nullable = true, unique = false, updatable = true)
     private LocalDate conclusionDate;
-    @ManyToMany
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_resources",
             joinColumns = @JoinColumn(name = "project_id"),

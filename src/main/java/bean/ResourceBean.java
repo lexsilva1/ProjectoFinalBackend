@@ -1,6 +1,7 @@
 package bean;
 
 import dao.ResourceDao;
+import dto.ResourceDto;
 import entities.ResourceEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
@@ -62,5 +63,16 @@ public class ResourceBean {
             resourceDao.persist(resource4);
         }
 
+    }
+    public ResourceDto convertToDto(ResourceEntity resourceEntity) {
+        ResourceDto resourceDto = new ResourceDto();
+        resourceDto.setId(resourceEntity.getId());
+        resourceDto.setName(resourceEntity.getName());
+        resourceDto.setDescription(resourceEntity.getDescription());
+        resourceDto.setType(resourceEntity.getType().toString());
+        resourceDto.setIdentifier(resourceEntity.getIdentifier());
+        resourceDto.setSupplier(resourceEntity.getSupplier());
+        resourceDto.setSupplierContact(resourceEntity.getSupplierContact());
+        return resourceDto;
     }
 }

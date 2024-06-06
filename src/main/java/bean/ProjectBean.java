@@ -42,6 +42,8 @@ public class ProjectBean {
     ProjectTaskDao projectTaskDao;
     @Inject
     ProjectResourceDao projectResourceDao;
+    @Inject
+    ResourceBean resourceBean;
 
 
 
@@ -125,6 +127,12 @@ public class ProjectBean {
         }
 
         projectDto.setTeamMembers(teamMembers);
+        Set<ResourceEntity> resources = project.getResources();
+        List<ResourceDto> resourceDtos = new ArrayList<>();
+        for (ResourceEntity resource : resources) {
+            resourceDtos.add(resourceBean.convertToDto(resource));
+        }
+        projectDto.setBillOfMaterials(resourceDtos);
         return projectDto;
     }
 
