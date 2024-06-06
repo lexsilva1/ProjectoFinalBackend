@@ -13,6 +13,7 @@ public class ProjectDto {
     private String [] interests;
     private List<ProjectUserDto> teamMembers;
     private List<ResourceDto> billOfMaterials;
+    private int maxTeamMembers;
 
 
 
@@ -89,5 +90,13 @@ public class ProjectDto {
 
     public void setBillOfMaterials(List<ResourceDto> billOfMaterials) {
         this.billOfMaterials = billOfMaterials;
+    }
+
+    public int getMaxTeamMembers() {
+        return maxTeamMembers;
+    }
+
+    public void setMaxTeamMembers(int maxTeamMembers) {
+        this.maxTeamMembers = maxTeamMembers;
     }
 }

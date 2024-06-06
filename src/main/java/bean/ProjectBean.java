@@ -133,6 +133,7 @@ public class ProjectBean {
             resourceDtos.add(resourceBean.convertToDto(resource));
         }
         projectDto.setBillOfMaterials(resourceDtos);
+        projectDto.setMaxTeamMembers(project.getMaxMembers());
         return projectDto;
     }
 
