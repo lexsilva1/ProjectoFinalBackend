@@ -223,7 +223,6 @@ public class ProjectBean {
                 projectUser.setUser(UserDao.findUserById(projectUserDto.getUserId()));
                 projectUser.setProjectManager(projectUserDto.isProjectManager());
                 projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
-                projectUser.setProjectManager(projectUserDto.isProjectManager());
                 projectUserDao.persist(projectUser);
             }
         }
@@ -298,13 +297,7 @@ public class ProjectBean {
     public boolean acceptRequest(String token, String projectName, Integer userId, OperationType operationType) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
-        UserEntity targetUser;
-
-        if (operationType == OperationType.ACCEPT_INVITATION) {
-            targetUser = user;
-        } else {
-            targetUser = UserDao.findUserById(userId);
-        }
+        UserEntity targetUser = operationType == OperationType.ACCEPT_INVITATION ? user : UserDao.findUserById(userId);
 
         ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, targetUser);
         if (user == null || project == null || targetUser == null || projectUser == null) {
@@ -408,5 +401,13 @@ public class ProjectBean {
         projectResource.setQuantity(quantity);
         projectResourceDao.persist(projectResource);
         return true;
+    }
+    public String decodeProjectName(String projectName) {
+        try {
+            return java.net.URLDecoder.decode(projectName, "UTF-8");
+        } catch (java.io.UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

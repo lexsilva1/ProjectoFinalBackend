@@ -21,6 +21,7 @@ public class ApplicationConfig extends Application{
         resources.add(InterestService.class);
         resources.add(PhotoUploadService.class);
         resources.add(ObjectMapperContextResolver.class);
+        resources.add(ResourceService.class);
         return resources;
     }
 

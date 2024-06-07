@@ -6,6 +6,9 @@ import entities.ResourceEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Stateless
 public class ResourceBean {
     @EJB
@@ -74,5 +77,14 @@ public class ResourceBean {
         resourceDto.setSupplier(resourceEntity.getSupplier());
         resourceDto.setSupplierContact(resourceEntity.getSupplierContact());
         return resourceDto;
+    }
+    public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
+
+        List<ResourceEntity> entities = resourceDao.findAllResources(name, identifier, supplier, type);
+        List <ResourceDto> dtos = new ArrayList<>();
+        for(ResourceEntity entity: entities) {
+            dtos.add(convertToDto(entity));
+        }
+        return dtos;
     }
 }

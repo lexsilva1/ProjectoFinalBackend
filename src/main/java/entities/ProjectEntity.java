@@ -1,10 +1,13 @@
 package entities;
 
+import dto.ProjectDto;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -97,7 +100,22 @@ public class ProjectEntity implements Serializable {
         }
 
     }
+    public ProjectEntity() {
+    }
 
+    public ProjectEntity(ProjectDto projectDto, UserEntity creator) {
+        this.name = projectDto.getName();
+        this.description = projectDto.getDescription();
+        this.image = projectDto.getImage();
+        this.status = Status.valueOf(projectDto.getStatus());
+        this.maxMembers = projectDto.getMaxTeamMembers();
+        this.startDate = projectDto.startDate;
+        this.endDate = projectDto.endDate;
+        this.createdAt = LocalDateTime.now();
+        this.creator = creator;
+
+
+    }
     public int getId() {
         return id;
     }
