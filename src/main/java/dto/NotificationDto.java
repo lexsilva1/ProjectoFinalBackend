@@ -8,7 +8,7 @@ public class NotificationDto {
     private int userId;
     private String projectName;
     private boolean isRead;
-    private int senderId;
+
     private LocalDateTime time;
 
     public NotificationDto() {
@@ -46,13 +46,6 @@ public class NotificationDto {
         isRead = read;
     }
 
-    public int getSenderId() {
-        return senderId;
-    }
-
-    public void setSenderId(int senderId) {
-        this.senderId = senderId;
-    }
 
     public LocalDateTime getTime() {
         return time;

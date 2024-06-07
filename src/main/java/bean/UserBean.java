@@ -49,6 +49,47 @@ public class UserBean {
             admin.setRole(UserEntity.Role.Admin);
             userDao.persist(admin);
         }
+        if (userDao.findUserByEmail("tozemarreco@gmail.com") == null) {
+            UserEntity toze = new UserEntity();
+            toze.setFirstName("António");
+            toze.setLastName("Marreco");
+            toze.setEmail("tozemarreco@gmail.com");
+            toze.setPwdHash(encryptHelper.encryptPassword("123Oliveira#4"));
+            toze.setLocation(labDao.findLabByLocation(LabEntity.Lab.Porto));
+            toze.setCreationDate(LocalDateTime.now().minusDays(5));
+            toze.setIsConfirmed(LocalDate.now().minusDays(3));
+            toze.setActive(true);
+            toze.setRole(UserEntity.Role.User);
+            toze.setPrivate(true);
+            userDao.persist(toze);
+        }
+        if (userDao.findUserByEmail("mariamacaca@gmail.com") == null) {
+            UserEntity maria = new UserEntity();
+            maria.setFirstName("Maria");
+            maria.setLastName("Simia");
+            maria.setNickname("MariaMacaca");
+            maria.setCreationDate(LocalDateTime.now().minusDays(3));
+            maria.setIsConfirmed(LocalDate.now().minusDays(1));
+            maria.setActive(true);
+            maria.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            maria.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
+            maria.setRole(UserEntity.Role.User);
+            userDao.persist(maria);
+        }
+           if (userDao.findUserByEmail("zetamplario@gmail.com")==null){
+               UserEntity ze = new UserEntity();
+               ze.setFirstName("Jose");
+               ze.setLastName("Teutao");
+               ze.setNickname("KnightTemplar");
+                ze.setCreationDate(LocalDateTime.now().minusDays(2));
+                ze.setIsConfirmed(LocalDate.now().minusDays(1));
+                ze.setActive(true);
+                ze.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+                ze.setLocation(labDao.findLabByLocation(LabEntity.Lab.Tomar));
+                ze.setRole(UserEntity.Role.User);
+                userDao.persist(ze);
+           }
+
 
     }
 
