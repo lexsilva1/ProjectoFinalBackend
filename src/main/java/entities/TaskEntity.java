@@ -3,6 +3,7 @@ package entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.io.Serializable;
 
@@ -34,15 +35,16 @@ public class TaskEntity implements Serializable {
     private TaskEntity parentTask;
 
     @OneToMany(mappedBy = "parentTask")
+    @Column (name = "dependencies", nullable = true, unique = false)
     private Set<TaskEntity> dependencies;
     @Column (name = "description", nullable = false, unique = false)
     String description;
     @Column (name = "status", nullable = false, unique = false)
     Status status;
     @Column (name = "Start_date", nullable = false, unique = false)
-    LocalDate startDate;
+    LocalDateTime startDate;
     @Column (name = "End_date", nullable = false, unique = false)
-    LocalDate endDate;
+    LocalDateTime endDate;
     @ManyToOne
     @JoinColumn(name = "project_id")
     private ProjectEntity project;
@@ -62,7 +64,7 @@ public class TaskEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
             private Set<UserEntity> taskUsers;
     @Column (name = "creation_date", nullable = false, unique = false)
-    LocalDate creationDate;
+    LocalDateTime creationDate;
 
         public UserEntity getResponsibleUser() {
             return responsibleUser;
@@ -134,19 +136,19 @@ public class TaskEntity implements Serializable {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
@@ -182,11 +184,11 @@ public class TaskEntity implements Serializable {
         this.taskUsers = projectUsers;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 }

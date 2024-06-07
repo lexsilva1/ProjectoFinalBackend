@@ -13,7 +13,7 @@ public class ProjectResourceEntity implements Serializable {
     private int id;
     @JoinColumn(name = "resource_id", nullable = false, unique = true, updatable = false)
     private int resource_id;
-    @Column(name = "quantity", nullable = false, unique = false)
+    @Column(name = "quantity", nullable = false, unique = false, columnDefinition = "int default 0", updatable = true)
     private int quantity;
     @JoinColumn(name = "project_id", nullable = false, unique = true, updatable = false)
     private int project_id;
@@ -49,4 +49,11 @@ public class ProjectResourceEntity implements Serializable {
     public void setProject_id(int project_id) {
         this.project_id = project_id;
     }
+
+    public ProjectResourceEntity() {
+    }
+
+
+
+
 }

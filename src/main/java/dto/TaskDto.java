@@ -1,6 +1,7 @@
 package dto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -15,9 +16,9 @@ public class TaskDto {
     private Set<Integer> dependencies;
     private Set<Integer> users;
     private String Status;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private LocalDate creationDate;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
+    private LocalDateTime creationDate;
     private String externalExecutors;
     public TaskDto() {
     }
@@ -94,27 +95,27 @@ public class TaskDto {
         Status = status;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 

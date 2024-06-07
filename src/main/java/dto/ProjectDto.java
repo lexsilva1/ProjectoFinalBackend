@@ -1,5 +1,7 @@
 package dto;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +16,9 @@ public class ProjectDto {
     private List<ProjectUserDto> teamMembers;
     private List<ResourceDto> billOfMaterials;
     private int maxTeamMembers;
+    public LocalDateTime startDate;
+    public LocalDateTime endDate;
+
 
 
 
@@ -98,5 +103,21 @@ public class ProjectDto {
 
     public void setMaxTeamMembers(int maxTeamMembers) {
         this.maxTeamMembers = maxTeamMembers;
+    }
+
+    public LocalDateTime getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDateTime startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDateTime getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDateTime endDate) {
+        this.endDate = endDate;
     }
 }

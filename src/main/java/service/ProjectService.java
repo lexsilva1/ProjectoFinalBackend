@@ -72,8 +72,11 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
-        projectBean.createProject(projectDto,token);
-        return Response.status(200).entity("project created").build();
+        boolean created = projectBean.createProject(projectDto,token);
+        if(!created) {
+            return Response.status(404).entity("project not created").build();
+        }
+        return Response.status(201).entity("project created").build();
     }
     @GET
     @Path("/allStatus")
@@ -110,5 +113,108 @@ public class ProjectService {
             ProjectDto projectDto = projectBean.convertToDto(project);
             return Response.status(200).entity(projectDto).build();
         }
+    }
+    @POST
+    @Path("/{projectName}/apply")
+    @Produces("application/json")
+    public Response applyProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        projectBean.applyToProject(token,projectName);
+        return Response.status(200).entity("applied").build();
+    }
+    @POST
+    @Path("/{projectName}/invite")
+    @Produces("application/json")
+    public Response inviteUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        projectBean.inviteToProject(token,projectName,userId);
+        return Response.status(200).entity("invited").build();
+    }
+
+    @POST
+    @Path("/{projectName}/accept")
+    @Produces("application/json")
+    public Response acceptUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String operationTypeString = operationType; // rename the string variable
+        ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
+        projectBean.acceptRequest(token,projectName,userId,operationTypeEnum);
+        return Response.status(200).entity("accepted").build();
+    }
+    @PUT
+    @Path("/{projectName}/promote")
+    @Produces("application/json")
+    public Response promoteUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        projectBean.promoteUserToProjectManager(token,projectName,userId);
+        return Response.status(200).entity("promoted").build();
+    }
+    @PUT
+    @Path("/{projectName}/demote")
+    @Produces("application/json")
+    public Response demoteUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        projectBean.demoteUserFromProjectManager(token,projectName,userId);
+        return Response.status(200).entity("demoted").build();
+    }
+    @POST
+    @Path("/{projectName}/leave")
+    @Produces("application/json")
+    public Response leaveProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        try {
+            projectName = URLDecoder.decode(projectName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        projectBean.leaveProject(token,projectName);
+        return Response.status(200).entity("left").build();
+    }
+    @POST
+    @Path("")
+    @Produces("application/json")
+    public Response updateProject(@HeaderParam("token") String token, ProjectDto projectDto){
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        projectBean.createProject(projectDto,token);
+        return Response.status(200).entity("project updated").build();
     }
 }

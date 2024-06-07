@@ -71,7 +71,7 @@ public class Notifications {
         } catch (JsonProcessingException e) {
             System.out.println("Error in processing JSON: " + e.getMessage());
         }
-        if(notificationDto != null) {
+        if (notificationDto != null) {
             UserEntity user = userBean.findUserById(notificationDto.getUserId());
             NotificationEntity notification = new NotificationEntity();
             notification.setUser(user);
@@ -79,10 +79,17 @@ public class Notifications {
             notification.setRead(notificationDto.isRead());
             notification.setTime(notificationDto.getTime());
             notificationDao.persist(notification);
+        }
+        if (session != null) {
+            System.out.println("sending.......... " + msg);
+            try {
+                session.getBasicRemote().sendText(msg);
+            } catch (IOException e) {
+                System.out.println("Something went wrong!");
             }
 
 
         }
     }
-
+}
 

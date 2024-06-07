@@ -84,7 +84,16 @@ public class TaskDao extends AbstractDao<TaskEntity>{
         }
         return em.createQuery(cq).getResultList();
     }
-
+    public TaskEntity findFinalTask(ProjectEntity project) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<TaskEntity> cq = cb.createQuery(TaskEntity.class);
+        Root<TaskEntity> task = cq.from(TaskEntity.class);
+        cq.select(task);
+        Join<ProjectEntity,TaskEntity> projectJoin = task.join("project");
+        cq.where(cb.equal(projectJoin.get("id"), project.getId()));
+        cq.where(cb.equal(task.get("title"), "Final Presentation"));
+        return em.createQuery(cq).getSingleResult();
+    }
 
 
 

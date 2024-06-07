@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -24,7 +25,7 @@ public class ProjectEntity implements Serializable {
     private int id;
     @Column(name = "name", nullable = false, unique = true, updatable = false)
     private String name;
-    @Column(name = "description", nullable = false, unique = true, updatable = false)
+    @Column(name = "description", nullable = false, unique = false, updatable = true)
     private String description;
     @OneToMany(mappedBy = "project" , fetch = FetchType.EAGER)
     private Set<ProjectUserEntity> projectUsers;
@@ -45,10 +46,10 @@ public class ProjectEntity implements Serializable {
     private Set<InterestEntity> interests;
 
     @Enumerated(EnumType.STRING)
-    @Column( name = "status", nullable = false, unique = true, updatable = false)
+    @Column( name = "status", nullable = false, unique = false, updatable = true)
     Status status;
     @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn (name = "lab_id", nullable = false, unique = true, updatable = false)
+    @JoinColumn (name = "lab_id", nullable = false, unique = false, updatable = false)
     private LabEntity lab;
     @Column (name="maxMembers", nullable = false, unique = false, updatable = true )
     int maxMembers;
@@ -58,15 +59,15 @@ public class ProjectEntity implements Serializable {
     @Column (name = "image", nullable = true, unique = false, updatable = true)
     private String image;
     @Column (name = "created_at", nullable = false, unique = false, updatable = false)
-    private LocalDate createdAt;
-    @Column (name = "start_date", nullable = true, unique = false, updatable = true)
-    private LocalDate startDate;
+    private LocalDateTime createdAt;
+    @Column (name = "start_date", nullable = false, unique = false, updatable = true)
+    private LocalDateTime startDate;
     @Column ( name = "in_progress_date", nullable = true, unique = false, updatable = true)
-    private LocalDate inProgressDate;
-    @Column (name = "end_date", nullable = true, unique = false, updatable = true)
-    private LocalDate endDate;
+    private LocalDateTime inProgressDate;
+    @Column (name = "end_date", nullable = false, unique = false, updatable = true)
+    private LocalDateTime endDate;
     @Column (name = "concluson_date", nullable = true, unique = false, updatable = true)
-    private LocalDate conclusionDate;
+    private LocalDateTime conclusionDate;
     @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_resources",
@@ -185,43 +186,43 @@ public class ProjectEntity implements Serializable {
         this.creator = creator;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getInProgressDate() {
+    public LocalDateTime getInProgressDate() {
         return inProgressDate;
     }
 
-    public void setInProgressDate(LocalDate inProgressDate) {
+    public void setInProgressDate(LocalDateTime inProgressDate) {
         this.inProgressDate = inProgressDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 
-    public LocalDate getConclusionDate() {
+    public LocalDateTime getConclusionDate() {
         return conclusionDate;
     }
 
-    public void setConclusionDate(LocalDate conclusionDate) {
+    public void setConclusionDate(LocalDateTime conclusionDate) {
         this.conclusionDate = conclusionDate;
     }
 

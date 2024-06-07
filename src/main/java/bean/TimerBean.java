@@ -32,7 +32,7 @@ public class TimerBean {
         List<UserEntity> timedOutUsers = userBean.findTimedOutUsers();
         for (UserEntity user : timedOutUsers) {
             userBean.forcedLogout(user);
-            notifier.send(user.getToken(), "User " + user.getFirstName() + user.getLastName() + " has been logged out due to inactivity.");
+            notifier.send(user.getToken(), "You have been logged out due to inactivity.");
             System.out.println("User " + user.getEmail() + " has been logged out due to inactivity.");
         }
 

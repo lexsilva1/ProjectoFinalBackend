@@ -5,6 +5,8 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import java.util.HashSet;
 import java.util.Set;
 
+
+
 @ApplicationPath("/rest")
 public class ApplicationConfig extends Application{
 
@@ -18,6 +20,9 @@ public class ApplicationConfig extends Application{
         resources.add(SkillService.class);
         resources.add(InterestService.class);
         resources.add(PhotoUploadService.class);
+        resources.add(ObjectMapperContextResolver.class);
         return resources;
     }
+
 }
+

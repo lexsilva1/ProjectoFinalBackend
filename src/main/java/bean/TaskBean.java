@@ -70,7 +70,7 @@ public class TaskBean {
         return true;
 
     }
-    public TaskEntity createLastTask(String token,ProjectEntity project, UserEntity user, LocalDate startDate, LocalDate endDate,List<Integer> dependencies, List<Integer> users) {
+    public TaskEntity createLastTask(String token,ProjectEntity project, UserEntity user, LocalDateTime startDate, LocalDateTime endDate, List<Integer> users) {
         TaskEntity task = new TaskEntity();
         task.setTitle("Final Presentation");
         task.setDescription("Final presentation of the finalized project");
@@ -79,15 +79,7 @@ public class TaskBean {
         task.setStatus(TaskEntity.Status.NOT_STARTED);
         task.setStartDate(project.getEndDate().minusDays(1));
         task.setEndDate(project.getEndDate());
-        task.setCreationDate(LocalDate.now());
-        Set dependenciesSet = new HashSet();
-        for(Integer i : dependencies) {
-            TaskEntity dep = taskDao.find(i);
-            if(dep != null) {
-                dependenciesSet.add(dep);
-            }
-        }
-        task.setDependencies(dependenciesSet);
+        task.setCreationDate(LocalDateTime.now());
         Set usersSet = new HashSet();
         for(Integer i : users) {
             UserEntity u = userBean.findUserById(i);

@@ -14,8 +14,8 @@ public class ProjectTaskEntity implements Serializable {
     private int id;
     @JoinColumn(name = "task_id", nullable = false, unique = true, updatable = false)
     private int task_id;
-    @JoinColumn(name = "project_id", nullable = false, unique = true, updatable = false)
-    private int project_id;
+    @JoinColumn(name = "projectName", nullable = false, unique = true, updatable = false)
+    private String projectName;
 
     public int getId() {
         return id;
@@ -33,11 +33,11 @@ public class ProjectTaskEntity implements Serializable {
         this.task_id = task_id;
     }
 
-    public int getProject_id() {
-        return project_id;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setProject_id(int project_id) {
-        this.project_id = project_id;
+    public void setProject_id(String projectName) {
+        this.projectName = projectName;
     }
 }

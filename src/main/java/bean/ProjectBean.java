@@ -5,7 +5,8 @@ import dto.*;
 import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.*;
 
 @Stateless
@@ -48,7 +49,7 @@ public class ProjectBean {
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
-            defaultProject.setStatus((ProjectEntity.Status.READY));
+            defaultProject.setStatus((ProjectEntity.Status.Planning));
             defaultProject.setDescription("Forge X is a project that aims to create a new software that will revolutionize the way we interact with technology.");
             defaultProject.setMaxMembers(5);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.KNOWLEDGE);
@@ -63,22 +64,22 @@ public class ProjectBean {
             defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
 
             defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser)));
-            defaultProject.setStartDate(java.time.LocalDate.now().minusDays(5));
-            defaultProject.setEndDate(java.time.LocalDate.now().plusDays(30));
-            defaultProject.setCreatedAt(java.time.LocalDate.now());
+            defaultProject.setStartDate(java.time.LocalDateTime.now().minusDays(5));
+            defaultProject.setEndDate(java.time.LocalDateTime.now().plusDays(30));
+            defaultProject.setCreatedAt(java.time.LocalDateTime.now());
             TaskEntity task = new TaskEntity();
             task.setTitle("Create the database");
             task.setDescription("Create the database for the project");
             task.setProject(defaultProject);
             task.setResponsibleUser(userBean.findUserByEmail("admin@admin.com"));
             task.setStatus(TaskEntity.Status.NOT_STARTED);
-            task.setStartDate(java.time.LocalDate.now().minusDays(5));
-            task.setEndDate(java.time.LocalDate.now().plusDays(30));
-            task.setCreationDate(java.time.LocalDate.now());
+            task.setStartDate(java.time.LocalDateTime.now().minusDays(5));
+            task.setEndDate(java.time.LocalDateTime.now().plusDays(30));
+            task.setCreationDate(java.time.LocalDateTime.now());
             taskDao.persist(task);
             projectDao.persist(defaultProject);
             ProjectTaskEntity projectTask = new ProjectTaskEntity();
-            projectTask.setProject_id(defaultProject.getId());
+            projectTask.setProject_id(defaultProject.getName());
             projectTask.setTask_id(task.getId());
             projectTaskDao.persist(projectTask);
             projectUserDao.persist(defaultProjectUser);
@@ -117,7 +118,6 @@ public class ProjectBean {
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser.getUser()));
         }
-
         projectDto.setTeamMembers(teamMembers);
         Set<ResourceEntity> resources = project.getResources();
         List<ResourceDto> resourceDtos = new ArrayList<>();
@@ -126,6 +126,8 @@ public class ProjectBean {
         }
         projectDto.setBillOfMaterials(resourceDtos);
         projectDto.setMaxTeamMembers(project.getMaxMembers());
+        projectDto.setStartDate(project.getStartDate());
+        projectDto.setEndDate(project.getEndDate());
         return projectDto;
     }
 
@@ -165,14 +167,26 @@ public class ProjectBean {
         return projectDtos;
     }
 
-    public void createProject(ProjectDto projectDto, String token) {
+    public boolean createProject(ProjectDto projectDto, String token) {
+        if(projectDao.findProjectByName(projectDto.getName()) != null) {
+            return false;
+        }
 
         ProjectEntity project = new ProjectEntity();
         project.setName(projectDto.getName());
         project.setDescription(projectDto.getDescription());
         project.setImage(projectDto.getImage());
-        project.setStatus(ProjectEntity.Status.PLANNING);
+        project.setStatus(ProjectEntity.Status.Planning);
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
+        project.setCreator(userBean.findUserByToken(token));
+        project.setMaxMembers(projectDto.getMaxTeamMembers());
+        project.setCreatedAt(java.time.LocalDateTime.now());
+        if(projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
+            project.setStartDate(java.time.LocalDateTime.now());
+            project.setEndDate(java.time.LocalDateTime.now().plusDays(30));
+        }
+        project.setStartDate(projectDto.getStartDate());
+        project.setEndDate(projectDto.getEndDate());
         List<SkillEntity> skills = new ArrayList<>();
         for (String skillName : projectDto.getSkills()) {
             SkillEntity skill = skillDao.findSkillByName(skillName);
@@ -200,10 +214,9 @@ public class ProjectBean {
             }
         }
         project.setInterests(new LinkedHashSet<>(interests));
-        project.setCreator(userBean.findUserByToken(token));
-        project.setMaxMembers(projectDto.getTeamMembers().size());
-        projectDao.persist(project);
-        for(int i = 0; i < project.getMaxMembers(); i++) {
+
+
+        for(int i = 0; i < projectDto.getTeamMembers().size(); i++) {
             for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
                 projectUser.setProject(project);
@@ -215,8 +228,24 @@ public class ProjectBean {
             }
         }
 
-
-
+        Set resourceSet = new LinkedHashSet<>();
+        for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
+            ResourceEntity resource = resourceDao.findResourceByName(resourceDto.getName());
+            if (resource == null) {
+                resource = new ResourceEntity();
+                resource.setName(resourceDto.getName());
+                resourceDao.persist(resource);
+            }
+            resourceSet.add(resource);
+        }
+        project.setResources(resourceSet);
+        TaskEntity lastTask = taskBean.createLastTask(token, project, userBean.findUserByToken(token), project.getStartDate(), project.getEndDate(), List.of(userBean.findUserByToken(token).getId()));
+        ProjectTaskEntity projectTask = new ProjectTaskEntity();
+        projectTask.setProject_id(project.getName());
+        projectTask.setTask_id(lastTask.getId());
+        projectTaskDao.persist(projectTask);
+        projectDao.persist(project);
+        return true;
        }
        public List<String> findAllStatus(){
         List<String> status = new ArrayList<>();
@@ -225,5 +254,159 @@ public class ProjectBean {
         }
         return status;
        }
+    public boolean applyToProject(String token, String projectName) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
+        if (user == null || project == null) {
+            return false;
+        }
+        if(projectUser != null) {
+            return false;
+        }
+        projectUser.setProject(project);
+        projectUser.setUser(user);
+        projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.APPLIED);
+        projectUser.setProjectManager(false);
+        projectUserDao.persist(projectUser);
+        return true;
+    }
 
+    public boolean inviteToProject(String token, String projectName, int userId) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        UserEntity invitedUser = UserDao.findUserById(userId);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, invitedUser);
+        if (user == null || project == null || invitedUser == null) {
+            return false;
+        }
+        if(projectUser != null) {
+            return false;
+        }
+        projectUser.setProject(project);
+        projectUser.setUser(invitedUser);
+        projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
+        projectUser.setProjectManager(false);
+        projectUserDao.persist(projectUser);
+        return true;
+    }
+    public enum OperationType {
+        ACCEPT_INVITATION,
+        ACCEPT_APPLICATION
+    }
+
+    public boolean acceptRequest(String token, String projectName, Integer userId, OperationType operationType) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        UserEntity targetUser;
+
+        if (operationType == OperationType.ACCEPT_INVITATION) {
+            targetUser = user;
+        } else {
+            targetUser = UserDao.findUserById(userId);
+        }
+
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, targetUser);
+        if (user == null || project == null || targetUser == null || projectUser == null) {
+            return false;
+        }
+
+        if (operationType == OperationType.ACCEPT_INVITATION) {
+            if (projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.INVITED) {
+                return false;
+            }
+        } else if (operationType == OperationType.ACCEPT_APPLICATION) {
+            if (projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.APPLIED) {
+                return false;
+            }
+        }
+
+        projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+        projectUserDao.persist(projectUser);
+        return true;
+    }
+
+    public boolean rejectInvitation(String token, String projectName) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
+        if (user == null || project == null || projectUser == null) {
+            return false;
+        }
+        if(projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.INVITED) {
+            return false;
+        }
+        projectUserDao.remove(projectUser);
+        return true;
+    }
+
+    public boolean leaveProject(String token, String projectName) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
+        if (user == null || project == null || projectUser == null) {
+            return false;
+        }
+        projectUserDao.remove(projectUser);
+        return true;
+    }
+    public boolean removeUserFromProject(String token, String projectName, int userId) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        UserEntity removedUser = UserDao.findUserById(userId);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, removedUser);
+        if (user == null || project == null || removedUser == null || projectUser == null) {
+            return false;
+        }
+        projectUserDao.remove(projectUser);
+        return true;
+    }
+    public boolean promoteUserToProjectManager(String token, String projectName, int userId) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        UserEntity promotedUser = UserDao.findUserById(userId);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, promotedUser);
+        if (user == null || project == null || promotedUser == null || projectUser == null) {
+            return false;
+        }
+        projectUser.setProjectManager(true);
+        projectUserDao.persist(projectUser);
+        return true;
+    }
+    public boolean demoteUserFromProjectManager(String token, String projectName, int userId) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        UserEntity demotedUser = UserDao.findUserById(userId);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, demotedUser);
+        if (user == null || project == null || demotedUser == null || projectUser == null) {
+            return false;
+        }
+        projectUser.setProjectManager(false);
+        projectUserDao.persist(projectUser);
+        return true;
+    }
+    public boolean changeProjectStatus(String token, String projectName, String status) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (user == null || project == null) {
+            return false;
+        }
+        project.setStatus(ProjectEntity.Status.valueOf(status));
+        projectDao.persist(project);
+        return true;
+    }
+    public boolean addResourceToProject(String token, String projectName, String resourceName, int quantity) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ResourceEntity resource = resourceDao.findResourceByName(resourceName);
+        if (user == null || project == null || resource == null) {
+            return false;
+        }
+        ProjectResourceEntity projectResource = new ProjectResourceEntity();
+        projectResource.setProject_id(project.getId());
+        projectResource.setResource_id(resource.getId());
+        projectResource.setQuantity(quantity);
+        projectResourceDao.persist(projectResource);
+        return true;
+    }
 }
