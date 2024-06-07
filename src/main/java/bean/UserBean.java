@@ -65,6 +65,7 @@ public class UserBean {
         }
         if (userDao.findUserByEmail("mariamacaca@gmail.com") == null) {
             UserEntity maria = new UserEntity();
+            maria.setEmail("mariamacaca@gmail.com");
             maria.setFirstName("Maria");
             maria.setLastName("Simia");
             maria.setNickname("MariaMacaca");
@@ -78,6 +79,7 @@ public class UserBean {
         }
            if (userDao.findUserByEmail("zetamplario@gmail.com")==null){
                UserEntity ze = new UserEntity();
+               ze.setEmail("zetamplario@gmail.com");
                ze.setFirstName("Jose");
                ze.setLastName("Teutao");
                ze.setNickname("KnightTemplar");
