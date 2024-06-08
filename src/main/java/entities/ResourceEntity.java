@@ -8,18 +8,20 @@ import java.io.Serializable;
 @Table(name = "resources")
 @NamedQuery(name = "Resource.findResourceById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")
 @NamedQuery(name = "Resource.findResourceByName", query = "SELECT r FROM ResourceEntity r WHERE r.name = :name")
+@NamedQuery(name = "Resource.findREsourceByNameAndSupplier", query = "SELECT r FROM ResourceEntity r WHERE r.name = :name AND r.supplier = :supplier")
 @NamedQuery(name = "Resource.findResourceByType", query = "SELECT r FROM ResourceEntity r WHERE r.type = :type")
 @NamedQuery(name = "Resource.findResourceBySupplier", query = "SELECT r FROM ResourceEntity r WHERE r.supplier = :supplier")
-
+@NamedQuery(name = "Resource.countResources", query = "SELECT COUNT(r) FROM ResourceEntity r")
+@NamedQuery(name = "Resource.findResourceByIdentifier", query = "SELECT r FROM ResourceEntity r WHERE r.identifier = :identifier")
 public class ResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
-    @Column(name = "name", nullable = false, unique = true, updatable = false)
+    @Column(name = "name", nullable = false, unique = false, updatable = false)
     private String name;
-    @Column(name = "description", nullable = false, unique = true, updatable = false)
+    @Column(name = "description", nullable = false, unique = false, updatable = false)
     private String description;
     @Column (name = "type", nullable = false, unique = false)
     private ResourceType type;

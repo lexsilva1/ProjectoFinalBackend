@@ -3,6 +3,7 @@ package service;
 import bean.ProjectBean;
 import bean.ResourceBean;
 import bean.UserBean;
+import dto.ResourceDto;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -29,5 +30,18 @@ public class ResourceService {
             return Response.status(403).entity("not allowed").build();
         }
         return Response.status(200).entity(resourceBean.findAllResources(resourceName,resourceIdentifier,supplier,resourceType)).build();
+    }
+    @POST
+    @Path("")
+    @Consumes("application/json")
+    public Response createResource(@HeaderParam("token") String token, ResourceDto resourceDto) {
+        if (userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        if (resourceBean.findResourceByNameAndSupplier(resourceDto.getName(),resourceDto.getSupplier()) != null) {
+            return Response.status(404).entity("resource already exists").build();
+        }
+        resourceBean.createResource(resourceDto);
+        return Response.status(200).entity("resource created").build();
     }
 }

@@ -87,4 +87,38 @@ public class ResourceBean {
         }
         return dtos;
     }
+    public ResourceEntity findResourceByName(String name) {
+        return resourceDao.findResourceByName(name);
+    }
+    public void createResource(ResourceDto resourceDto) {
+        ResourceEntity resource = new ResourceEntity();
+        resource.setName(resourceDto.getName());
+        resource.setDescription(resourceDto.getDescription());
+        resource.setIdentifier(generateResourceIdentifier(resourceDto));
+        resource.setSupplier(resourceDto.getSupplier());
+        resource.setSupplierContact(resourceDto.getSupplierContact());
+
+        resource.setType(ResourceEntity.ResourceType.valueOf(resourceDto.getType()));
+        resourceDao.persist(resource);
+    }
+    public String generateResourceIdentifier(ResourceDto resourceDto) {
+        if (resourceDto.getIdentifier() == null || resourceDto.getIdentifier().isEmpty()) {
+            String identifier = resourceDto.getName().substring(0, 3).toUpperCase() + "-";
+            if (resourceDto.getType().equals("COMPONENT")) {
+                identifier += "C";
+            } else if (resourceDto.getType().equals("RESOURCE")) {
+                identifier += "R";
+            }
+            identifier += "-" + resourceDao.countResources();
+            return identifier;
+        }
+
+        return resourceDto.getIdentifier();
+    }
+    public ResourceEntity findResourcebyIdentifier(String identifier) {
+        return resourceDao.findResourceByIdentifier(identifier);
+    }
+    public ResourceEntity findResourceByNameAndSupplier(String name, String supplier) {
+        return resourceDao.findResourceByNameAndSupplier(name, supplier);
+    }
 }

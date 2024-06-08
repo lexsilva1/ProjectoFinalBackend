@@ -5,8 +5,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Table(name = "chat")
+
 @Entity
+@Table(name = "chat")
 @NamedQuery(name = "ChatEntity.getChatByProject", query = "SELECT c FROM ChatEntity c WHERE c.project = :project")
 public class ChatEntity implements Serializable {
     @Id
