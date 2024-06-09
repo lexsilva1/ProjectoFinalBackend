@@ -105,6 +105,7 @@ public class ResourceBean {
         resource.setSupplier(resourceDto.getSupplier());
         resource.setSupplierContact(resourceDto.getSupplierContact());
         resource.setBrand(resourceDto.getBrand());
+        resource.setStock(resourceDto.getStock());
         resource.setType(ResourceEntity.ResourceType.valueOf(resourceDto.getType()));
         resourceDao.persist(resource);
     }
