@@ -29,6 +29,7 @@ public class ResourceBean {
             resource1.setSupplier("Intel");
             resource1.setSupplierContact("customersupport@intel.com");
             resource1.setType(ResourceEntity.ResourceType.COMPONENT);
+            resource1.setBrand("Intel");
             resourceDao.persist(resource1);
         }
         if(resourceDao.findResourceByName("RAM") == null) {
@@ -40,6 +41,7 @@ public class ResourceBean {
             resource2.setSupplier("Kingston");
             resource2.setSupplierContact("9123455678");
             resource2.setType(ResourceEntity.ResourceType.COMPONENT);
+            resource2.setBrand("Kingston");
             resourceDao.persist(resource2);
         }
          if(resourceDao.findResourceByName("Office365 License") == null) {
@@ -52,6 +54,7 @@ public class ResourceBean {
              resource3.setSupplier("Microsoft");
              resource3.setSupplierContact("21345667788");
              resource3.setType(ResourceEntity.ResourceType.RESOURCE);
+             resource3.setBrand("Microsoft");
              resourceDao.persist(resource3);
          }
         if(resourceDao.findResourceByName("Windows 10 License") == null) {
@@ -63,6 +66,7 @@ public class ResourceBean {
             resource4.setSupplier("Microsoft");
             resource4.setSupplierContact("21345667788");
             resource4.setType(ResourceEntity.ResourceType.RESOURCE);
+            resource4.setBrand("Microsoft");
             resourceDao.persist(resource4);
         }
 

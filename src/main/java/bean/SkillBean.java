@@ -2,12 +2,14 @@ package bean;
 
 import dao.SkillDao;
 import dto.SkillDto;
+import entities.InterestEntity;
 import entities.SkillEntity;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class SkillBean {
@@ -190,5 +192,15 @@ public class SkillBean {
         skill.setName(skillDto.getName());
         skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
         skillDao.persist(skill);
+    }
+    public Set<SkillEntity> convertStringToSkillEntities(Set<String> skills){
+        return skillDao.findSkillsByName(skills);
+    }
+    public Set<String> convertSkillEntitiestoString(Set<SkillEntity> skills){
+        Set skillEntities = (Set) skills;
+        for(SkillEntity skill : skills){
+            skillEntities.add(skill.getName());
+        }
+        return skillEntities;
     }
 }

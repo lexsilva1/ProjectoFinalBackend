@@ -6,6 +6,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class SkillDao extends AbstractDao<SkillEntity>
@@ -36,6 +37,15 @@ public class SkillDao extends AbstractDao<SkillEntity>
     public List<SkillEntity> findAllSkills() {
         try {
             return em.createNamedQuery("SkillEntity.findAllSkills").getResultList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+public Set<SkillEntity> findSkillsByName(Set<String> names) {
+        try {
+            return (Set<SkillEntity>) em.createNamedQuery("SkillEntity.findSkillsByName").setParameter("names", names)
+                    .getResultList();
+
         } catch (Exception e) {
             return null;
         }

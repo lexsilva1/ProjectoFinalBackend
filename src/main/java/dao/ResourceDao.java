@@ -28,6 +28,7 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
         }
     }
 
+
     public List<ResourceEntity> findAllResources(String name, String identifier, String supplier, String type) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ResourceEntity> cq = cb.createQuery(ResourceEntity.class);

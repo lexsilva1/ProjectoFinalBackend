@@ -37,6 +37,10 @@ public class ProjectBean {
     ProjectResourceDao projectResourceDao;
     @Inject
     ResourceBean resourceBean;
+    @Inject
+    SkillBean skillBean;
+    @Inject
+    InterestBean interestBean;
 
 
 
@@ -104,16 +108,10 @@ public class ProjectBean {
         projectDto.setImage(project.getImage());
         projectDto.setStatus(project.getStatus().name());
         projectDto.setLab(project.getLab().getLocation().name());
-        Set<String> skills = new LinkedHashSet<>();
-        for (SkillEntity skill : project.getSkills()) {
-            skills.add(skill.getName());
-        }
-        projectDto.setSkills(skills.toArray(new String[0]));
-        Set<String> interests = new LinkedHashSet<>();
-        for (InterestEntity interest : project.getInterests()) {
-            interests.add(interest.getName());
-        }
-        projectDto.setInterests(interests.toArray(new String[0]));
+
+        projectDto.setSkills(skillBean.convertSkillEntitiestoString(project.getSkills()));
+
+        projectDto.setInterests(interestBean.convertInterestEntitiesToString(project.getInterests()));
         List<ProjectUserDto> teamMembers = new ArrayList<>();
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser.getUser()));
@@ -187,36 +185,11 @@ public class ProjectBean {
         }
         project.setStartDate(projectDto.getStartDate());
         project.setEndDate(projectDto.getEndDate());
-        List<SkillEntity> skills = new ArrayList<>();
-        for (String skillName : projectDto.getSkills()) {
-            SkillEntity skill = skillDao.findSkillByName(skillName);
-            if (skill != null) {
-                skills.add(skill);
-            }else{
-                skill = new SkillEntity();
-                skill.setName(skillName);
-                skillDao.persist(skill);
-                skills.add(skill);
 
-            }
-        }
-        project.setSkills(new LinkedHashSet<>(skills));
-        List<InterestEntity> interests = new ArrayList<>();
-        for (String interestName : projectDto.getInterests()) {
-            InterestEntity interest = interestDao.findInterestByName(interestName);
-            if (interest != null) {
-                interests.add(interest);
-            }else {
-                interest = new InterestEntity();
-                interest.setName(interestName);
-                interestDao.persist(interest);
-                interests.add(interest);
-            }
-        }
-        project.setInterests(new LinkedHashSet<>(interests));
+        project.setSkills(skillBean.convertStringToSkillEntities(projectDto.getSkills()));
+        project.setInterests(interestBean.convertStringToInterestEntities(projectDto.getInterests()));
 
-
-        for(int i = 0; i < projectDto.getTeamMembers().size(); i++) {
+        for(int i = 0; i < projectDto.getMaxTeamMembers(); i++) {
             for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
                 projectUser.setProject(project);

@@ -8,6 +8,7 @@ import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class InterestBean {
@@ -110,6 +111,16 @@ public class InterestBean {
         interest.setName(interestDto.getName());
         interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
         interestDao.persist(interest);
+    }
+    public Set<InterestEntity> convertStringToInterestEntities(Set<String> interests){
+        return interestDao.findInterestsByName(interests);
+    }
+    public Set<String> convertInterestEntitiesToString(Set<InterestEntity> interests){
+        Set <String> interestNames = null;
+        for(InterestEntity interest : interests){
+            interestNames.add(interest.getName());
+        }
+        return interestNames;
     }
 }
 

@@ -35,6 +35,8 @@ public class ResourceEntity implements Serializable {
     private int stock;
     @Column (name = "observations", nullable = true, unique = false)
     private String observations;
+    @Column (name = "brand", nullable = false, unique = false)
+    private String brand;
     public enum ResourceType {
         COMPONENT,
         RESOURCE
@@ -112,5 +114,13 @@ public class ResourceEntity implements Serializable {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

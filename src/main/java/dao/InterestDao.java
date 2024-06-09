@@ -40,4 +40,13 @@ public class InterestDao extends AbstractDao<InterestEntity> {
             return null;
         }
     }
+    public Set<InterestEntity> findInterestsByName(Set<String> names) {
+        try {
+            return (Set<InterestEntity>) em.createNamedQuery("InterestEntity.findInterestsByName").setParameter("names", names)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

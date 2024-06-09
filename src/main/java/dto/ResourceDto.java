@@ -10,6 +10,7 @@ public class ResourceDto {
     private String supplierContact;
     private int quantity;
     private String observations;
+    private String brand;
 
     public ResourceDto() {
     }
@@ -84,5 +85,13 @@ public class ResourceDto {
 
     public void setObservations(String observations) {
         this.observations = observations;
+    }
+
+    public String getBrand() {
+        return brand;
+    }
+
+    public void setBrand(String brand) {
+        this.brand = brand;
     }
 }

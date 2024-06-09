@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ProjectDto {
     private String name;
@@ -11,8 +12,8 @@ public class ProjectDto {
     private String image;
     private String status;
     private String lab;
-    private String [] skills;
-    private String [] interests;
+    private Set<String> skills;
+    private Set<String> interests;
     private List<ProjectUserDto> teamMembers;
     private List<ResourceDto> billOfMaterials;
     private int maxTeamMembers;
@@ -65,19 +66,19 @@ public class ProjectDto {
         this.lab = lab;
     }
 
-    public String [] getSkills() {
+    public Set<String> getSkills() {
         return skills;
     }
 
-    public void setSkills(String [] skills) {
+    public void setSkills(Set<String> skills) {
         this.skills = skills;
     }
 
-    public String [] getInterests() {
+    public Set<String> getInterests() {
         return interests;
     }
 
-    public void setInterests(String [] interests) {
+    public void setInterests(Set<String> interests) {
         this.interests = interests;
     }
 
