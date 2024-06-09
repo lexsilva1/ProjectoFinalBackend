@@ -82,7 +82,7 @@ public class ResourceBean {
         resourceDto.setSupplierContact(resourceEntity.getSupplierContact());
         resourceDto.setBrand(resourceEntity.getBrand());
         resourceDto.setStock(resourceEntity.getStock());
-
+        resourceDto.setObservations(resourceEntity.getObservations());
         return resourceDto;
     }
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
