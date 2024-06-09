@@ -1,11 +1,14 @@
 package websocket;
 
+import bean.NotificationBean;
+import bean.ProjectBean;
 import bean.UserBean;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dao.NotificationDao;
 import dto.NotificationDto;
 import entities.NotificationEntity;
+import entities.ProjectEntity;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
@@ -23,10 +26,12 @@ import java.util.List;
 public class Notifications {
 
     @EJB
-    private NotificationDao notificationDao;
+    private NotificationBean notificationBean;
 
     @EJB
     private UserBean userBean;
+    @EJB
+    ProjectBean projectBean;
 
     HashMap<String, Session> sessions = new HashMap<String, Session>();
     private ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
@@ -72,14 +77,11 @@ public class Notifications {
             System.out.println("Error in processing JSON: " + e.getMessage());
         }
         if (notificationDto != null) {
-            UserEntity user = userBean.findUserById(notificationDto.getUserId());
-            NotificationEntity notification = new NotificationEntity();
-            notification.setUser(user);
-            notification.setMessage(notificationDto.getMessage());
-            notification.setRead(notificationDto.isRead());
-            notification.setTime(notificationDto.getTime());
-            notificationDao.persist(notification);
+        notificationBean.createNotification(notificationDto);
         }
+        UserEntity user = userBean.findUserById(notificationDto.getUserId());
+        session = sessions.get(user.getToken());
+
         if (session != null) {
             System.out.println("sending.......... " + msg);
             try {

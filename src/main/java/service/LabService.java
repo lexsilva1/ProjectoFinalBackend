@@ -1,6 +1,7 @@
 package service;
 
 import bean.LabBean;
+import bean.UserBean;
 import dao.UserDao;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
@@ -20,8 +21,8 @@ public class LabService {
     private HttpServletRequest request;
     @EJB
     LabBean labBean;
-    @Inject
-    UserDao userDao;
+    @EJB
+    UserBean userBean;
 
 
     @GET
@@ -31,8 +32,8 @@ public class LabService {
         if(token == null) {
             return Response.status(403).entity("not allowed").build();
         }else{
-            UserEntity user = userDao.findUserByToken(token);
-            UserEntity user2 = userDao.findUserByAuxToken(token);
+            UserEntity user = userBean.findUserByToken(token);
+            UserEntity user2 = userBean.findUserByAuxToken(token);
             if(user == null && user2 == null){
                 return Response.status(404).entity("not found").build();
             }

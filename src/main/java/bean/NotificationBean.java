@@ -8,6 +8,7 @@ import entities.NotificationEntity;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class NotificationBean {
         NotificationEntity entity = new NotificationEntity();
         entity.setMessage(dto.getMessage());
         entity.setRead(dto.isRead());
-        entity.setTime(dto.getTime());
+        entity.setTime(LocalDateTime.now());
         entity.setUser(userDao.findUserById(dto.getUserId()));
         entity.setProject(projectDao.findProjectByName(dto.getProjectName()));
         if(entity.getUser() == null || entity.getProject() == null) {
