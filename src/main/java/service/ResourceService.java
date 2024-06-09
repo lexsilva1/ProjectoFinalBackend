@@ -29,6 +29,7 @@ public class ResourceService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         return Response.status(200).entity(resourceBean.findAllResources(resourceName,resourceIdentifier,supplier,resourceType)).build();
     }
     @POST
