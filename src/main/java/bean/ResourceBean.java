@@ -80,6 +80,7 @@ public class ResourceBean {
         resourceDto.setIdentifier(resourceEntity.getIdentifier());
         resourceDto.setSupplier(resourceEntity.getSupplier());
         resourceDto.setSupplierContact(resourceEntity.getSupplierContact());
+        resourceDto.setBrand(resourceEntity.getBrand());
         return resourceDto;
     }
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
@@ -101,7 +102,7 @@ public class ResourceBean {
         resource.setIdentifier(generateResourceIdentifier(resourceDto));
         resource.setSupplier(resourceDto.getSupplier());
         resource.setSupplierContact(resourceDto.getSupplierContact());
-
+        resource.setBrand(resourceDto.getBrand());
         resource.setType(ResourceEntity.ResourceType.valueOf(resourceDto.getType()));
         resourceDao.persist(resource);
     }
