@@ -8,6 +8,7 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -197,7 +198,7 @@ public class SkillBean {
         return skillDao.findSkillsByName(skills);
     }
     public Set<String> convertSkillEntitiestoString(Set<SkillEntity> skills){
-        Set skillEntities = (Set) skills;
+        Set<String> skillEntities = new HashSet<>();
         for(SkillEntity skill : skills){
             skillEntities.add(skill.getName());
         }

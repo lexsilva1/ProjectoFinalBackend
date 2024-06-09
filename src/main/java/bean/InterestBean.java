@@ -7,6 +7,7 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -116,7 +117,7 @@ public class InterestBean {
         return interestDao.findInterestsByName(interests);
     }
     public Set<String> convertInterestEntitiesToString(Set<InterestEntity> interests){
-        Set <String> interestNames = null;
+        Set <String> interestNames = new HashSet<>();
         for(InterestEntity interest : interests){
             interestNames.add(interest.getName());
         }
