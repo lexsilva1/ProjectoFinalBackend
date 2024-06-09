@@ -91,6 +91,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         taskBean.createTask(token,projectName,taskDto);
         return Response.status(200).entity("task created").build();
     }
@@ -101,6 +102,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         ProjectEntity project = projectBean.findProjectByName(projectName);
         if(project == null) {
@@ -117,6 +119,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.applyToProject(token,projectName);
         return Response.status(200).entity("applied").build();
@@ -128,6 +131,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.inviteToProject(token,projectName,userId);
         return Response.status(200).entity("invited").build();
@@ -140,6 +144,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         String operationTypeString = operationType; // rename the string variable
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
@@ -153,6 +158,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.promoteUserToProjectManager(token,projectName,userId);
         return Response.status(200).entity("promoted").build();
@@ -164,6 +170,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.demoteUserFromProjectManager(token,projectName,userId);
         return Response.status(200).entity("demoted").build();
@@ -175,6 +182,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.leaveProject(token,projectName);
         return Response.status(200).entity("left").build();
@@ -186,6 +194,7 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         projectBean.createProject(projectDto,token);
         return Response.status(200).entity("project updated").build();
     }

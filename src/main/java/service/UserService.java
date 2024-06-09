@@ -88,6 +88,7 @@ public class UserService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(404).entity("user not found").build();
         }
+        userBean.setLastActivity(token);
         UserDto user = userBean.findUserDtoById(id);
         if(user == null) {
             return Response.status(404).entity("user not found").build();
@@ -101,6 +102,7 @@ public class UserService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(404).entity("user not found").build();
         }
+        userBean.setLastActivity(token);
         if(userBean.updateUser(id, userDto)) {
             return Response.status(200).entity("user updated").build();
         } else {

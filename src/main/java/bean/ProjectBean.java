@@ -202,12 +202,12 @@ public class ProjectBean {
 
         Set resourceSet = new LinkedHashSet<>();
         for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
-            ResourceEntity resource = resourceDao.findResourceByName(resourceDto.getName());
-            if (resource == null) {
-                resource = new ResourceEntity();
-                resource.setName(resourceDto.getName());
-                resourceDao.persist(resource);
-            }
+            ResourceEntity resource = resourceDao.findResourceByIdentifier(resourceDto.getIdentifier());
+        ProjectResourceEntity projectResource = new ProjectResourceEntity();
+        projectResource.setProject_id(project.getId());
+        projectResource.setResource_id(resource.getId());
+        projectResource.setQuantity(resourceDto.getQuantity());
+        projectResourceDao.persist(projectResource);
             resourceSet.add(resource);
         }
         project.setResources(resourceSet);

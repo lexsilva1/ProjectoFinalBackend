@@ -341,4 +341,9 @@ public class UserBean {
         userDao.merge(user);
         return true;
     }
+    public void setLastActivity(String token){
+        UserEntity user = userDao.findUserByToken(token);
+        user.setLastActivity(LocalDateTime.now());
+        userDao.merge(user);
+    }
 }
