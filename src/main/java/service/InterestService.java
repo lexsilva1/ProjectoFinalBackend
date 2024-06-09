@@ -5,9 +5,7 @@ import dto.InterestDto;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
@@ -27,10 +25,12 @@ public class InterestService {
     }
     @POST
     @Path("")
-    public Response createInterest(InterestDto interestDto) {
+    @Produces("application/json")
+    public Response createInterest(@HeaderParam("token") String token, InterestDto interestDto) {
         if(interestBean.findInterestByName(interestDto.getName()) != null) {
             return Response.status(404).entity("interest already exists").build();
         }
+        userBean.setLastActivity(token);
         interestBean.createInterest(interestDto);
         return Response.status(200).entity("interest created").build();
     }

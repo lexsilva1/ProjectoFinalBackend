@@ -38,6 +38,7 @@ public class ResourceService {
         if (userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
         if (resourceBean.findResourceByNameAndSupplier(resourceDto.getName(),resourceDto.getSupplier()) != null) {
             return Response.status(404).entity("resource already exists").build();
         }

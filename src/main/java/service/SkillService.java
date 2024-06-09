@@ -4,10 +4,7 @@ import bean.SkillBean;
 import bean.UserBean;
 import dto.SkillDto;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.Response;
@@ -28,10 +25,12 @@ public class SkillService {
     }
     @POST
     @Path("")
+    @Produces("application/json")
     public Response createSkill(@HeaderParam("token") String token, SkillDto skillDto) {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(404).entity("user not found").build();
         }
+        userBean.setLastActivity(token);
         if(skillBean.findSkillByName(skillDto.getName()) != null) {
             return Response.status(404).entity("skill already exists").build();
         }
