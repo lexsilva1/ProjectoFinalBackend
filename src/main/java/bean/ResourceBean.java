@@ -81,6 +81,8 @@ public class ResourceBean {
         resourceDto.setSupplier(resourceEntity.getSupplier());
         resourceDto.setSupplierContact(resourceEntity.getSupplierContact());
         resourceDto.setBrand(resourceEntity.getBrand());
+        resourceDto.setStock(resourceEntity.getStock());
+
         return resourceDto;
     }
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
