@@ -4,6 +4,8 @@ import dao.SkillDao;
 import dto.SkillDto;
 import entities.InterestEntity;
 import entities.SkillEntity;
+import jakarta.ejb.EJB;
+import jakarta.ejb.EJBs;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
@@ -16,6 +18,10 @@ import java.util.Set;
 public class SkillBean {
     @Inject
     private SkillDao skillDao;
+    @EJB
+    private UserBean userBean;
+    @EJB
+    private ProjectBean projectBean;
 
     public void createDefaultSkills(){
         if(skillDao.findSkillByName("Java") == null){
@@ -203,5 +209,36 @@ public class SkillBean {
             skillEntities.add(skill.getName());
         }
         return skillEntities;
+    }
+    public boolean addSkillToUser(String token, String skillName){
+        SkillEntity skill = skillDao.findSkillByName(skillName);
+        if(skill == null){
+            return false;
+        }
+        return userBean.addSkillToUser(token, skill);
+    }
+    public boolean removeSkillFromUser(String token, String skillName){
+        SkillEntity skill = skillDao.findSkillByName(skillName);
+        if(skill == null){
+            return false;
+        }
+        return userBean.removeSkillFromUser(token, skill);
+    }
+    public boolean addSkilltoProject(String token, int projectId, String skillName){
+        SkillEntity skill = skillDao.findSkillByName(skillName);
+        if(skill == null){
+            return false;
+        }
+        return projectBean.addSkillToProject(token,projectId, skill);
+    }
+    public boolean removeSkillFromProject(String token, int projectId, String skillName){
+        SkillEntity skill = skillDao.findSkillByName(skillName);
+        if(skill == null){
+            return false;
+        }
+        return projectBean.removeSkillFromProject(token, projectId, skill);
+    }
+    public SkillEntity findSkillByName(String token, String skillName){
+        return skillDao.findSkillByName(skillName);
     }
 }

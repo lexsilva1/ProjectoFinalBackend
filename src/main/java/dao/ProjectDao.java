@@ -114,4 +114,13 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
 
         return em.createQuery(cq).getResultList();
     }
+    public ProjectEntity findProjectById(int id) {
+        try {
+            return (ProjectEntity) em.createNamedQuery("ProjectEntity.findProjectById").setParameter("id", id)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

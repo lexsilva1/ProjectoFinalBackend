@@ -3,6 +3,7 @@ package bean;
 import dao.InterestDao;
 import dto.InterestDto;
 import entities.InterestEntity;
+import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
@@ -15,6 +16,10 @@ import java.util.Set;
 public class InterestBean {
     @Inject
     private InterestDao interestDao;
+    @EJB
+    private UserBean userBean;
+    @EJB
+    private ProjectBean projectBean;
 
     public InterestBean() {
     }
@@ -122,6 +127,38 @@ public class InterestBean {
             interestNames.add(interest.getName());
         }
         return interestNames;
+    }
+    public boolean addInterestToProject(String token, int projectId, String interestName){
+        InterestEntity interest = interestDao.findInterestByName(interestName);
+        if(interest == null){
+            return false;
+        }
+        projectBean.addInterestToProject(token, projectId, interest);
+        return true;
+    }
+    public boolean removeInterestFromProject(String token ,int projectId, String interestName){
+        InterestEntity interest = interestDao.findInterestByName(interestName);
+        if(interest == null){
+            return false;
+        }
+        projectBean.removeInterestFromProject(token,projectId, interest);
+        return true;
+    }
+    public boolean addInterestToUser(String token, String interestName){
+        InterestEntity interest = interestDao.findInterestByName(interestName);
+        if(interest == null){
+            return false;
+        }
+        userBean.addInterestToUser(token, interest);
+        return true;
+    }
+    public boolean removeInterestFromUser(String token, String interestName){
+        InterestEntity interest = interestDao.findInterestByName(interestName);
+        if(interest == null){
+            return false;
+        }
+        userBean.removeInterestFromUser(token, interest);
+        return true;
     }
 }
 

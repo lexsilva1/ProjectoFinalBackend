@@ -43,9 +43,8 @@ public class ProjectBean {
     InterestBean interestBean;
 
 
-
     public void createDefaultProjects() {
-        if(projectDao.findProjectByName("Forge X") == null) {
+        if (projectDao.findProjectByName("Forge X") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Forge X");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
@@ -94,9 +93,9 @@ public class ProjectBean {
             projectResourceDao.persist(projectResource);
 
 
-
         }
     }
+
     public ProjectEntity findProjectByName(String name) {
         return projectDao.findProjectByName(name);
     }
@@ -130,7 +129,6 @@ public class ProjectBean {
     }
 
 
-
     public List<UserDto> findProjectUsers(ProjectEntity project) {
         List<UserEntity> projectUsers = projectUserDao.findAllProjectUsers(project);
         List<UserDto> users = new ArrayList<>();
@@ -140,6 +138,7 @@ public class ProjectBean {
 
         return users;
     }
+
     public List<SkillDto> findProjectSkills(ProjectEntity project) {
         List<SkillEntity> projectSkills = projectDao.findProjectSkills(project);
         List<SkillDto> skills = new ArrayList<>();
@@ -148,6 +147,7 @@ public class ProjectBean {
         }
         return skills;
     }
+
     public SkillDto convertToSkillDto(SkillEntity skill) {
         SkillDto skillDto = new SkillDto();
         skillDto.setName(skill.getName());
@@ -155,6 +155,7 @@ public class ProjectBean {
         skillDto.setId(skill.getId()); // Correct usage
         return skillDto;
     }
+
     public List<ProjectDto> findProjects(String projectName, String projectLab, String projectSkill, String projectInterest, int projectStatus, int projectUser, String token) {
         List<ProjectEntity> projectEntities = projectDao.findProjects(projectName, projectLab, projectSkill, projectInterest, projectStatus, projectUser);
 
@@ -166,7 +167,7 @@ public class ProjectBean {
     }
 
     public boolean createProject(ProjectDto projectDto, String token) {
-        if(projectDao.findProjectByName(projectDto.getName()) != null) {
+        if (projectDao.findProjectByName(projectDto.getName()) != null) {
             return false;
         }
 
@@ -179,7 +180,7 @@ public class ProjectBean {
         project.setCreator(userBean.findUserByToken(token));
         project.setMaxMembers(projectDto.getMaxTeamMembers());
         project.setCreatedAt(java.time.LocalDateTime.now());
-        if(projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
+        if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
             project.setStartDate(java.time.LocalDateTime.now());
             project.setEndDate(java.time.LocalDateTime.now().plusDays(30));
         }
@@ -189,7 +190,7 @@ public class ProjectBean {
         project.setSkills(skillBean.convertStringToSkillEntities(projectDto.getSkills()));
         project.setInterests(interestBean.convertStringToInterestEntities(projectDto.getInterests()));
 
-        for(int i = 0; i < projectDto.getMaxTeamMembers(); i++) {
+        for (int i = 0; i < projectDto.getMaxTeamMembers(); i++) {
             for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
                 projectUser.setProject(project);
@@ -203,11 +204,11 @@ public class ProjectBean {
         Set resourceSet = new LinkedHashSet<>();
         for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
             ResourceEntity resource = resourceDao.findResourceByIdentifier(resourceDto.getIdentifier());
-        ProjectResourceEntity projectResource = new ProjectResourceEntity();
-        projectResource.setProject_id(project.getId());
-        projectResource.setResource_id(resource.getId());
-        projectResource.setQuantity(resourceDto.getQuantity());
-        projectResourceDao.persist(projectResource);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject_id(project.getId());
+            projectResource.setResource_id(resource.getId());
+            projectResource.setQuantity(resourceDto.getQuantity());
+            projectResourceDao.persist(projectResource);
             resourceSet.add(resource);
         }
         project.setResources(resourceSet);
@@ -218,14 +219,16 @@ public class ProjectBean {
         projectTaskDao.persist(projectTask);
         projectDao.persist(project);
         return true;
-       }
-       public List<String> findAllStatus(){
+    }
+
+    public List<String> findAllStatus() {
         List<String> status = new ArrayList<>();
-        for(ProjectEntity.Status s : ProjectEntity.Status.values()){
+        for (ProjectEntity.Status s : ProjectEntity.Status.values()) {
             status.add(s.name());
         }
         return status;
-       }
+    }
+
     public boolean applyToProject(String token, String projectName) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -233,7 +236,7 @@ public class ProjectBean {
         if (user == null || project == null) {
             return false;
         }
-        if(projectUser != null) {
+        if (projectUser != null) {
             return false;
         }
         projectUser.setProject(project);
@@ -252,7 +255,7 @@ public class ProjectBean {
         if (user == null || project == null || invitedUser == null) {
             return false;
         }
-        if(projectUser != null) {
+        if (projectUser != null) {
             return false;
         }
         projectUser.setProject(project);
@@ -262,6 +265,7 @@ public class ProjectBean {
         projectUserDao.persist(projectUser);
         return true;
     }
+
     public enum OperationType {
         ACCEPT_INVITATION,
         ACCEPT_APPLICATION
@@ -299,7 +303,7 @@ public class ProjectBean {
         if (user == null || project == null || projectUser == null) {
             return false;
         }
-        if(projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.INVITED) {
+        if (projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.INVITED) {
             return false;
         }
         projectUserDao.remove(projectUser);
@@ -316,6 +320,7 @@ public class ProjectBean {
         projectUserDao.remove(projectUser);
         return true;
     }
+
     public boolean removeUserFromProject(String token, String projectName, int userId) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -327,6 +332,7 @@ public class ProjectBean {
         projectUserDao.remove(projectUser);
         return true;
     }
+
     public boolean promoteUserToProjectManager(String token, String projectName, int userId) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -339,6 +345,7 @@ public class ProjectBean {
         projectUserDao.persist(projectUser);
         return true;
     }
+
     public boolean demoteUserFromProjectManager(String token, String projectName, int userId) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -351,6 +358,7 @@ public class ProjectBean {
         projectUserDao.persist(projectUser);
         return true;
     }
+
     public boolean changeProjectStatus(String token, String projectName, String status) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -361,6 +369,7 @@ public class ProjectBean {
         projectDao.persist(project);
         return true;
     }
+
     public boolean addResourceToProject(String token, String projectName, String resourceName, int quantity) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -375,6 +384,7 @@ public class ProjectBean {
         projectResourceDao.persist(projectResource);
         return true;
     }
+
     public String decodeProjectName(String projectName) {
         try {
             return java.net.URLDecoder.decode(projectName, "UTF-8");
@@ -382,5 +392,47 @@ public class ProjectBean {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public boolean addSkillToProject(String token, int projectid, SkillEntity skill) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectById(projectid);
+        if (user == null || project == null || skill == null) {
+            return false;
+        }
+        project.getSkills().add(skill);
+        projectDao.persist(project);
+        return true;
+    }
+
+    public boolean removeSkillFromProject(String token, int projectid, SkillEntity skill) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectById(projectid);
+        if (user == null || project == null || skill == null) {
+            return false;
+        }
+        project.getSkills().remove(skill);
+        projectDao.persist(project);
+        return true;
+    }
+    public boolean addInterestToProject(String token, int projectid, InterestEntity interest) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectById(projectid);
+        if (user == null || project == null || interest == null) {
+            return false;
+        }
+        project.getInterests().add(interest);
+        projectDao.persist(project);
+        return true;
+    }
+    public boolean removeInterestFromProject(String token, int projectid, InterestEntity interest) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectById(projectid);
+        if (user == null || project == null || interest == null) {
+            return false;
+        }
+        project.getInterests().remove(interest);
+        projectDao.persist(project);
+        return true;
     }
 }

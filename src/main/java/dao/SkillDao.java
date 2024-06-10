@@ -50,5 +50,6 @@ public Set<SkillEntity> findSkillsByName(Set<String> names) {
             return null;
         }
     }
+
 }
 

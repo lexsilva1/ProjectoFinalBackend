@@ -31,7 +31,48 @@ public class InterestService {
             return Response.status(404).entity("interest already exists").build();
         }
         userBean.setLastActivity(token);
-        interestBean.createInterest(interestDto);
-        return Response.status(200).entity("interest created").build();
+        if(interestDto.getProjectId() == 0) {
+            interestBean.createInterest(interestDto);
+           if( interestBean.addInterestToUser(token, interestDto.getName())) {
+               return Response.status(200).entity("interest added to your list").build();
+              } else {
+                  return Response.status(404).entity("interest not added").build();
+              }
+
+
+        } else {
+            interestBean.createInterest(interestDto);
+            if(interestBean.addInterestToProject(token, interestDto.getProjectId(), interestDto.getName())) {
+                return Response.status(200).entity("keyword added to project").build();
+            } else {
+                return Response.status(404).entity("keyword not added").build();
+            }
+
+        }
+
+
     }
+    @DELETE
+    @Path("/removeInterest")
+    @Produces("application/json")
+    public Response deleteInterest(@HeaderParam("token") String token, InterestDto interestDto) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        if(interestDto.getProjectId() == 0) {
+            if(interestBean.removeInterestFromUser(token, interestDto.getName())) {
+                return Response.status(200).entity("interest removed from your list").build();
+            } else {
+                return Response.status(404).entity("interest not removed").build();
+            }
+        } else {
+            if(interestBean.removeInterestFromProject(token, interestDto.getProjectId(), interestDto.getName())) {
+                return Response.status(200).entity("interest removed from project").build();
+            } else {
+                return Response.status(404).entity("interest not removed").build();
+            }
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ public class SkillDto {
     private int id;
     private String name;
     private String skillType;
+    private int projetcId;
 
     public SkillDto() {
     }
@@ -30,5 +31,14 @@ public class SkillDto {
 
     public void setSkillType(String skillType) {
         this.skillType = skillType;
+    }
+
+
+    public int getProjetcId() {
+        return projetcId;
+    }
+
+    public void setProjetcId(int projetcId) {
+        this.projetcId = projetcId;
     }
 }
