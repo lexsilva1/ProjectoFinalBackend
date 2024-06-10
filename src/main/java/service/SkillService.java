@@ -35,9 +35,24 @@ public class SkillService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(404).entity("user not found").build();
         }
+
         userBean.setLastActivity(token);
         if(skillBean.findSkillByName(skillDto.getName()) != null) {
-            return Response.status(404).entity("skill already exists").build();
+            if (skillDto.getProjetcId() == 0) {
+                boolean added = skillBean.addSkillToUser(token, skillDto.getName());
+                if (added) {
+                    return Response.status(200).entity("skill added to your profile").build();
+                } else {
+                    return Response.status(404).entity("skill not added").build();
+                }
+            } else {
+                boolean added = skillBean.addSkilltoProject(token, skillDto.getProjetcId(), skillDto.getName());
+                if (!added) {
+                    return Response.status(404).entity("skill not added").build();
+                } else {
+                    return Response.status(200).entity("skill added to project").build();
+                }
+            }
         }
         if(skillDto.getProjetcId() == 0) {
             skillBean.createSkill(skillDto);

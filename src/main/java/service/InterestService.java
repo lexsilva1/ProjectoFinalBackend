@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
 @Path("/interests")
@@ -20,6 +21,7 @@ public class InterestService {
 
     @GET
     @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response findAllInterests() {
         return Response.status(200).entity(interestBean.findAllInterests()).build();
     }
