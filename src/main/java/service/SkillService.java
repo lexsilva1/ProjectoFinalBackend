@@ -25,6 +25,7 @@ public class SkillService {
 
     @GET
     @Path("")
+    @Produces(MediaType.APPLICATION_JSON)
     public Response findAllSkills() {
         return Response.status(200).entity(skillBean.findAllSkills()).build();
     }
