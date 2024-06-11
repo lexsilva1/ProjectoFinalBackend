@@ -7,9 +7,9 @@ public class PasswordDto {
     public PasswordDto() {
     }
 
-    public PasswordDto(String password, String newPassword) {
+    public PasswordDto(String password, String confirmPassword) {
         this.password = password;
-        this.confirmPassword = newPassword;
+        this.confirmPassword = confirmPassword;
     }
 
     public String getPassword() {
@@ -20,7 +20,7 @@ public class PasswordDto {
         this.password = password;
     }
 
-    public String getNewPassword() {
+    public String getConfirmPassword() {
         return confirmPassword;
     }
 

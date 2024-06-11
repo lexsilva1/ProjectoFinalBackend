@@ -420,7 +420,6 @@ public class UserBean {
         return true;
     }
     public boolean resetPassword(UserEntity user) {
-        user.setPwdHash(null);
         user.setAuxToken(encryptHelper.generateToken());
         user.setActive(false);
         userDao.merge(user);

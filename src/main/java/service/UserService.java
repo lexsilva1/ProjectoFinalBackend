@@ -118,7 +118,10 @@ public class UserService {
         if(user == null) {
             return Response.status(404).entity("user not found").build();
         }
-        userBean.resetPassword(user);
+        boolean sent = userBean.resetPassword(user);
+        if(!sent) {
+            return Response.status(404).entity("email not sent").build();
+        }
         return Response.status(200).entity("password reset").build();
     }
     @PUT
@@ -128,7 +131,7 @@ public class UserService {
         if(!userBean.isPasswordValid(passwordDto.getPassword())) {
             return Response .status(406).entity("invalid password").build();
         }
-        if(!passwordDto.getNewPassword().equals(passwordDto.getPassword())) {
+        if(!passwordDto.getConfirmPassword().equals(passwordDto.getPassword())) {
             return Response.status(409).entity("passwords do not match").build();
         }
         boolean reset = userBean.confirmPasswordReset(token, passwordDto);
