@@ -56,13 +56,22 @@ public class SkillService {
             }
         }
         if(skillDto.getProjetcId() == 0) {
-            skillBean.createSkill(skillDto);
-            skillBean.addSkillToUser(token, skillDto.getName());
+             skillBean.createSkill(skillDto);
+            boolean added = skillBean.addSkillToUser(token, skillDto.getName());
+            if(added) {
+                return Response.status(201).entity("skill added to your profile").build();
+            } else {
+                return Response.status(404).entity("skill not added").build();
+            }
         } else {
             skillBean.createSkill(skillDto);
-            skillBean.addSkilltoProject(token, skillDto.getProjetcId(), skillDto.getName());
+            boolean added = skillBean.addSkilltoProject(token, skillDto.getProjetcId(), skillDto.getName());
+            if(!added) {
+                return Response.status(404).entity("skill not added").build();
+            } else {
+                return Response.status(201).entity("skill added to project").build();
+            }
         }
-        return Response.status(200).entity("skill created").build();
     }
     @DELETE
     @Path("/removeSkill")

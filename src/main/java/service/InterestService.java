@@ -29,10 +29,23 @@ public class InterestService {
     @Path("")
     @Produces("application/json")
     public Response createInterest(@HeaderParam("token") String token, InterestDto interestDto) {
-        if(interestBean.findInterestByName(interestDto.getName()) != null) {
-            return Response.status(404).entity("interest already exists").build();
-        }
         userBean.setLastActivity(token);
+        if(interestBean.findInterestByName(interestDto.getName()) != null) {
+            if(interestDto.getProjectId() == 0) {
+                if(interestBean.addInterestToUser(token, interestDto.getName())) {
+                    return Response.status(200).entity("interest added to your list").build();
+                } else {
+                    return Response.status(404).entity("interest not added").build();
+                }
+            } else {
+                if(interestBean.addInterestToProject(token, interestDto.getProjectId(), interestDto.getName())) {
+                    return Response.status(200).entity("interest added to project").build();
+                } else {
+                    return Response.status(404).entity("interest not added").build();
+                }
+            }
+        }
+
         if(interestDto.getProjectId() == 0) {
             interestBean.createInterest(interestDto);
            if( interestBean.addInterestToUser(token, interestDto.getName())) {

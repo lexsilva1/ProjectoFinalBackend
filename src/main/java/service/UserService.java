@@ -2,6 +2,7 @@ package service;
 
 import bean.UserBean;
 import dto.MyDto;
+import dto.PasswordDto;
 import dto.UserConfirmation;
 import dto.UserDto;
 import entities.UserEntity;
@@ -108,5 +109,32 @@ public class UserService {
         } else {
             return Response.status(404).entity("user not found").build();
         }
+    }
+    @PUT
+    @Path("/resetPassword")
+    @Produces("application/json")
+    public Response resetPassword(@HeaderParam("email") String email) {
+        UserEntity user = userBean.findUserByEmail(email);
+        if(user == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        userBean.resetPassword(user);
+        return Response.status(200).entity("password reset").build();
+    }
+    @PUT
+    @Path("/confirmPasswordReset/{token}")
+    @Produces("application/json")
+    public Response confirmPasswordReset(@PathParam("token") String token, PasswordDto passwordDto) {
+        if(!userBean.isPasswordValid(passwordDto.getPassword())) {
+            return Response .status(406).entity("invalid password").build();
+        }
+        if(!passwordDto.getNewPassword().equals(passwordDto.getPassword())) {
+            return Response.status(409).entity("passwords do not match").build();
+        }
+        boolean reset = userBean.confirmPasswordReset(token, passwordDto);
+        if(!reset) {
+            return Response.status(404).entity("user not found").build();
+        }
+        return Response.status(200).entity("password reset").build();
     }
 }

@@ -2,10 +2,7 @@ package bean;
 
 import dao.LabDao;
 import dao.ProjectUserDao;
-import dto.MyDto;
-import dto.ProjectUserDto;
-import dto.UserConfirmation;
-import dto.UserDto;
+import dto.*;
 import entities.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
@@ -419,6 +416,25 @@ public class UserBean {
             return false;
         }
         user.getInterests().remove(interest);
+        userDao.merge(user);
+        return true;
+    }
+    public boolean resetPassword(UserEntity user) {
+        user.setPwdHash(null);
+        user.setAuxToken(encryptHelper.generateToken());
+        user.setActive(false);
+        userDao.merge(user);
+        emailBean.sendPasswordResetEmail(user);
+        return true;
+    }
+    public boolean confirmPasswordReset(String auxToken, PasswordDto password) {
+        UserEntity user = userDao.findUserByAuxToken(auxToken);
+        if (user == null) {
+            return false;
+        }
+        user.setPwdHash(encryptHelper.encryptPassword(password.getPassword()));
+        user.setAuxToken(null);
+        user.setActive(true);
         userDao.merge(user);
         return true;
     }
