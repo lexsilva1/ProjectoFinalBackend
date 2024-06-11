@@ -241,4 +241,11 @@ public class SkillBean {
     public SkillEntity findSkillByName(String token, String skillName){
         return skillDao.findSkillByName(skillName);
     }
+    public List<String> findAllSkilltypes(){
+        List<String> skillTypes = new ArrayList<>();
+        for(SkillEntity.SkillType skillType : SkillEntity.SkillType.values()){
+            skillTypes.add(skillType.toString());
+        }
+        return skillTypes;
+    }
 }

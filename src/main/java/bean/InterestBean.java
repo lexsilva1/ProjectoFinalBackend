@@ -160,5 +160,12 @@ public class InterestBean {
         userBean.removeInterestFromUser(token, interest);
         return true;
     }
+    public List<String> findAllInterestTypes(){
+        List<String> interestTypes = new ArrayList<>();
+        for(InterestEntity.InterestType interestType : InterestEntity.InterestType.values()){
+            interestTypes.add(interestType.toString());
+        }
+        return interestTypes;
+    }
 }
 

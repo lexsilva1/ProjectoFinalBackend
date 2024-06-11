@@ -95,6 +95,12 @@ public class SkillService {
         }
 
     }
+    @GET
+    @Path("/types")
+    @Produces("application/json")
+    public Response findAllSkillTypes() {
+        return Response.status(200).entity(skillBean.findAllSkilltypes()).build();
+    }
 
 
 }

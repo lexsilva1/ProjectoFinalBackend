@@ -89,5 +89,11 @@ public class InterestService {
             }
         }
     }
+    @GET
+    @Path("/types")
+    @Produces("application/json")
+    public Response findAllInterestTypes() {
+        return Response.status(200).entity(interestBean.findAllInterestTypes()).build();
+    }
 
 }
