@@ -6,6 +6,7 @@ import java.util.List;
 
 public class UserDto {
     private int userId;
+
     private String firstName;
     private String lastName;
     private String nickname;
@@ -16,7 +17,7 @@ public class UserDto {
     private List<String> skills;
     private List<String> interests;
     private List<String> projects;
-    private boolean isPrivate;
+    private boolean privacy;
 
     public UserDto() {
     }
@@ -109,11 +110,11 @@ public class UserDto {
         this.projects = projects;
     }
 
-    public boolean isPrivate() {
-        return isPrivate;
+    public boolean getPrivacy() {
+        return privacy;
     }
 
-    public void setPrivate(boolean aPrivate) {
-        isPrivate = aPrivate;
+    public void setPrivacy(boolean aPrivate) {
+        privacy = aPrivate;
     }
 }

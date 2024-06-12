@@ -51,12 +51,13 @@ public class UserEntity implements Serializable{
     LocalDateTime creationDate;
     @Column (name="bio", nullable = true, unique = false)
     String bio;
-    @Column (name="isPrivate", nullable = false, unique = false)
-    boolean isPrivate;
+    @Column (name="Privacy", nullable = false, unique = false)
+    boolean Privacy;
     @ManyToOne
     @JoinColumn(name = "location_id")
     private LabEntity location;
     @ManyToMany
+
     @JoinTable(
             name = "user_interests",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -248,12 +249,12 @@ public class UserEntity implements Serializable{
         this.location = location;
     }
 
-    public boolean isPrivate() {
-        return isPrivate;
+    public boolean getPrivacy() {
+        return Privacy;
     }
 
-    public void setPrivate(boolean aPrivate) {
-        isPrivate = aPrivate;
+    public void setPrivacy(boolean aPrivate) {
+        Privacy = aPrivate;
     }
 
     public Set<InterestEntity> getInterests() {

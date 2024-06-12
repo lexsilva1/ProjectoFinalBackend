@@ -64,7 +64,7 @@ public class UserBean {
             toze.setIsConfirmed(LocalDate.now().minusDays(3));
             toze.setActive(true);
             toze.setRole(UserEntity.Role.User);
-            toze.setPrivate(true);
+            toze.setPrivacy(true);
             userDao.persist(toze);
         }
         if (userDao.findUserByEmail("mariamacaca@gmail.com") == null) {
@@ -125,6 +125,7 @@ public class UserBean {
         userDto.setUserPhoto(user.getUserPhoto());
         userDto.setRole(user.getRole());
         userDto.setUserId(user.getId());
+        userDto.setPrivacy(user.getPrivacy());
         return userDto;
     }
 
@@ -313,7 +314,7 @@ public class UserBean {
         userDto.setUserPhoto(user.getUserPhoto());
         userDto.setRole(user.getRole());
         userDto.setUserId(user.getId());
-        userDto.setPrivate(user.isPrivate());
+        userDto.setPrivacy(user.getPrivacy());
         List<String> projects = new ArrayList<>();
         for (ProjectUserEntity projectUser : user.getProjectUsers()) {
             projects.add(projectUser.getProject().getName());
@@ -442,7 +443,7 @@ public class UserBean {
         if(user == null){
             return false;
         }
-        user.setPrivate(!user.isPrivate());
+        user.setPrivacy(!user.getPrivacy());
         userDao.merge(user);
         return true;
     }
