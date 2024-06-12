@@ -80,6 +80,7 @@ public class SkillService {
         if(userBean.findUserByToken(token) == null) {
             return Response.status(403).entity("not allowed").build();
         }
+        System.out.println(skillDto.getName()+" "+skillDto.getProjetcId()+" "+skillDto.getSkillType());
         userBean.setLastActivity(token);
         SkillEntity skill = skillBean.findSkillByName(skillDto.getName());
         if(skill == null) {

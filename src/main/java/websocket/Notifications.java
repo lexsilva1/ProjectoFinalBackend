@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Singleton
-@ServerEndpoint("/websocket/notifications")
+@ServerEndpoint("/websocket/notifications/{token}")
 public class Notifications {
 
     @EJB

@@ -1,12 +1,10 @@
 package bean;
 
-import dao.LabDao;
-import dao.ProjectUserDao;
+import dao.*;
 import dto.*;
 import entities.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
-import dao.UserDao;
 import jakarta.inject.Inject;
 import utilities.EncryptHelper;
 
@@ -32,6 +30,10 @@ public class UserBean {
     private SkillBean skillBean;
     @EJB
     private InterestBean interestBean;
+    @Inject
+    private SkillDao skillDao;
+    @Inject
+    InterestDao intererestDao;
 
     public UserBean() {
     }
@@ -398,8 +400,12 @@ public class UserBean {
         if (user == null) {
             return false;
         }
-        user.getSkills().remove(skill);
-        userDao.merge(user);
+        SkillEntity skillEntity = skillDao.findSkillByName(skill.getName());
+        skillEntity.getUsers().size(); // This line initializes the users collection
+        user.getSkills().remove(skillEntity);
+        skillEntity.getUsers().remove(user);
+        userDao.merge(user); // Update the UserEntity in the database
+        skillDao.merge(skillEntity); // Update the SkillEntity in the database
         return true;
     }
     public boolean addInterestToUser(String token, InterestEntity interest) {
@@ -416,7 +422,10 @@ public class UserBean {
         if (user == null) {
             return false;
         }
+        InterestEntity interestEntity = interestBean.findInterestByName(interest.getName());
+        interestEntity.getUsers().remove(user); // This line initializes the users collection
         user.getInterests().remove(interest);
+        intererestDao.merge(interestEntity); // Update the InterestEntity in the database
         userDao.merge(user);
         return true;
     }
