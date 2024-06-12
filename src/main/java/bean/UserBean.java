@@ -437,4 +437,13 @@ public class UserBean {
         userDao.merge(user);
         return true;
     }
+    public boolean setPrivate(String token){
+        UserEntity user = findUserByToken(token);
+        if(user == null){
+            return false;
+        }
+        user.setPrivate(!user.isPrivate());
+        userDao.merge(user);
+        return true;
+    }
 }

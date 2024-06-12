@@ -140,4 +140,18 @@ public class UserService {
         }
         return Response.status(200).entity("password reset").build();
     }
+    @PUT
+    @Path("/setPrivacy")
+    @Produces("application/json")
+    public Response setPrivacy(@HeaderParam("token") String token) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        userBean.setLastActivity(token);
+        if(userBean.setPrivate(token)) {
+            return Response.status(200).entity("privacy set").build();
+        } else {
+            return Response.status(404).entity("user not found").build();
+        }
+    }
 }
