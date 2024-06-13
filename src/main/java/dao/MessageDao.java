@@ -21,7 +21,7 @@ private static final long serialVersionUID = 1L;
         UserEntity user2 = em.find(UserEntity.class, id2);
         return em.createQuery("SELECT m FROM MessageEntity m WHERE " +
                         "(m.sender = :user1 AND m.receiver = :user2) OR " +
-                        "(m.sender = :user2 AND m.receiver = :user1)", MessageEntity.class)
+                        "(m.sender = :user2 AND m.receiver = :user1) ORDER BY m.time DESC", MessageEntity.class)
                 .setParameter("user1", user)
                 .setParameter("user2", user2)
                 .getResultList();
@@ -33,7 +33,7 @@ private static final long serialVersionUID = 1L;
                                 "(SELECT MAX(m2.time) FROM MessageEntity m2 " +
                                 "WHERE ((m2.sender.id = :userId AND m2.receiver.id = m.receiver.id) OR " +
                                 "(m2.receiver.id = :userId AND m2.sender.id = m.sender.id))) " +
-                                "AND (m.sender.id = :userId OR m.receiver.id = :userId)",
+                                "AND (m.sender.id = :userId OR m.receiver.id = :userId) order by m.time desc",
                         MessageEntity.class)
                 .setParameter("userId", id)
                 .getResultList();

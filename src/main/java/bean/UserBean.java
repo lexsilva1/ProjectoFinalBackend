@@ -337,18 +337,14 @@ public class UserBean {
         return userDto;
     }
 
-    public ProjectUserDto convertToProjectUserDto(UserEntity user) {
-        ProjectUserEntity projectUser = projectUserDao.findProjectUserByUser(user);
-        if (projectUser == null) {
-            return null;
-        }
+    public ProjectUserDto convertToProjectUserDto(ProjectUserEntity projectUser) {
         ProjectUserDto projectUserDto = new ProjectUserDto();
-        projectUserDto.setFirstName(user.getFirstName());
-        projectUserDto.setLastName(user.getLastName());
-        projectUserDto.setNickname(user.getNickname());
-        projectUserDto.setUserPhoto(user.getUserPhoto());
+        projectUserDto.setFirstName(projectUser.getUser().getFirstName());
+        projectUserDto.setLastName(projectUser.getUser().getLastName());
+        projectUserDto.setNickname( projectUser.getUser().getNickname());
+        projectUserDto.setUserPhoto(projectUser.getUser().getUserPhoto());
         projectUserDto.setProjectManager(projectUser.isProjectManager());
-        projectUserDto.setUserId(user.getId());
+        projectUserDto.setUserId(projectUser.getUser().getId());
         return projectUserDto;
     }
 

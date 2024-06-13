@@ -234,7 +234,7 @@ public class ProjectBean {
         projectDto.setInterests(interestBean.convertInterestEntitiesToString(project.getInterests()));
         List<ProjectUserDto> teamMembers = new ArrayList<>();
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
-            teamMembers.add(userBean.convertToProjectUserDto(projectUser.getUser()));
+            teamMembers.add(userBean.convertToProjectUserDto(projectUser));
         }
         projectDto.setTeamMembers(teamMembers);
         Set<ResourceEntity> resources = project.getResources();

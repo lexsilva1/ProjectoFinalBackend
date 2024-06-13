@@ -132,7 +132,16 @@ public void createDefaultMessage() {
         List <MessageEntity> messages = messageDao.findLastMessagesByUser(user.getId());
         List <MessageDto> messageDtos = new ArrayList<>();
         for (MessageEntity message : messages) {
-            messageDtos.add(convertToDto(message));
+            MessageDto messageDto = new MessageDto();
+            if(user == message.getSender()) {
+                messageDto.setSender(convertToDto(message).getReceiver());
+            } else {
+                messageDto.setSender(convertToDto(message).getSender());
+            }
+            messageDto.setMessage(message.getMessage());
+            messageDto.setTime(message.getTime());
+            messageDto.setIsRead(message.isRead());
+            messageDtos.add(messageDto);
         }
         return messageDtos;
     }
