@@ -174,6 +174,48 @@ public class SkillBean {
             defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
             skillDao.persist(defaultSkill);
         }
+        if(skillDao.findSkillByName("Artificial Intelligence") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Artificial Intelligence");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Git") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Git");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Docker") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Docker");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Kubernetes") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Kubernetes");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Jenkins") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Jenkins");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Jira") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Jira");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Confluence") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Confluence");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
     }
 
     public List<SkillDto> findAllSkills(){

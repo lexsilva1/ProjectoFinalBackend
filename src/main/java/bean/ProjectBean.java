@@ -89,11 +89,132 @@ public class ProjectBean {
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
             projectResource.setProject_id(defaultProject.getId());
             projectResource.setResource_id(resourceDao.findResourceByName("CPU").getId());
-            projectResource.setQuantity(5);
+            projectResource.setQuantity(3);
             projectResourceDao.persist(projectResource);
 
 
         }
+        if(projectDao.findProjectByName("UserInterface") == null) {
+            ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setName("UserInterface");
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Vila_Real));
+            List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.HARDWARE);
+            if (skills != null) {
+                defaultProject.setSkills(new LinkedHashSet<>(skills));
+            }
+            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setDescription("UserInterface is a project that aims to create a new hardware that will revolutionize the way we interact with technology.");
+            defaultProject.setMaxMembers(5);
+            List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.CAUSES);
+            if (interests != null) {
+                defaultProject.setInterests(new LinkedHashSet<>(interests));
+            }
+            defaultProject.setCreator(userBean.findUserByEmail("tozemarreco@gmail.com"));
+            ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
+            defaultProjectUser.setProject(defaultProject);
+            defaultProjectUser.setUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
+            defaultProjectUser.setProjectManager(true);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            ProjectUserEntity defaultProjectUser2 = new ProjectUserEntity();
+            defaultProjectUser2.setProject(defaultProject);
+            defaultProjectUser2.setUser(userBean.findUserByEmail("mariamacaca@gmail.com"));
+            defaultProjectUser2.setProjectManager(false);
+            defaultProjectUser2.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            ProjectUserEntity defaultProjectUser3 = new ProjectUserEntity();
+            defaultProjectUser3.setProject(defaultProject);
+            defaultProjectUser3.setUser(userBean.findUserByEmail("zetamplario@gmail.com"));
+            defaultProjectUser3.setProjectManager(false);
+            defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
+            defaultProject.setStartDate(java.time.LocalDateTime.now().minusDays(10));
+            defaultProject.setEndDate(java.time.LocalDateTime.now().plusDays(15));
+            defaultProject.setCreatedAt(java.time.LocalDateTime.now().minusDays(15));
+            TaskEntity task = new TaskEntity();
+            task.setTitle("Create the UserInterface");
+            task.setDescription("Create the UserInterface for the project");
+            task.setProject(defaultProject);
+            task.setResponsibleUser(userBean.findUserByEmail("mariamacaca@gmail.com"));
+            task.setStatus(TaskEntity.Status.NOT_STARTED);
+            task.setStartDate(java.time.LocalDateTime.now().minusDays(10));
+            task.setEndDate(java.time.LocalDateTime.now().plusDays(15));
+            task.setCreationDate(java.time.LocalDateTime.now());
+            taskDao.persist(task);
+            projectDao.persist(defaultProject);
+            ProjectTaskEntity projectTask = new ProjectTaskEntity();
+            projectTask.setProject_id(defaultProject.getName());
+            projectTask.setTask_id(task.getId());
+            projectTaskDao.persist(projectTask);
+            projectUserDao.persist(defaultProjectUser);
+            projectUserDao.persist(defaultProjectUser2);
+            projectUserDao.persist(defaultProjectUser3);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject_id(defaultProject.getId());
+            projectResource.setResource_id(resourceDao.findResourceByName("RAM").getId());
+            projectResource.setQuantity(3);
+            projectResourceDao.persist(projectResource);
+        }
+        if(projectDao.findProjectByName("Project X") == null) {
+            ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setName("Project X");
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
+            if (skills != null) {
+                defaultProject.setSkills(new LinkedHashSet<>(skills));
+            }
+            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setDescription("Project X is a project that aims to create a new software that will revolutionize the way we interact with technology.");
+            defaultProject.setMaxMembers(5);
+            List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
+            if (interests != null) {
+                defaultProject.setInterests(new LinkedHashSet<>(interests));
+            }
+            defaultProject.setCreator(userBean.findUserByEmail("zetamplario@gmail.com"));
+            ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
+            defaultProjectUser.setProject(defaultProject);
+            defaultProjectUser.setUser(userBean.findUserByEmail("zetamplario@gmail.com"));
+            defaultProjectUser.setProjectManager(true);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            ProjectUserEntity defaultProjectUser2 = new ProjectUserEntity();
+            defaultProjectUser2.setProject(defaultProject);
+            defaultProjectUser2.setUser(userBean.findUserByEmail("mariamacaca@gmail.com"));
+            defaultProjectUser2.setProjectManager(false);
+            defaultProjectUser2.setApprovalStatus(ProjectUserEntity.ApprovalStatus.APPLIED);
+            ProjectUserEntity defaultProjectUser3 = new ProjectUserEntity();
+            defaultProjectUser3.setProject(defaultProject);
+            defaultProjectUser3.setUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
+            defaultProjectUser3.setProjectManager(false);
+            defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
+            defaultProject.setStartDate(java.time.LocalDateTime.now().minusDays(5));
+            defaultProject.setEndDate(java.time.LocalDateTime.now().plusDays(30));
+            defaultProject.setCreatedAt(java.time.LocalDateTime.now());
+            TaskEntity task = new TaskEntity();
+            task.setTitle("Create the database");
+            task.setDescription("Create the database for the project");
+            task.setProject(defaultProject);
+            task.setResponsibleUser(userBean.findUserByEmail("zetamplario@gmail.com"));
+            task.setStatus(TaskEntity.Status.IN_PROGRESS);
+            task.setStartDate(java.time.LocalDateTime.now().minusDays(5));
+            task.setEndDate(java.time.LocalDateTime.now().plusDays(2));
+            task.setCreationDate(java.time.LocalDateTime.now().minusDays(6));
+            taskDao.persist(task);
+            projectDao.persist(defaultProject);
+            ProjectTaskEntity projectTask = new ProjectTaskEntity();
+            projectTask.setProject_id(defaultProject.getName());
+            projectTask.setTask_id(task.getId());
+            projectTaskDao.persist(projectTask);
+            projectUserDao.persist(defaultProjectUser);
+            projectUserDao.persist(defaultProjectUser2);
+            projectUserDao.persist(defaultProjectUser3);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject_id(defaultProject.getId());
+            projectResource.setResource_id(resourceDao.findResourceByName("Windows 10 License").getId());
+            projectResource.setQuantity(3);
+            projectResourceDao.persist(projectResource);
+        }
+
+
+
     }
 
     public ProjectEntity findProjectByName(String name) {

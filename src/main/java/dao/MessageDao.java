@@ -19,5 +19,8 @@ private static final long serialVersionUID = 1L;
     public MessageEntity findMessageByProject(int id) {
         return em.find(MessageEntity.class, id);
     }
+    public void createMessage(MessageEntity message) {
+       em.persist(message);
+    }
 
 }

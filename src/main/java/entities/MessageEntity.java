@@ -1,5 +1,8 @@
 package entities;
 
+import dao.UserDao;
+import dto.MessageDto;
+import jakarta.inject.Inject;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -7,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "message")
+
 public class MessageEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -25,5 +29,15 @@ public class MessageEntity implements Serializable {
     private LocalDateTime time;
     @Column(name = "is_read", nullable = false, unique = false)
     private boolean isRead;
+
+    public MessageEntity() {
+    }
+    public MessageEntity(MessageDto messageDto, UserEntity sender, UserEntity receiver) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = messageDto.getMessage();
+        this.time = messageDto.getTime();
+        this.isRead = messageDto.isRead();
+    }
 
 }
