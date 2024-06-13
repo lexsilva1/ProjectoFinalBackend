@@ -57,19 +57,21 @@ public class SkillService {
         }
         if(skillDto.getProjetcId() == 0) {
              skillBean.createSkill(skillDto);
+             SkillDto skill = skillBean.toSkillDtos(skillBean.findSkillByName(skillDto.getName()));
             boolean added = skillBean.addSkillToUser(token, skillDto.getName());
             if(added) {
-                return Response.status(201).entity("skill added to your profile").build();
+                return Response.status(201).entity(skill).build();
             } else {
                 return Response.status(404).entity("skill not added").build();
             }
         } else {
             skillBean.createSkill(skillDto);
+            SkillDto skill = skillBean.toSkillDtos(skillBean.findSkillByName(skillDto.getName()));
             boolean added = skillBean.addSkilltoProject(token, skillDto.getProjetcId(), skillDto.getName());
             if(!added) {
                 return Response.status(404).entity("skill not added").build();
             } else {
-                return Response.status(201).entity("skill added to project").build();
+                return Response.status(201).entity(skill).build();
             }
         }
     }

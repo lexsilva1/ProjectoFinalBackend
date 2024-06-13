@@ -2,6 +2,7 @@ package service;
 import bean.InterestBean;
 import bean.UserBean;
 import dto.InterestDto;
+import dto.SkillDto;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -32,14 +33,16 @@ public class InterestService {
         userBean.setLastActivity(token);
         if(interestBean.findInterestByName(interestDto.getName()) != null) {
             if(interestDto.getProjectId() == 0) {
+                InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
                 if(interestBean.addInterestToUser(token, interestDto.getName())) {
-                    return Response.status(200).entity("interest added to your list").build();
+                    return Response.status(200).entity(interest).build();
                 } else {
                     return Response.status(404).entity("interest not added").build();
                 }
             } else {
+                InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
                 if(interestBean.addInterestToProject(token, interestDto.getProjectId(), interestDto.getName())) {
-                    return Response.status(200).entity("interest added to project").build();
+                    return Response.status(200).entity(interest).build();
                 } else {
                     return Response.status(404).entity("interest not added").build();
                 }
@@ -48,8 +51,9 @@ public class InterestService {
 
         if(interestDto.getProjectId() == 0) {
             interestBean.createInterest(interestDto);
+            InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
            if( interestBean.addInterestToUser(token, interestDto.getName())) {
-               return Response.status(200).entity("interest added to your list").build();
+               return Response.status(200).entity(interest).build();
               } else {
                   return Response.status(404).entity("interest not added").build();
               }
@@ -57,8 +61,9 @@ public class InterestService {
 
         } else {
             interestBean.createInterest(interestDto);
+            InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
             if(interestBean.addInterestToProject(token, interestDto.getProjectId(), interestDto.getName())) {
-                return Response.status(200).entity("keyword added to project").build();
+                return Response.status(200).entity(interest).build();
             } else {
                 return Response.status(404).entity("keyword not added").build();
             }
