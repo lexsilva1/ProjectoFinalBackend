@@ -5,10 +5,7 @@ import bean.UserBean;
 import dto.MessageDto;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
@@ -31,5 +28,23 @@ public class MessageService {
         }
         messageBean.createMessage(message);
         return Response.status(200).build();
+    }
+    @GET
+    @Path("/{id}")
+    @Produces("application/json")
+    public Response findAllMessages(@HeaderParam("token") String token, @PathParam("id") int id) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        return Response.status(200).entity(messageBean.findUserMessages(token,id)).build();
+    }
+    @GET
+    @Path("")
+    @Produces("application/json")
+    public Response findLastMessages(@HeaderParam("token") String token) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(404).entity("user not found").build();
+        }
+        return Response.status(200).entity(messageBean.findLastMessages(token)).build();
     }
 }
