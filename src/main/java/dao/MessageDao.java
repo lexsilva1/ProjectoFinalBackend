@@ -5,6 +5,9 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Stateless
@@ -21,7 +24,7 @@ private static final long serialVersionUID = 1L;
         UserEntity user2 = em.find(UserEntity.class, id2);
         return em.createQuery("SELECT m FROM MessageEntity m WHERE " +
                         "(m.sender = :user1 AND m.receiver = :user2) OR " +
-                        "(m.sender = :user2 AND m.receiver = :user1) ORDER BY m.time DESC", MessageEntity.class)
+                        "(m.sender = :user2 AND m.receiver = :user1) ORDER BY m.time ASC", MessageEntity.class)
                 .setParameter("user1", user)
                 .setParameter("user2", user2)
                 .getResultList();
@@ -29,11 +32,12 @@ private static final long serialVersionUID = 1L;
     public List<MessageEntity> findLastMessagesByUser(int id) {
         return em.createQuery(
                         "SELECT m FROM MessageEntity m " +
-                                "WHERE m.time = " +
-                                "(SELECT MAX(m2.time) FROM MessageEntity m2 " +
-                                "WHERE ((m2.sender.id = :userId AND m2.receiver.id = m.receiver.id) OR " +
-                                "(m2.receiver.id = :userId AND m2.sender.id = m.sender.id))) " +
-                                "AND (m.sender.id = :userId OR m.receiver.id = :userId) order by m.time desc",
+                                "WHERE m.time IN (" +
+                                "SELECT MAX(m2.time) FROM MessageEntity m2 " +
+                                "WHERE (m2.sender.id = :userId OR m2.receiver.id = :userId) " +
+                                "GROUP BY CASE WHEN m2.sender.id = :userId THEN m2.receiver.id ELSE m2.sender.id END" +
+                                ") AND (m.sender.id = :userId OR m.receiver.id = :userId) " +
+                                "ORDER BY m.time DESC",
                         MessageEntity.class)
                 .setParameter("userId", id)
                 .getResultList();

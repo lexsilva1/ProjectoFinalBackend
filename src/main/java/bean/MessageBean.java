@@ -1,6 +1,7 @@
 package bean;
 
 import dao.MessageDao;
+import dto.LastMessageDto;
 import dto.MessageDto;
 import dto.MessageUserDto;
 import entities.MessageEntity;
@@ -127,21 +128,32 @@ public void createDefaultMessage() {
         messageDto.setIsRead(message.isRead());
         return messageDto;
     }
-    public List <MessageDto> findLastMessages(String token) {
+    public List <LastMessageDto> findLastMessages(String token) {
         UserEntity user = userBean.findUserByToken(token);
         List <MessageEntity> messages = messageDao.findLastMessagesByUser(user.getId());
-        List <MessageDto> messageDtos = new ArrayList<>();
+        List <LastMessageDto> messageDtos = new ArrayList<>();
         for (MessageEntity message : messages) {
-            MessageDto messageDto = new MessageDto();
-            if(user == message.getSender()) {
-                messageDto.setSender(convertToDto(message).getReceiver());
+            LastMessageDto lastMessageDto = new LastMessageDto();
+            MessageUserDto senderDto = new MessageUserDto();
+            if(message.getSender().getId() == user.getId()) {
+                UserEntity receiver = message.getReceiver();
+                senderDto.setId(receiver.getId());
+                senderDto.setFirstName(receiver.getFirstName());
+                senderDto.setLastName(receiver.getLastName());
+                senderDto.setImage(receiver.getUserPhoto());
+                lastMessageDto.setSender(senderDto);
             } else {
-                messageDto.setSender(convertToDto(message).getSender());
+                UserEntity sender = message.getSender();
+                senderDto.setId(sender.getId());
+                senderDto.setFirstName(sender.getFirstName());
+                senderDto.setLastName(sender.getLastName());
+                senderDto.setImage(sender.getUserPhoto());
+                lastMessageDto.setSender(senderDto);
             }
-            messageDto.setMessage(message.getMessage());
-            messageDto.setTime(message.getTime());
-            messageDto.setIsRead(message.isRead());
-            messageDtos.add(messageDto);
+            lastMessageDto.setMessage(message.getMessage());
+            lastMessageDto.setTime(message.getTime());
+            lastMessageDto.setRead(message.isRead());
+            messageDtos.add(lastMessageDto);
         }
         return messageDtos;
     }
