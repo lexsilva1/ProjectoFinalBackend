@@ -33,13 +33,16 @@ public class TimerBean {
     public void checkTimeouts() {
         //logger.info("Checking for timeouts...");
         System.out.println("Checking for timeouts...");
-        List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusMinutes(30));
+        List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusMinutes(1));
+
         for (TokenEntity token : timedOutUsers) {
             UserEntity user = token.getUser();
             userBean.forcedLogout(token);
             notifier.send(token.getToken(), "You have been logged out due to inactivity.");
-            System.out.println("User " + user.getEmail() + " has been logged out due to inactivity.");
-        }
 
+            System.out.println("User " + user.getEmail() + " has been logged out due to inactivity.");
+            user=null;  //nullify user to prevent memory leaks
+        }
+        timedOutUsers.clear();
     }
 }

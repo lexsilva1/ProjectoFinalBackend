@@ -41,6 +41,7 @@ public class MessageService {
         }
         return Response.status(200).entity(messageBean.findUserMessages(token,id)).build();
     }
+
     @GET
     @Path("")
     @Produces("application/json")

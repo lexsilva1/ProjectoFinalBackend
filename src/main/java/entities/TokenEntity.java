@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "Tokens")
 @NamedQuery(name = "TokenEntity.findTokenByToken", query = "SELECT t FROM TokenEntity t WHERE t.token = :token")
 @NamedQuery(name = "TokenEntity.findUSerByToken" , query = "SELECT t.user FROM TokenEntity t WHERE t.token = :token")
-@NamedQuery(name = "TokenEntity.findTimedOutTokens", query = "SELECT t FROM TokenEntity t WHERE t.creationDate < :time")
+@NamedQuery(name = "TokenEntity.findTimedOutTokens", query = "SELECT t FROM TokenEntity t WHERE t.creationDate < :time AND t.isUsed = false")
 @NamedQuery(name = "TokenEntity.findTokenByUserAndType", query = "SELECT t FROM TokenEntity t WHERE t.user = :user AND t.type = :type")
 @NamedQuery(name = "TokenEntity.findTokensByUser", query = "SELECT t FROM TokenEntity t WHERE t.user = :user")
 @NamedQuery(name = "TokenEntity.findUserByToken", query = "SELECT t.user FROM TokenEntity t WHERE t.token = :token")

@@ -24,9 +24,7 @@ public class UserService {
     @EJB
     TokenBean tokenBean;
 
-
-
-
+    
     @POST
     @Path("/login")
     @Produces("application/json")

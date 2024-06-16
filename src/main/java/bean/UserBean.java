@@ -102,8 +102,6 @@ public class UserBean {
             ze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/4.jpg?t="+System.currentTimeMillis());
             userDao.persist(ze);
         }
-
-
     }
 
     public void removeUser(String email) {
