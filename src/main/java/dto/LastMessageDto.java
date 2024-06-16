@@ -11,6 +11,12 @@ public class LastMessageDto {
 
     public LastMessageDto() {
     }
+    public LastMessageDto(MessageUserDto sender, String message) {
+        this.sender = sender;
+        this.message = message;
+        this.time = LocalDateTime.now();
+        this.isRead = false;
+    }
 
 
     public MessageUserDto getSender() {

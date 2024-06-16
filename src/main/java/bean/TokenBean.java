@@ -86,4 +86,7 @@ public TokenEntity findTokenByToken(String token) {
         }
         return true;
     }
+    public List<TokenEntity> findActiveTokensByUser(UserEntity userEntity) {
+        return tokenDao.findActiveTokensByUser(userEntity);
+    }
 }

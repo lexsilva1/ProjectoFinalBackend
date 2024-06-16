@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "TokenEntity.findTokenByUserAndType", query = "SELECT t FROM TokenEntity t WHERE t.user = :user AND t.type = :type")
 @NamedQuery(name = "TokenEntity.findTokensByUser", query = "SELECT t FROM TokenEntity t WHERE t.user = :user")
 @NamedQuery(name = "TokenEntity.findUserByToken", query = "SELECT t.user FROM TokenEntity t WHERE t.token = :token")
+@NamedQuery(name = "TokenEntity.findActiveTokensByUser", query = "SELECT t FROM TokenEntity t WHERE t.user = :user AND t.isUsed = false")
 public class TokenEntity implements Serializable {
     @Id
     @Column(name = "token", nullable = false, unique = true, updatable = false)

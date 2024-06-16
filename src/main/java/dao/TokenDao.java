@@ -53,6 +53,11 @@ public class TokenDao {
                 .setParameter("user", userEntity)
                 .getResultList();
     }
+    public List<TokenEntity> findActiveTokensByUser(UserEntity userEntity) {
+        return em.createNamedQuery("TokenEntity.findActiveTokensByUser", TokenEntity.class)
+                .setParameter("user", userEntity)
+                .getResultList();
+    }
 
 
 }
