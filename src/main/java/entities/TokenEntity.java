@@ -18,7 +18,7 @@ public class TokenEntity implements Serializable {
     @Column(name = "token", nullable = false, unique = true, updatable = false)
     private String token;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, unique = true, updatable = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = false, updatable = false)
     private UserEntity user;
     @Column(name = "creationDate", nullable = false, unique = false)
     private LocalDateTime creationDate;

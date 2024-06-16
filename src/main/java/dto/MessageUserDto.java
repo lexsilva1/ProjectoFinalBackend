@@ -1,5 +1,7 @@
 package dto;
 
+import entities.UserEntity;
+
 public class MessageUserDto {
     private int id;
     private String firstName;
@@ -7,6 +9,13 @@ public class MessageUserDto {
     private String image;
 
     public MessageUserDto() {
+    }
+
+    public MessageUserDto(UserEntity user) {
+        this.id = user.getId();
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.image = user.getUserPhoto();
     }
     public int getId() {
         return id;

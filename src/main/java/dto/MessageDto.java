@@ -11,6 +11,13 @@ public class MessageDto {
 
     public MessageDto() {
     }
+    public MessageDto(String message, MessageUserDto sender, MessageUserDto receiver) {
+        this.message = message;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.time = LocalDateTime.now();
+        this.isRead = false;
+    }
 
     public String getMessage() {
         return message;
