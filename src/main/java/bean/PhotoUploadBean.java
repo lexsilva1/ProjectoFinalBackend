@@ -68,7 +68,7 @@ public class PhotoUploadBean {
         }
     }
     public UserEntity confirmUserByToken(String token) {
-        UserEntity user = userBean.findUserByAuxToken(token);
+        UserEntity user = userBean.findUserByToken(token);
         if (user != null) {
          return user;
         }else {

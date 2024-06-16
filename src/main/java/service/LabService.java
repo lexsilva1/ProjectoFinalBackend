@@ -33,8 +33,8 @@ public class LabService {
             return Response.status(403).entity("not allowed").build();
         }else{
             UserEntity user = userBean.findUserByToken(token);
-            UserEntity user2 = userBean.findUserByAuxToken(token);
-            if(user == null && user2 == null){
+            ;
+            if(user == null ){
                 return Response.status(404).entity("not found").build();
             }
         }

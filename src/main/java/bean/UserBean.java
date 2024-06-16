@@ -34,6 +34,8 @@ public class UserBean {
     private SkillDao skillDao;
     @Inject
     InterestDao intererestDao;
+    @Inject
+    TokenBean tokenBean;
 
     public UserBean() {
     }
@@ -67,6 +69,7 @@ public class UserBean {
             toze.setActive(true);
             toze.setRole(UserEntity.Role.User);
             toze.setPrivacy(true);
+            toze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/2.jpg?t="+System.currentTimeMillis());
             userDao.persist(toze);
         }
         if (userDao.findUserByEmail("mariamacaca@gmail.com") == null) {
@@ -81,6 +84,7 @@ public class UserBean {
             maria.setPwdHash(encryptHelper.encryptPassword("Password1!"));
             maria.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
             maria.setRole(UserEntity.Role.User);
+            maria.setUserPhoto("http://localhost:8080/ProjectoFinalImages/3.jpg?t="+System.currentTimeMillis());
             userDao.persist(maria);
         }
         if (userDao.findUserByEmail("zetamplario@gmail.com") == null) {
@@ -95,6 +99,7 @@ public class UserBean {
             ze.setPwdHash(encryptHelper.encryptPassword("Password1!"));
             ze.setLocation(labDao.findLabByLocation(LabEntity.Lab.Tomar));
             ze.setRole(UserEntity.Role.User);
+            ze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/4.jpg?t="+System.currentTimeMillis());
             userDao.persist(ze);
         }
 
@@ -131,13 +136,13 @@ public class UserBean {
         return userDto;
     }
 
-    public MyDto convertToMyDto(UserEntity user) {
+    public MyDto convertToMyDto(UserEntity user, String token) {
         MyDto myDto = new MyDto();
         myDto.setFirstName(user.getFirstName());
         myDto.setLastName(user.getLastName());
         myDto.setNickname(user.getNickname());
         myDto.setImage(user.getUserPhoto());
-        myDto.setToken(user.getToken());
+        myDto.setToken(token);
         myDto.setId(user.getId());
         return myDto;
     }
@@ -154,9 +159,9 @@ public class UserBean {
         UserEntity user = userDao.findUserByEmail(email);
         if (user != null && user.isActive() && encryptHelper.checkPassword(password, user.getPwdHash())) {
             String token = generateToken();
-            user.setToken(token);
-            setLastActivity(user);
-            MyDto userDto = convertToMyDto(user);
+            tokenBean.createLoginToken(token,user);
+
+            MyDto userDto = convertToMyDto(user,token);
             return userDto;
         }
         return null;
@@ -170,15 +175,15 @@ public class UserBean {
      */
     public String firstLogin(UserEntity user) {
         String token = generateToken();
-        user.setToken(token);
+        tokenBean.createLoginToken(token, user);
         userDao.merge(user);
         return token;
     }
 
     public boolean logout(String token) {
-        UserEntity user = userDao.findUserByToken(token);
+        UserEntity user = tokenBean.findUserByToken(token);
         if (user != null) {
-            user.setToken(null);
+            tokenBean.removeToken(token);
             return true;
         }
         return false;
@@ -187,12 +192,10 @@ public class UserBean {
     /**
      * Logs out the user
      *
-     * @param user
+     * @param token
      */
-    public void forcedLogout(UserEntity user) {
-        user.setToken(null);
-        user.setLastActivity(null);
-        userDao.merge(user);
+    public void forcedLogout(TokenEntity token) {
+        tokenBean.removeToken(token.getToken());
     }
 
 
@@ -200,9 +203,6 @@ public class UserBean {
         return encryptHelper.generateToken();
     }
 
-    public UserEntity getUserByToken(String token) {
-        return userDao.findUserByToken(token);
-    }
 
     public UserEntity getUserByEmail(String email) {
         return userDao.findUserByEmail(email);
@@ -227,7 +227,7 @@ public class UserBean {
     }
 
     public UserEntity findUserByToken(String token) {
-        return userDao.findUserByToken(token);
+        return tokenBean.findUserByToken(token);
     }
 
     public UserEntity findUserByEmail(String email) {
@@ -247,8 +247,9 @@ public class UserBean {
         user.setEmail(email);
         user.setPwdHash(encryptHelper.encryptPassword(password));
         user.setCreationDate(LocalDateTime.now());
-        user.setAuxToken(encryptHelper.generateToken());
         user.setActive(true);
+        tokenBean.createRegisterToken(encryptHelper.generateToken(),user);
+
         if (emailBean.sendConfirmationEmail(user)) {
             userDao.persist(user);
             registered = true;
@@ -264,7 +265,7 @@ public class UserBean {
      * @return
      */
     public UserEntity confirmUser(String auxToken, UserConfirmation userConfirmation) {
-        UserEntity user = userDao.findUserByAuxToken(auxToken);
+        UserEntity user = tokenBean.findUserByToken(auxToken);
         if (user != null) {
             user.setUserPhoto(userConfirmation.getUserPhoto());
             user.setFirstName(userConfirmation.getFirstName());
@@ -274,7 +275,7 @@ public class UserBean {
             user.setLocation(labDao.findLabByLocation(LabEntity.Lab.valueOf(userConfirmation.getLabLocation())));
             user.setRole(UserEntity.Role.User);
             user.setIsConfirmed(LocalDate.now());
-            user.setAuxToken(null);
+            tokenBean.removeToken(auxToken);
             userDao.merge(user);
             return user;
         }
@@ -291,20 +292,8 @@ public class UserBean {
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     }
 
-    /**
-     * Sets the last activity of the user
-     *
-     * @param user
-     */
-    public void setLastActivity(UserEntity user) {
-        user.setLastActivity(LocalDateTime.now());
-        userDao.merge(user);
-    }
 
-    public List<UserEntity> findTimedOutUsers() {
-        LocalDateTime time = LocalDateTime.now().minusMinutes(30);
-        return userDao.findTimedOutUsers(time);
-    }
+
 
     public UserDto convertToDto(UserEntity user) {
         UserDto userDto = new UserDto();
@@ -357,9 +346,7 @@ public class UserBean {
         return convertToDto(user);
     }
 
-    public UserEntity findUserByAuxToken(String auxToken) {
-        return userDao.findUserByAuxToken(auxToken);
-    }
+
 
     public boolean updateUser(int id, UserDto userDto) {
         UserEntity user = findUserById(id);
@@ -377,9 +364,9 @@ public class UserBean {
     }
 
     public void setLastActivity(String token) {
-        UserEntity user = userDao.findUserByToken(token);
-        user.setLastActivity(LocalDateTime.now());
-        userDao.merge(user);
+        TokenEntity tokenEntity = tokenBean.findTokenByToken(token);
+        tokenEntity.setLastActivity(LocalDateTime.now());
+        tokenBean.updateToken(tokenEntity);
     }
 
     public boolean addSkillToUser(String token, SkillEntity skill) {
@@ -426,19 +413,19 @@ public class UserBean {
         return true;
     }
     public boolean resetPassword(UserEntity user) {
-        user.setAuxToken(encryptHelper.generateToken());
+        tokenBean.createPasswordToken(encryptHelper.generateToken(), user);
         user.setActive(false);
         userDao.merge(user);
         emailBean.sendPasswordResetEmail(user);
         return true;
     }
     public boolean confirmPasswordReset(String auxToken, PasswordDto password) {
-        UserEntity user = userDao.findUserByAuxToken(auxToken);
+        UserEntity user = tokenBean.findUserByToken(auxToken);
         if (user == null) {
             return false;
         }
         user.setPwdHash(encryptHelper.encryptPassword(password.getPassword()));
-        user.setAuxToken(null);
+        tokenBean.removeToken(auxToken);
         user.setActive(true);
         userDao.merge(user);
         return true;

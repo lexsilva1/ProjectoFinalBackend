@@ -3,17 +3,15 @@ package entities;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
 @Entity
 @Table(name="Users")
 @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")
-@NamedQuery(name = "User.findUserByToken", query = "SELECT u FROM UserEntity u WHERE u.token = :token")
-@NamedQuery(name = "User.findUserByAuxToken", query = "SELECT u FROM UserEntity u WHERE u.auxToken = :auxToken")
-@NamedQuery(name = "User.updateToken", query = "UPDATE UserEntity u SET u.token = :token WHERE u.email = :email")
+@NamedQuery(name = "User.findActiveTokens", query = "SELECT t FROM TokenEntity t WHERE t.user = :user AND t.isUsed = false")
 @NamedQuery(name = "User.findUserByNickname", query = "SELECT u FROM UserEntity u WHERE u.nickname = :nickname")
-@NamedQuery(name = "User.findTimedOutUsers", query = "SELECT u FROM UserEntity u WHERE u.lastActivity < :time")
 @NamedQuery(name = "User.findUserById", query = "SELECT u FROM UserEntity u WHERE u.id = :id")
 public class UserEntity implements Serializable{
     @Id
@@ -34,8 +32,9 @@ public class UserEntity implements Serializable{
     String contactNumber;
     @Column (name="userPhoto", nullable = true, unique = false)
     String userPhoto;
-    @Column (name="token", nullable = true, unique = true)
-    String token;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TokenEntity> tokens;
+
     @Enumerated(EnumType.ORDINAL)
     @Column (name="role", nullable = true, unique = false)
     Role role;
@@ -43,10 +42,7 @@ public class UserEntity implements Serializable{
     boolean isActive;
     @Column (name="isConfirmed", nullable = true, unique = false)
     LocalDate isConfirmed;
-    @Column (name="passwordResetToken", nullable = true, unique = true)
-    String auxToken;
-    @Column (name="lastActivity", nullable = true, unique = false)
-    LocalDateTime lastActivity;
+
     @Column (name="creationDate", nullable = false, unique = false)
     LocalDateTime creationDate;
     @Column (name="bio", nullable = true, unique = false)
@@ -161,14 +157,6 @@ public class UserEntity implements Serializable{
         this.userPhoto = userPhoto;
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public boolean isIsActive() {
         return isActive;
     }
@@ -183,22 +171,6 @@ public class UserEntity implements Serializable{
 
     public void setIsConfirmed(LocalDate confirmed) {
         this.isConfirmed = confirmed;
-    }
-
-    public String getAuxToken() {
-        return auxToken;
-    }
-
-    public void setAuxToken(String passwordResetToken) {
-        this.auxToken = passwordResetToken;
-    }
-
-    public LocalDateTime getLastActivity() {
-        return lastActivity;
-    }
-
-    public void setLastActivity(LocalDateTime lastActivity) {
-        this.lastActivity = lastActivity;
     }
 
     public String getNickname() {
@@ -279,6 +251,18 @@ public class UserEntity implements Serializable{
 
     public void setProjectUsers(Set<ProjectUserEntity> projectUsers) {
         this.projectUsers = projectUsers;
+    }
+
+    public List<TokenEntity> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(TokenEntity token) {
+        this.tokens.add(token);
+    }
+
+    public boolean isPrivacy() {
+        return Privacy;
     }
 }
 

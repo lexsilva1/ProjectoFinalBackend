@@ -2,6 +2,7 @@ package service;
 
 import bean.ProjectBean;
 import bean.ResourceBean;
+import bean.TokenBean;
 import bean.UserBean;
 import dto.ResourceDto;
 import jakarta.inject.Inject;
@@ -20,13 +21,15 @@ public class ResourceService {
     private ProjectBean projectBean;
     @Inject
     private UserBean userBean;
+    @Inject
+    private TokenBean tokenBean;
 
 
     @GET
     @Path("")
     @Produces("application/json")
     public Response findResources(@HeaderParam("token") String token, @QueryParam("resourceName") String resourceName, @QueryParam("resourceType") String resourceType, @QueryParam("resourceIdentifier") String resourceIdentifier, @QueryParam("supplier") String supplier) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -36,7 +39,7 @@ public class ResourceService {
     @Path("")
     @Consumes("application/json")
     public Response createResource(@HeaderParam("token") String token, ResourceDto resourceDto) {
-        if (userBean.findUserByToken(token) == null) {
+        if (userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);

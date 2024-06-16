@@ -1,6 +1,7 @@
 package service;
 
 import bean.MessageBean;
+import bean.TokenBean;
 import bean.UserBean;
 import dto.MessageDto;
 import jakarta.ejb.EJB;
@@ -17,6 +18,8 @@ public class MessageService {
     private MessageBean messageBean;
     @EJB
     private UserBean userBean;
+    @EJB
+    private TokenBean tokenBean;
 
     @POST
     @Path("")
@@ -33,7 +36,7 @@ public class MessageService {
     @Path("/{id}")
     @Produces("application/json")
     public Response findAllMessages(@HeaderParam("token") String token, @PathParam("id") int id) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
         return Response.status(200).entity(messageBean.findUserMessages(token,id)).build();
@@ -42,7 +45,7 @@ public class MessageService {
     @Path("")
     @Produces("application/json")
     public Response findLastMessages(@HeaderParam("token") String token) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
         return Response.status(200).entity(messageBean.findLastMessages(token)).build();

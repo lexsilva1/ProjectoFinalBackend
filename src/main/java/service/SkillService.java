@@ -2,6 +2,7 @@ package service;
 
 import bean.ProjectBean;
 import bean.SkillBean;
+import bean.TokenBean;
 import bean.UserBean;
 import dto.SkillDto;
 import entities.SkillEntity;
@@ -22,6 +23,8 @@ public class SkillService {
     private UserBean userBean;
     @Inject
     private ProjectBean projectBean;
+    @Inject
+    private TokenBean tokenBean;
 
     @GET
     @Path("")
@@ -33,7 +36,7 @@ public class SkillService {
     @Path("")
     @Produces("application/json")
     public Response createSkill(@HeaderParam("token") String token, SkillDto skillDto) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
 
@@ -79,7 +82,7 @@ public class SkillService {
     @Path("/removeSkill")
     @Produces("application/json")
     public Response deleteSkill(@HeaderParam("token") String token, SkillDto skillDto) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         System.out.println(skillDto.getName()+" "+skillDto.getProjetcId()+" "+skillDto.getSkillType());

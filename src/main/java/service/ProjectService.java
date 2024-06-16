@@ -2,6 +2,7 @@ package service;
 
 import bean.ProjectBean;
 import bean.TaskBean;
+import bean.TokenBean;
 import bean.UserBean;
 import dto.ProjectDto;
 import dto.TaskDto;
@@ -25,6 +26,8 @@ public class ProjectService {
     UserBean userBean;
     @EJB
     TaskBean taskBean;
+    @EJB
+    TokenBean tokenBean;
 
 
 
@@ -39,7 +42,7 @@ public class ProjectService {
     @Path("/projectUsers")
     @Produces("application/json")
     public Response findAllProjectUsers(@HeaderParam("token") String token,@QueryParam("projectName") String projectName){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         ProjectEntity project = projectBean.findProjectByName(projectName);
@@ -54,7 +57,7 @@ public class ProjectService {
     @Path("/projectSkills")
     @Produces("application/json")
     public Response findAllProjectSkills(@HeaderParam("token") String token,@QueryParam("projectName") String projectName){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         ProjectEntity project = projectBean.findProjectByName(projectName);
@@ -69,7 +72,7 @@ public class ProjectService {
     @Path("/")
     @Produces("application/json")
     public Response createProject(@HeaderParam("token") String token,ProjectDto projectDto){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null ||  !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         boolean created = projectBean.createProject(projectDto,token);
@@ -88,7 +91,7 @@ public class ProjectService {
     @Path("/{projectName}/tasks")
     @Produces("application/json")
     public Response createTask(@HeaderParam("token") String token, @PathParam("projectName") String projectName, TaskDto taskDto){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -99,7 +102,7 @@ public class ProjectService {
     @Path("/{projectName}")
     @Produces("application/json")
     public Response findProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -116,7 +119,7 @@ public class ProjectService {
     @Path("/{projectName}/apply")
     @Produces("application/json")
     public Response applyProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -128,7 +131,7 @@ public class ProjectService {
     @Path("/{projectName}/invite")
     @Produces("application/json")
     public Response inviteUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -141,7 +144,7 @@ public class ProjectService {
     @Path("/{projectName}/accept")
     @Produces("application/json")
     public Response acceptUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -155,7 +158,7 @@ public class ProjectService {
     @Path("/{projectName}/promote")
     @Produces("application/json")
     public Response promoteUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -167,7 +170,7 @@ public class ProjectService {
     @Path("/{projectName}/demote")
     @Produces("application/json")
     public Response demoteUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
-        if(userBean.findUserByToken(token) == null) {
+    if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -179,7 +182,7 @@ public class ProjectService {
     @Path("/{projectName}/leave")
     @Produces("application/json")
     public Response leaveProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -191,7 +194,7 @@ public class ProjectService {
     @Path("")
     @Produces("application/json")
     public Response updateProject(@HeaderParam("token") String token, ProjectDto projectDto){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);

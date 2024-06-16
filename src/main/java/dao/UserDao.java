@@ -1,5 +1,6 @@
 package dao;
 
+import entities.TokenEntity;
 import entities.UserEntity;
 
 import jakarta.ejb.Stateless;
@@ -20,17 +21,11 @@ public class UserDao extends AbstractDao<UserEntity>{
     public UserDao() {
         super(UserEntity.class);
     }
-    public UserEntity findUserByToken(String token) {
-        try {
-            return (UserEntity) em.createNamedQuery("User.findUserByToken").setParameter("token", token)
-                    .getSingleResult();
 
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-    public void updateToken(UserEntity userEntity) {
-        em.createNamedQuery("User.updateToken").setParameter("token", userEntity.getToken()).setParameter("token",userEntity.getToken()).executeUpdate();
+    public void updateToken(UserEntity userEntity, TokenEntity tokenEntity) {
+
+        userEntity.setTokens(tokenEntity);
+        em.merge(userEntity);
     }
     public void updateUser(UserEntity userEntity) {
         em.merge(userEntity);
@@ -53,21 +48,6 @@ public class UserDao extends AbstractDao<UserEntity>{
             return null;
         }
     }
-    public List<UserEntity> findAllUsers() {
-        return em.createQuery("SELECT u FROM UserEntity u").getResultList();
-    }
-    public UserEntity findUserByAuxToken(String auxToken) {
-        try {
-            return (UserEntity) em.createNamedQuery("User.findUserByAuxToken").setParameter("auxToken", auxToken)
-                    .getSingleResult();
-
-        } catch (NoResultException e) {
-            return null;
-        }
-    }
-    public List<UserEntity> findTimedOutUsers(LocalDateTime time) {
-        return em.createNamedQuery("User.findTimedOutUsers").setParameter("time", time).getResultList();
-    }
     public UserEntity findUserById(int id) {
         try {
             return (UserEntity) em.createNamedQuery("User.findUserById").setParameter("id", id)
@@ -77,4 +57,7 @@ public class UserDao extends AbstractDao<UserEntity>{
             return null;
         }
     }
+
+
+
 }

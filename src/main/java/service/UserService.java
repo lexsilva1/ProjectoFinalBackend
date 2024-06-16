@@ -1,5 +1,6 @@
 package service;
 
+import bean.TokenBean;
 import bean.UserBean;
 import dto.MyDto;
 import dto.PasswordDto;
@@ -8,6 +9,7 @@ import dto.UserDto;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
@@ -19,6 +21,8 @@ public class UserService {
     private HttpServletRequest request;
     @EJB
     UserBean userBean;
+    @EJB
+    TokenBean tokenBean;
 
 
 
@@ -27,7 +31,8 @@ public class UserService {
     @Path("/login")
     @Produces("application/json")
     public Response login(@HeaderParam("email") String email, @HeaderParam("password") String password) {
-        System.out.println("login");
+
+
         MyDto myInfo = userBean.login(email, password);
         if(myInfo.getToken() != null) {
             return Response.status(200).entity(myInfo).build();
@@ -39,6 +44,7 @@ public class UserService {
     @Path("/logout")
     @Produces("application/json")
     public Response logout(@HeaderParam("token") String token) {
+
         if(userBean.logout(token)) {
             return Response.status(200).entity("logout successful").build();
         } else
@@ -48,7 +54,7 @@ public class UserService {
     @Path("")
     @Produces("application/json")
     public Response findAllUsers(@HeaderParam("token") String token){
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
         return Response.status(200).entity(userBean.findAllUsers()).build();
@@ -79,14 +85,14 @@ public class UserService {
             return Response.status(404).entity("user not found").build();
         }
         String loginToken = userBean.firstLogin(user);
-        userBean.setLastActivity(user);
+        userBean.setLastActivity(token);
         return Response.status(200).entity(loginToken).build();
     }
     @GET
     @Path("/{id}")
     @Produces("application/json")
     public Response findUserById(@HeaderParam("token") String token, @PathParam("id") int id) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null && !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
         userBean.setLastActivity(token);
@@ -100,7 +106,7 @@ public class UserService {
     @Path("/{id}")
     @Produces("application/json")
     public Response updateUser(@HeaderParam("token") String token, @PathParam("id") int id, UserDto userDto) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
         userBean.setLastActivity(token);
@@ -144,7 +150,7 @@ public class UserService {
     @Path("/setPrivacy")
     @Produces("application/json")
     public Response setPrivacy(@HeaderParam("token") String token) {
-        if(userBean.findUserByToken(token) == null) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
         userBean.setLastActivity(token);

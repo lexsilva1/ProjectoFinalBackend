@@ -2,6 +2,7 @@ package websocket;
 
 import bean.NotificationBean;
 import bean.ProjectBean;
+import bean.TokenBean;
 import bean.UserBean;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,6 +10,7 @@ import dao.NotificationDao;
 import dto.NotificationDto;
 import entities.NotificationEntity;
 import entities.ProjectEntity;
+import entities.TokenEntity;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
@@ -32,6 +34,8 @@ public class Notifications {
     private UserBean userBean;
     @EJB
     ProjectBean projectBean;
+    @EJB
+    TokenBean tokenBean;
 
     HashMap<String, Session> sessions = new HashMap<String, Session>();
     private ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
@@ -80,8 +84,12 @@ public class Notifications {
         notificationBean.createNotification(notificationDto);
         }
         UserEntity user = userBean.findUserById(notificationDto.getUserId());
-        session = sessions.get(user.getToken());
-
+        List<TokenEntity> tokens = tokenBean.findTokensByUser(user);
+        for (TokenEntity token : tokens) {
+            if (sessions.containsKey(token.getToken())) {
+                send(token.getToken(), msg);
+            }
+        }
         if (session != null) {
             System.out.println("sending.......... " + msg);
             try {
