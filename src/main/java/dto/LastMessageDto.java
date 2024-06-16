@@ -7,6 +7,7 @@ public class LastMessageDto {
     private String message;
     private LocalDateTime time;
     private boolean isRead;
+    private String type;
 
 
     public LastMessageDto() {
@@ -16,6 +17,7 @@ public class LastMessageDto {
         this.message = message;
         this.time = LocalDateTime.now();
         this.isRead = false;
+        this.type = "LAST_MESSAGE";
     }
 
 
@@ -49,5 +51,13 @@ public class LastMessageDto {
 
     public void setRead(boolean read) {
         isRead = read;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
