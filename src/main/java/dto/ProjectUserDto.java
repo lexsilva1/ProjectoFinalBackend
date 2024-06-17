@@ -8,6 +8,7 @@ public class ProjectUserDto {
     private String projectPhoto;
     private boolean isProjectManager;
     private int userId;
+    private String approvalStatus;
     public int getId() {
         return id;
     }
@@ -62,5 +63,21 @@ public class ProjectUserDto {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getProjectPhoto() {
+        return projectPhoto;
+    }
+
+    public void setProjectPhoto(String projectPhoto) {
+        this.projectPhoto = projectPhoto;
+    }
+
+    public String getApprovalStatus() {
+        return approvalStatus;
+    }
+
+    public void setApprovalStatus(String approvalStatus) {
+        this.approvalStatus = approvalStatus;
     }
 }

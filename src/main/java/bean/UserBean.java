@@ -332,6 +332,7 @@ public class UserBean {
         projectUserDto.setUserPhoto(projectUser.getUser().getUserPhoto());
         projectUserDto.setProjectManager(projectUser.isProjectManager());
         projectUserDto.setUserId(projectUser.getUser().getId());
+        projectUserDto.setApprovalStatus(projectUser.getApprovalStatus().name());
         return projectUserDto;
     }
 
