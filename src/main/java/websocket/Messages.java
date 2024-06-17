@@ -4,20 +4,20 @@ import bean.MessageBean;
 import bean.NotificationBean;
 import bean.TokenBean;
 import bean.UserBean;
-import com.google.gson.Gson;
-import dto.LastMessageDto;
-import dto.MessageDto;
-import dto.MessageUserDto;
-import entities.TokenEntity;
-import entities.UserEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.SingleString;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
+import dto.LastMessageDto;
+import dto.MessageDto;
+import dto.MessageUserDto;
+import entities.TokenEntity;
+import entities.UserEntity;
 import service.ObjectMapperContextResolver;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -36,11 +36,12 @@ public class Messages {
     Notifications notifications;
     @EJB
     private TokenBean tokenBean;
-    HashMap<String, Session> sessions = new HashMap<String, Session>();
-    private ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
-    Gson gson = new Gson();
-    public void send(String conervsationToken, String msg) {
-        Session session = sessions.get(conervsationToken);
+    private final HashMap<String, Session> sessions = new HashMap<>();
+    private final ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
+    private final ObjectMapper mapper = contextResolver.getContext(ObjectMapper.class);
+
+    public void send(String conversationToken, String msg) {
+        Session session = sessions.get(conversationToken);
         if (session != null) {
             System.out.println("sending.......... " + msg);
             try {
@@ -50,9 +51,10 @@ public class Messages {
             }
         }
     }
+
     @OnOpen
     public void toDoOnOpen(Session session, @PathParam("token") String token, @PathParam("id") int id) {
-        System.out.println("A new WebSocket session is opened for client with token: " + token);
+        System.out.println("A new messages WebSocket session is opened for client with token: " + token);
         String conversationToken = token + "/" + id;
         sessions.put(conversationToken, session);
     }
@@ -60,13 +62,13 @@ public class Messages {
     @OnClose
     public void toDoOnClose(Session session, CloseReason reason) {
         System.out.println("Websocket session is closed with CloseCode: " + reason.getCloseCode() + ": " + reason.getReasonPhrase());
-        for (String key : sessions.keySet()) {
-            if (sessions.get(key) == session)
-                sessions.remove(key);
-        }
+        sessions.values().removeIf(s -> s == session);
     }
+
     @OnMessage
-    public void toDoOnMessage( String message, @PathParam("token") String token, @PathParam("id") int id) {
+    public void toDoOnMessage(@PathParam("token") String token, @PathParam("id") int id, String message) {
+
+        System.out.println("Received message: " + message);
         UserEntity sender = userBean.findUserByToken(token);
         UserEntity receiver = userBean.findUserById(id);
         if (sender != null && receiver != null) {
@@ -78,32 +80,40 @@ public class Messages {
             List<TokenEntity> receiverTokens = tokenBean.findActiveTokensByUser(receiver);
 
             for (TokenEntity receiverToken : receiverTokens) {
-                if(notifications.sessions.containsKey(receiverToken.getToken())) {
+                if (notifications.sessions.containsKey(receiverToken.getToken())) {
                     LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
-                    String lastMessageJson = gson.toJson(lastMessageDto);
+                    String lastMessageJson = serializeToJson(lastMessageDto);
                     notifications.send(receiverToken.getToken(), lastMessageJson);
 
                     String conversationToken = receiverToken.getToken() + "/" + sender.getId();
                     if (sessions.containsKey(conversationToken)) {
                         messageDto.setIsRead(true);
-                        String messageJson = gson.toJson(messageDto);
+                        String messageJson = serializeToJson(messageDto);
                         send(conversationToken, messageJson);
                     }
                 }
-
             }
+
             for (TokenEntity senderToken : senderTokens) {
                 LastMessageDto lastMessageDto = new LastMessageDto(receiverDto, message);
-                String lastMessageJson = gson.toJson(lastMessageDto);
+                String lastMessageJson = serializeToJson(lastMessageDto);
                 notifications.send(senderToken.getToken(), lastMessageJson);
                 String conversationToken = senderToken.getToken() + "/" + receiver.getId();
                 if (sessions.containsKey(conversationToken)) {
-                    String messageJson = gson.toJson(messageDto);
+                    String messageJson = serializeToJson(messageDto);
                     send(conversationToken, messageJson);
                 }
             }
         }
+    }
 
-
+    private String serializeToJson(Object obj) {
+        try {
+            return mapper.writeValueAsString(obj);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "{}";
+        }
     }
 }
+
