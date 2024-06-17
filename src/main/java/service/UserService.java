@@ -82,9 +82,9 @@ public class UserService {
         if(user == null) {
             return Response.status(404).entity("user not found").build();
         }
-        String loginToken = userBean.firstLogin(user);
-        userBean.setLastActivity(token);
-        return Response.status(200).entity(loginToken).build();
+
+
+        return Response.status(200).entity(userBean.firstLogin(user)).build();
     }
     @GET
     @Path("/{id}")

@@ -171,11 +171,11 @@ public class UserBean {
      * @param user
      * @return
      */
-    public String firstLogin(UserEntity user) {
+    public MyDto firstLogin(UserEntity user) {
         String token = generateToken();
         tokenBean.createLoginToken(token, user);
-        userDao.merge(user);
-        return token;
+
+        return convertToMyDto(user,token);
     }
 
     public boolean logout(String token) {
