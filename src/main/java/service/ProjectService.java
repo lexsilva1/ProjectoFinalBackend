@@ -201,4 +201,14 @@ public class ProjectService {
         projectBean.createProject(projectDto,token);
         return Response.status(200).entity("project updated").build();
     }
+    @GET
+    @Path("statistics")
+    @Produces("application/json")
+    public Response getStatistics(@HeaderParam("token") String token){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        return Response.status(200).entity(projectBean.getProjectStatistics()).build();
+    }
 }

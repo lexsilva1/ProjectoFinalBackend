@@ -1,5 +1,6 @@
 package dao;
 
+import entities.LabEntity;
 import entities.ProjectEntity;
 import entities.ProjectUserEntity;
 import entities.SkillEntity;
@@ -9,6 +10,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Stateless
@@ -122,5 +124,82 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         } catch (Exception e) {
             return null;
         }
+    }
+    public HashMap<String, Integer> getProjectsByLab() {
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p GROUP BY p.lab.location").getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+    public HashMap<String,Integer> getApprovedProjectsByLab(){
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
+                .setParameter("status", ProjectEntity.Status.Approved)
+                .getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+    public HashMap<String,Integer> getCompletedProjectsByLab(){
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
+                .setParameter("status", ProjectEntity.Status.Completed)
+                .getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+
+    public HashMap<String,Integer> getCancelledProjectsByLab(){
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
+                .setParameter("status", ProjectEntity.Status.Cancelled)
+                .getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+    public HashMap<String,Integer> getReadyProjectsByLab(){
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
+                .setParameter("status", ProjectEntity.Status.Ready)
+                .getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+    public HashMap<String,Integer> getInProgressProjectsByLab(){
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
+                .setParameter("status", ProjectEntity.Status.In_Progress)
+                .getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+    public HashMap<String,Integer> getPlanningProjectsByLab(){
+        List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
+                .setParameter("status", ProjectEntity.Status.Planning)
+                .getResultList();
+        HashMap<String, Integer> projectsByLab = new HashMap<>();
+        for (Object[] result : results) {
+            projectsByLab.put(((LabEntity.Lab) result[0]).name(), ((Long) result[1]).intValue());
+        }
+        return projectsByLab;
+    }
+    public double getAverageMembersPerProject(){
+        List<Object> results = em.createQuery("SELECT AVG(p.maxMembers) FROM ProjectEntity p").getResultList();
+        return (double) results.get(0);
+    }
+    public double getAverageExecutionTime(){
+        List<Object> results = em.createQuery("SELECT AVG(FUNCTION('DATEDIFF', p.endDate, p.startDate)) FROM ProjectEntity p").getResultList();
+        return  (double) results.get(0);
     }
 }

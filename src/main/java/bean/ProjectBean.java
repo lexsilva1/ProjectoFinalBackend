@@ -556,4 +556,18 @@ public class ProjectBean {
         projectDao.persist(project);
         return true;
     }
+    public ProjectStatistics getProjectStatistics() {
+        ProjectStatistics projectStatistics = new ProjectStatistics();
+        projectStatistics.setTotalProjects(projectDao.findAllProjects().size());
+        projectStatistics.setProjectsByLab(projectDao.getProjectsByLab());
+        projectStatistics.setTotalApprovedProjects(projectDao.getApprovedProjectsByLab());
+        projectStatistics.setTotalCompletedProjects(projectDao.getCompletedProjectsByLab());
+        projectStatistics.setTotalCancelledProjects(projectDao.getCancelledProjectsByLab());
+        projectStatistics.setTotalPlanningProjects(projectDao.getPlanningProjectsByLab());
+        projectStatistics.setTotalInProgressProjects(projectDao.getInProgressProjectsByLab());
+        projectStatistics.setTotalReadyProjects(projectDao.getReadyProjectsByLab());
+        projectStatistics.setAverageMembersPerProject(projectDao.getAverageMembersPerProject());
+        projectStatistics.setAverageExecutionTime(projectDao.getAverageExecutionTime());
+        return projectStatistics;
+    }
 }
