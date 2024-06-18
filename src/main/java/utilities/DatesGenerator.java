@@ -10,6 +10,6 @@ public class DatesGenerator {
     public DatesGenerator() {
     }
     public LocalDateTime generateRandomDate() {
-        return LocalDateTime.now().plusDays((long) (Math.random() * 30));
+        return LocalDateTime.now().minusDays((long) (Math.random() * 30));
     }
 }

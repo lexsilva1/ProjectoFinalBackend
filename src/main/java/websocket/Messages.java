@@ -79,17 +79,22 @@ public class Messages {
             List<TokenEntity> senderTokens = tokenBean.findActiveTokensByUser(sender);
             List<TokenEntity> receiverTokens = tokenBean.findActiveTokensByUser(receiver);
 
-            for (TokenEntity receiverToken : receiverTokens) {
-                if (notifications.sessions.containsKey(receiverToken.getToken())) {
+            for (TokenEntity receiverToken : receiverTokens) {;
+                if (notifications.getSession(receiverToken.getToken()) != null){
+
+                    System.out.println("receiver is online");
                     LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
                     String lastMessageJson = serializeToJson(lastMessageDto);
                     notifications.send(receiverToken.getToken(), lastMessageJson);
+                    System.out.println("sending last message to receiver");
 
                     String conversationToken = receiverToken.getToken() + "/" + sender.getId();
                     if (sessions.containsKey(conversationToken)) {
+                        System.out.println("receiver is online with token: " + receiverToken.getToken());
                         messageDto.setIsRead(true);
                         String messageJson = serializeToJson(messageDto);
                         send(conversationToken, messageJson);
+                        System.out.println("sending message to sender");
                     }
                 }
             }
@@ -98,10 +103,12 @@ public class Messages {
                 LastMessageDto lastMessageDto = new LastMessageDto(receiverDto, message);
                 String lastMessageJson = serializeToJson(lastMessageDto);
                 notifications.send(senderToken.getToken(), lastMessageJson);
+                System.out.println("sending last message to sender");
                 String conversationToken = senderToken.getToken() + "/" + receiver.getId();
                 if (sessions.containsKey(conversationToken)) {
                     String messageJson = serializeToJson(messageDto);
                     send(conversationToken, messageJson);
+                    System.out.println("sending message to receiver");
                 }
             }
         }
