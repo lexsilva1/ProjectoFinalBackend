@@ -6,6 +6,7 @@ import bean.TokenBean;
 import bean.UserBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.SingleString;
+import entities.MessageEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.inject.Inject;
@@ -75,38 +76,42 @@ public class Messages {
             MessageUserDto senderDto = new MessageUserDto(sender);
             MessageUserDto receiverDto = new MessageUserDto(receiver);
             MessageDto messageDto = new MessageDto(message, senderDto, receiverDto);
-            messageBean.createMessage(messageDto);
+            MessageEntity entity = messageBean.createMessage(messageDto);
             List<TokenEntity> senderTokens = tokenBean.findActiveTokensByUser(sender);
             List<TokenEntity> receiverTokens = tokenBean.findActiveTokensByUser(receiver);
 
             for (TokenEntity receiverToken : receiverTokens) {;
                 if (notifications.getSession(receiverToken.getToken()) != null){
 
-                    System.out.println("receiver is online");
-                    LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
-                    String lastMessageJson = serializeToJson(lastMessageDto);
-                    System.out.println("last Message"+lastMessageJson);
-                    notifications.send(receiverToken.getToken(), lastMessageJson);
-                    System.out.println("sending last message to receiver");
-
                     String conversationToken = receiverToken.getToken() + "/" + sender.getId();
                     if (sessions.containsKey(conversationToken)) {
                         System.out.println("receiver is online with token: " + receiverToken.getToken());
                         messageDto.setIsRead(true);
+                        messageBean.markAsRead(entity);
                         String messageJson = serializeToJson(messageDto);
                         send(conversationToken, messageJson);
+                        LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
+                        lastMessageDto.setRead(true);
+                        String lastMessageJson = serializeToJson(lastMessageDto);
+                        notifications.send(receiverToken.getToken(), lastMessageJson);
                         System.out.println("sending message to sender");
+                    }else{
+                        LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
+                        String lastMessageJson = serializeToJson(lastMessageDto);
+                        notifications.send(receiverToken.getToken(), lastMessageJson);
                     }
                 }
             }
 
             for (TokenEntity senderToken : senderTokens) {
                 LastMessageDto lastMessageDto = new LastMessageDto(receiverDto, message);
+                lastMessageDto.setRead(true);
                 String lastMessageJson = serializeToJson(lastMessageDto);
                 notifications.send(senderToken.getToken(), lastMessageJson);
                 System.out.println("sending last message to sender");
                 String conversationToken = senderToken.getToken() + "/" + receiver.getId();
                 if (sessions.containsKey(conversationToken)) {
+                    messageDto.setIsRead(true);
                     String messageJson = serializeToJson(messageDto);
                     send(conversationToken, messageJson);
                     System.out.println("sending message to receiver");

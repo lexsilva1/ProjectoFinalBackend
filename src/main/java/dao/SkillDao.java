@@ -5,6 +5,7 @@ import entities.SkillEntity;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -41,12 +42,16 @@ public class SkillDao extends AbstractDao<SkillEntity>
             return null;
         }
     }
-public Set<SkillEntity> findSkillsByName(Set<String> names) {
+    public Set<SkillEntity> findSkillsByName(Set<String> names) {
         try {
-            return (Set<SkillEntity>) em.createNamedQuery("SkillEntity.findSkillsByName").setParameter("names", names)
+            List<SkillEntity> skillList = em.createQuery(
+                            "SELECT s FROM SkillEntity s LEFT JOIN FETCH s.users WHERE s.name IN :names",
+                            SkillEntity.class)
+                    .setParameter("names", names)
                     .getResultList();
-
+            return new HashSet<>(skillList);
         } catch (Exception e) {
+            System.out.println("exception in findSkillsByName"+    e.getMessage());
             return null;
         }
     }

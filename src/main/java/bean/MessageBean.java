@@ -91,11 +91,12 @@ public void createDefaultMessage() {
 
 
     }
-    public void createMessage(MessageDto message) {
+    public MessageEntity createMessage(MessageDto message) {
         UserEntity sender = userBean.findUserById(message.getSender().getId());
         UserEntity receiver = userBean.findUserById(message.getReceiver().getId());
         MessageEntity messageEntity = new MessageEntity(message, sender, receiver);
         messageDao.createMessage(messageEntity);
+        return messageEntity;
     }
     public List <MessageDto> findUserMessages(String token, int id) {
         UserEntity user = userBean.findUserByToken(token);
@@ -103,6 +104,9 @@ public void createDefaultMessage() {
         List <MessageEntity> messages = messageDao.findMessagesByUser(user.getId(), user2.getId());
         List <MessageDto> messageDtos = new ArrayList<>();
         for (MessageEntity message : messages) {
+            if(!message.isRead() && message.getReceiver().getId() == user.getId()) {
+                markAsRead(message);
+            }
             messageDtos.add(convertToDto(message));
         }
         return messageDtos;
@@ -142,6 +146,7 @@ public void createDefaultMessage() {
                 senderDto.setLastName(receiver.getLastName());
                 senderDto.setImage(receiver.getUserPhoto());
                 lastMessageDto.setSender(senderDto);
+                lastMessageDto.setRead(true);
             } else {
                 UserEntity sender = message.getSender();
                 senderDto.setId(sender.getId());
@@ -149,13 +154,18 @@ public void createDefaultMessage() {
                 senderDto.setLastName(sender.getLastName());
                 senderDto.setImage(sender.getUserPhoto());
                 lastMessageDto.setSender(senderDto);
+                lastMessageDto.setRead(message.isRead());
             }
             lastMessageDto.setMessage(message.getMessage());
             lastMessageDto.setTime(message.getTime());
-            lastMessageDto.setRead(message.isRead());
+
             messageDtos.add(lastMessageDto);
         }
         return messageDtos;
+    }
+    public void markAsRead(MessageEntity message) {
+        message.setRead(true);
+        messageDao.merge(message);
     }
 
 

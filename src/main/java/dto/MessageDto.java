@@ -8,6 +8,7 @@ public class MessageDto {
     private MessageUserDto receiver;
     private LocalDateTime time;
     private boolean isRead;
+    private String image;
 
     public MessageDto() {
     }

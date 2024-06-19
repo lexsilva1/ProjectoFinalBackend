@@ -13,6 +13,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
+import java.util.List;
+
 @Path("/skills")
 public class SkillService {
     @Context
@@ -107,6 +109,12 @@ public class SkillService {
     public Response findAllSkillTypes() {
         return Response.status(200).entity(skillBean.findAllSkilltypes()).build();
     }
+    @GET
+    @Path("/tests")
+    @Produces("application/json")
+    public Response test(List<String> names) {
+        return Response.status(200).entity(skillBean.findSkillsByName(names)).build();
 
+    }
 
 }

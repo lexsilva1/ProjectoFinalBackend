@@ -310,7 +310,7 @@ public class ProjectBean {
 
         project.setSkills(skillBean.convertStringToSkillEntities(projectDto.getSkills()));
         project.setInterests(interestBean.convertStringToInterestEntities(projectDto.getInterests()));
-
+        projectDao.persist(project);
         for (int i = 0; i < projectDto.getMaxTeamMembers(); i++) {
             for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
@@ -338,7 +338,8 @@ public class ProjectBean {
         projectTask.setProject_id(project.getName());
         projectTask.setTask_id(lastTask.getId());
         projectTaskDao.persist(projectTask);
-        projectDao.persist(project);
+
+
         return true;
     }
 

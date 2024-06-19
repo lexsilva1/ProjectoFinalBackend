@@ -290,4 +290,8 @@ public class SkillBean {
         }
         return skillTypes;
     }
+    public Set<SkillEntity> findSkillsByName(List<String> names){
+        Set<String> skillNames = new HashSet<>(names);
+        return skillDao.findSkillsByName(skillNames);
+    }
 }

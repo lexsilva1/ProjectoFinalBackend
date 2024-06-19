@@ -5,6 +5,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,10 +43,14 @@ public class InterestDao extends AbstractDao<InterestEntity> {
     }
     public Set<InterestEntity> findInterestsByName(Set<String> names) {
         try {
-            return (Set<InterestEntity>) em.createNamedQuery("InterestEntity.findInterestsByName").setParameter("names", names)
+            List<InterestEntity> skillList = em.createQuery(
+                            "SELECT s FROM InterestEntity s LEFT JOIN FETCH s.users WHERE s.name IN :names",
+                            InterestEntity.class)
+                    .setParameter("names", names)
                     .getResultList();
-
+            return new HashSet<>(skillList);
         } catch (Exception e) {
+            System.out.println("exception in findSkillsByName"+    e.getMessage());
             return null;
         }
     }
