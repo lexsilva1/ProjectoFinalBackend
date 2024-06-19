@@ -85,6 +85,7 @@ public class Messages {
                     System.out.println("receiver is online");
                     LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
                     String lastMessageJson = serializeToJson(lastMessageDto);
+                    System.out.println("last Message"+lastMessageJson);
                     notifications.send(receiverToken.getToken(), lastMessageJson);
                     System.out.println("sending last message to receiver");
 
