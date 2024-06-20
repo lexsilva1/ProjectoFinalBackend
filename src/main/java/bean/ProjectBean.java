@@ -7,6 +7,8 @@ import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import websocket.Notifications;
+
 import java.util.*;
 
 @Stateless
@@ -41,6 +43,8 @@ public class ProjectBean {
     SkillBean skillBean;
     @Inject
     InterestBean interestBean;
+    @Inject
+    NotificationBean notificationBean;
 
 
     public void createDefaultProjects() {
@@ -298,7 +302,8 @@ public class ProjectBean {
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.Planning);
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
-        project.setCreator(userBean.findUserByToken(token));
+        UserEntity creator = userBean.findUserByToken(token);
+        project.setCreator(creator);
         project.setMaxMembers(projectDto.getMaxTeamMembers());
         project.setCreatedAt(java.time.LocalDateTime.now());
         if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
@@ -311,16 +316,32 @@ public class ProjectBean {
         project.setSkills(skillBean.convertStringToSkillEntities(projectDto.getSkills()));
         project.setInterests(interestBean.convertStringToInterestEntities(projectDto.getInterests()));
         projectDao.persist(project);
-        for (int i = 0; i < projectDto.getMaxTeamMembers(); i++) {
+        if(projectDto.getTeamMembers().size() > project.getMaxMembers()){
+            return false;
+        }
             for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
                 projectUser.setProject(project);
                 projectUser.setUser(UserDao.findUserById(projectUserDto.getUserId()));
                 projectUser.setProjectManager(projectUserDto.isProjectManager());
-                projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+                projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.valueOf(projectUserDto.getApprovalStatus()));
                 projectUserDao.persist(projectUser);
+                if(projectUserDto.getApprovalStatus().equals("INVITED")){
+                   NotificationDto notificationDto = new NotificationDto();
+                     notificationDto.setProjectName(project.getName());
+                        notificationDto.setUserId(projectUserDto.getUserId());
+                        notificationDto.setMessage("INVITE");
+                        notificationDto.setRead(false);
+                        if(notificationBean.createNotification(notificationDto)){
+                            notificationBean.sendNotification(notificationDto);
+                        }
+
+
+                }
             }
-        }
+
+
+
 
         Set resourceSet = new LinkedHashSet<>();
         for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
@@ -418,16 +439,27 @@ public class ProjectBean {
         return true;
     }
 
-    public boolean rejectInvitation(String token, String projectName) {
+
+    public boolean rejectRequest(String token, String projectName, Integer userId, OperationType operationType) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
-        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
-        if (user == null || project == null || projectUser == null) {
+        UserEntity targetUser = operationType == OperationType.ACCEPT_INVITATION ? user : UserDao.findUserById(userId);
+
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, targetUser);
+        if (user == null || project == null || targetUser == null || projectUser == null) {
             return false;
         }
-        if (projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.INVITED) {
-            return false;
+
+        if (operationType == OperationType.ACCEPT_INVITATION) {
+            if (projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.INVITED) {
+                return false;
+            }
+        } else if (operationType == OperationType.ACCEPT_APPLICATION) {
+            if (projectUser.getApprovalStatus() != ProjectUserEntity.ApprovalStatus.APPLIED) {
+                return false;
+            }
         }
+
         projectUserDao.remove(projectUser);
         return true;
     }

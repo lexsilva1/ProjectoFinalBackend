@@ -23,12 +23,33 @@ public class NotificationEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private UserEntity user;
     @Column (name = "message", nullable = false, unique = false)
-    private String message;
+    private NotificationType message;
     @Column (name = "is_read", nullable = false, unique = false)
     private boolean isRead;
     @Column (name = "time", nullable = false, unique = false)
     private LocalDateTime time;
 
+    public enum NotificationType {
+        INVITE,
+        APPLY,
+        ACCEPT,
+        REJECT,
+        EXCLUDE,
+        PROMOTED,
+        DEMOTED,
+        TASK_ASSIGN,
+        TASK_DOING,
+        TASK_COMPLETE,
+        PROJECT_COMPLETE,
+        PROJECT_CANCEL,
+        PROJECT_APPROVED,
+        PROJECT_READY,
+        PROJECT_DOING
+
+    }
+
+    public NotificationEntity() {
+    }
 
     public int getId() {
         return id;
@@ -54,11 +75,11 @@ public class NotificationEntity implements Serializable {
         this.user = user;
     }
 
-    public String getMessage() {
+    public NotificationType getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(NotificationType message) {
         this.message = message;
     }
 

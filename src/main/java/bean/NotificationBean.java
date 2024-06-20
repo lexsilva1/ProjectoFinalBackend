@@ -7,6 +7,7 @@ import dto.NotificationDto;
 import entities.NotificationEntity;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
+import websocket.Notifications;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -22,6 +23,8 @@ public class NotificationBean {
     private UserDao userDao;
     @Inject
     private ProjectDao projectDao;
+    @Inject
+    private Notifications notifications;
 
 
     public NotificationBean() {
@@ -30,7 +33,7 @@ public class NotificationBean {
     public NotificationDto convertToDto(NotificationEntity entity) {
         NotificationDto dto = new NotificationDto();
         dto.setRead(entity.isRead());
-        dto.setMessage(entity.getMessage());
+        dto.setMessage(entity.getMessage().name());
         dto.setProjectName(entity.getProject().getName());
         dto.setTime(entity.getTime());
         dto.setUserId(entity.getUser().getId());
@@ -39,7 +42,7 @@ public class NotificationBean {
     public boolean createNotification(NotificationDto dto) {
         boolean created = false;
         NotificationEntity entity = new NotificationEntity();
-        entity.setMessage(dto.getMessage());
+        entity.setMessage(NotificationEntity.NotificationType.valueOf(dto.getMessage()));
         entity.setRead(dto.isRead());
         entity.setTime(LocalDateTime.now());
         entity.setUser(userDao.findUserById(dto.getUserId()));
@@ -58,5 +61,15 @@ public class NotificationBean {
             dtos.add(convertToDto(entity));
         }
         return dtos;
+    }
+    public boolean sendNotification (NotificationDto dto) {
+
+        boolean sent = false;
+
+        if(createNotification(dto)) {
+            notifications.sendNotification(dto);
+            sent = true;
+        }
+        return sent;
     }
 }

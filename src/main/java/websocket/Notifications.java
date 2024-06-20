@@ -51,6 +51,26 @@ public class Notifications {
             }
         }
     }
+    public void sendNotification(NotificationDto notificationDto) {
+        ObjectMapper mapper = contextResolver.getContext(null);
+        String msg = null;
+        try {
+            msg = mapper.writeValueAsString(notificationDto);
+        } catch (JsonProcessingException e) {
+            System.out.println("Error in processing JSON: " + e.getMessage());
+        }
+        if (msg != null) {
+            UserEntity user = userBean.findUserById(notificationDto.getUserId());
+            List<TokenEntity> tokens = tokenBean.findTokensByUser(user);
+            if(tokens != null){
+            for (TokenEntity token : tokens) {
+                if (sessions.containsKey(token.getToken())) {
+                    send(token.getToken(), msg);
+                }
+            }
+            }
+        }
+    }
 
     public Session getSession(String token) {
         return sessions.get(token);

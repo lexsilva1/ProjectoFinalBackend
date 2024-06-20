@@ -154,6 +154,20 @@ public class ProjectService {
         projectBean.acceptRequest(token,projectName,userId,operationTypeEnum);
         return Response.status(200).entity("accepted").build();
     }
+    @DELETE
+    @Path("/{projectName}/reject")
+    @Produces("application/json")
+    public Response rejectUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        String operationTypeString = operationType; // rename the string variable
+        ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
+        projectBean.rejectRequest(token,projectName,userId,operationTypeEnum);
+        return Response.status(200).entity("rejected").build();
+    }
     @PUT
     @Path("/{projectName}/promote")
     @Produces("application/json")
