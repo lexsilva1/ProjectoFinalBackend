@@ -52,5 +52,14 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
+    public List<ProjectUserEntity> findProjectManagers(ProjectEntity project) {
+        try {
+            return em.createNamedQuery("ProjectUserEntity.findProjectManagers").setParameter("project", project)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 }

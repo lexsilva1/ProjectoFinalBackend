@@ -5,6 +5,8 @@ import dao.ProjectDao;
 import dao.UserDao;
 import dto.NotificationDto;
 import entities.NotificationEntity;
+import entities.ProjectEntity;
+import entities.UserEntity;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import websocket.Notifications;
@@ -33,16 +35,20 @@ public class NotificationBean {
     public NotificationDto convertToDto(NotificationEntity entity) {
         NotificationDto dto = new NotificationDto();
         dto.setRead(entity.isRead());
-        dto.setMessage(entity.getMessage().name());
+        dto.setType(entity.getType().name());
         dto.setProjectName(entity.getProject().getName());
         dto.setTime(entity.getTime());
         dto.setUserId(entity.getUser().getId());
+        dto.setNotificationId(entity.getId());
+        if(entity.getOtherUser() != null) {
+            dto.setOtherUserId(entity.getOtherUser().getId());
+        }
         return dto;
     }
     public boolean createNotification(NotificationDto dto) {
         boolean created = false;
         NotificationEntity entity = new NotificationEntity();
-        entity.setMessage(NotificationEntity.NotificationType.valueOf(dto.getMessage()));
+        entity.setType(NotificationEntity.NotificationType.valueOf(dto.getType()));
         entity.setRead(dto.isRead());
         entity.setTime(LocalDateTime.now());
         entity.setUser(userDao.findUserById(dto.getUserId()));
@@ -54,8 +60,10 @@ public class NotificationBean {
         created = true;
         return created;
     }
-    public List<NotificationDto> findNotifications(String projectName,int userId, boolean isRead) {
-        List<NotificationEntity> entities = notificationDao.findNotifications(projectName, userId,  isRead);
+    public List<NotificationDto> findNotifications(String projectName,String token, Boolean isRead) {
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        UserEntity user = userDao.findUserByToken(token);
+        List<NotificationEntity> entities = notificationDao.findNotifications(project, user,  isRead);
         List<NotificationDto> dtos = new ArrayList<>();
         for (NotificationEntity entity : entities) {
             dtos.add(convertToDto(entity));
@@ -71,5 +79,18 @@ public class NotificationBean {
             sent = true;
         }
         return sent;
+    }
+    public NotificationDto findNotificationById(int id) {
+        NotificationEntity entity = notificationDao.findNotificationById(id);
+        return convertToDto(entity);
+    }
+    public NotificationDto updateNotificationMessage( int id, String message) {
+        NotificationEntity entity = notificationDao.findNotificationById(id);
+        entity.setType(NotificationEntity.NotificationType.valueOf(message));
+        notificationDao.merge(entity);
+        return convertToDto(entity);
+    }
+    public int findLastNotificationId() {
+        return notificationDao.findLastNotificationId();
     }
 }

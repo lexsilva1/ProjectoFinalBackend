@@ -38,6 +38,7 @@ public class ProjectLogEntity implements Serializable {
         UPDATE_PROJECT_STATUS,
         UPDATE_PROJECT_DETAILS,
         REQUEST_RESOURCE,
+        OTHER
     }
 
     public int getId() {

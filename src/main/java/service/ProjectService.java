@@ -1,9 +1,7 @@
 package service;
 
-import bean.ProjectBean;
-import bean.TaskBean;
-import bean.TokenBean;
-import bean.UserBean;
+import bean.*;
+import dto.NotificationDto;
 import dto.ProjectDto;
 import dto.TaskDto;
 import entities.ProjectEntity;
@@ -28,6 +26,8 @@ public class ProjectService {
     TaskBean taskBean;
     @EJB
     TokenBean tokenBean;
+    @EJB
+    NotificationBean notificationBean;
 
 
 
@@ -143,21 +143,30 @@ public class ProjectService {
     @POST
     @Path("/{projectName}/accept")
     @Produces("application/json")
-    public Response acceptUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType){
+    public Response acceptUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType, @QueryParam("notificationId")int notificationId){
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        String operationTypeString = operationType; // rename the string variable
+        NotificationDto notification = notificationBean.findNotificationById(notificationId);
+        if(notification == null) {
+            return Response.status(404).entity("notification not found").build();
+        }
+        notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
+        String operationTypeString = operationType;
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
-        projectBean.acceptRequest(token,projectName,userId,operationTypeEnum);
-        return Response.status(200).entity("accepted").build();
+        if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum)) {
+            NotificationDto updatedNotification = notificationBean.findNotificationById(notificationId);
+            return Response.status(200).entity(updatedNotification).build();
+        }else{
+            return Response.status(405).entity("not accepted").build();
+        }
     }
     @DELETE
     @Path("/{projectName}/reject")
     @Produces("application/json")
-    public Response rejectUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType){
+    public Response rejectUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType, @QueryParam("notificationId") int notificationId){
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }

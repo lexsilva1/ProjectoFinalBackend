@@ -8,9 +8,11 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import org.hibernate.query.criteria.spi.CriteriaBuilderExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Stateless
@@ -34,22 +36,26 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
         return em.createNamedQuery("NotificationEntity.findNotificationByProject").setParameter("project", project)
                 .getResultList();
     }
-    public List<NotificationEntity> findNotifications(String projectName, int userId, Boolean isRead) {
+    public List<NotificationEntity> findNotifications(ProjectEntity project, UserEntity user, Boolean isRead) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<NotificationEntity> cq = cb.createQuery(NotificationEntity.class);
         Root<NotificationEntity> root = cq.from(NotificationEntity.class);
         cq.select(root);
-        if(projectName != null) {
-            cq.where(cb.equal(root.get("project"), projectName));
+        List<Predicate> predicates = new ArrayList<>();
+        if(project != null) {
+            predicates.add(cb.equal(root.get("project"), project));
         }
-        if(userId != 0) {
-            cq.where(cb.equal(root.get("user"), userId));
+        if(user != null) {
+            predicates.add(cb.equal(root.get("user"), user));
         }
         if(isRead != null) {
-            cq.where(cb.equal(root.get("isRead"), isRead));
+            predicates.add(cb.equal(root.get("isRead"), isRead));
         }
-
+        cq.where(cb.and(predicates.toArray(new Predicate[0])));
         return em.createQuery(cq).getResultList();
+    }
+    public int findLastNotificationId() {
+        return em.createQuery("SELECT MAX(n.id) FROM NotificationEntity n", Integer.class).getSingleResult();
     }
 
 }

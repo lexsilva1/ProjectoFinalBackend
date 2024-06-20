@@ -4,22 +4,32 @@ import java.time.LocalDateTime;
 
 public class NotificationDto {
 
-    private String message;
+    private String type;
     private int userId;
     private String projectName;
     private boolean isRead;
-
+    private int notificationId;
     private LocalDateTime time;
+    private int otherUserId;
 
     public NotificationDto() {
     }
 
-    public String getMessage() {
-        return message;
+    public NotificationDto(String type, int userId, String projectName, boolean isRead, LocalDateTime time) {
+        this.type = type;
+        this.userId = userId;
+        this.projectName = projectName;
+        this.isRead = isRead;
+        this.time = time;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getUserId() {
@@ -53,5 +63,21 @@ public class NotificationDto {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public int getNotificationId() {
+        return notificationId;
+    }
+
+    public void setNotificationId(int notificationId) {
+        this.notificationId = notificationId;
+    }
+
+    public int getOtherUserId() {
+        return otherUserId;
+    }
+
+    public void setOtherUserId(int otherUserId) {
+        this.otherUserId = otherUserId;
     }
 }

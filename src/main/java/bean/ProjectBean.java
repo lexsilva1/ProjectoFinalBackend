@@ -5,10 +5,8 @@ import dto.*;
 import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import websocket.Notifications;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Stateless
@@ -156,6 +154,7 @@ public class ProjectBean {
             projectResource.setResource_id(resourceDao.findResourceByName("RAM").getId());
             projectResource.setQuantity(3);
             projectResourceDao.persist(projectResource);
+            notificationBean.createNotification(new NotificationDto("INVITE",userBean.findUserByEmail("zetamplario@gmail.com").getId(), "UserInterface",  false, LocalDateTime.now()));
         }
         if(projectDao.findProjectByName("Project X") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
@@ -188,6 +187,7 @@ public class ProjectBean {
             defaultProjectUser3.setUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
             defaultProjectUser3.setProjectManager(false);
             defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
+
             defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
             defaultProject.setStartDate(java.time.LocalDateTime.now().minusDays(5));
             defaultProject.setEndDate(java.time.LocalDateTime.now().plusDays(30));
@@ -215,6 +215,7 @@ public class ProjectBean {
             projectResource.setResource_id(resourceDao.findResourceByName("Windows 10 License").getId());
             projectResource.setQuantity(3);
             projectResourceDao.persist(projectResource);
+            notificationBean.createNotification(new NotificationDto("INVITE",userBean.findUserByEmail("tozemarreco@gmail.com").getId(), "Project X",  false, LocalDateTime.now()));
         }
 
 
@@ -330,7 +331,7 @@ public class ProjectBean {
                    NotificationDto notificationDto = new NotificationDto();
                      notificationDto.setProjectName(project.getName());
                         notificationDto.setUserId(projectUserDto.getUserId());
-                        notificationDto.setMessage("INVITE");
+                        notificationDto.setType("INVITE");
                         notificationDto.setRead(false);
                         if(notificationBean.createNotification(notificationDto)){
                             notificationBean.sendNotification(notificationDto);
@@ -436,6 +437,17 @@ public class ProjectBean {
 
         projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
         projectUserDao.persist(projectUser);
+        projectUserDao.findProjectManagers(project).forEach(projectManager -> {
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setProjectName(project.getName());
+            notificationDto.setUserId(projectManager.getUser().getId());
+            notificationDto.setType("ACCEPT");
+            notificationDto.setRead(false);
+            notificationDto.setOtherUserId(targetUser.getId());
+            notificationBean.createNotification(notificationDto);
+            notificationDto.setNotificationId(notificationBean.findLastNotificationId());
+            notificationBean.sendNotification(notificationDto);
+        });
         return true;
     }
 

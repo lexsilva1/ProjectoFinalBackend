@@ -13,6 +13,7 @@ import jakarta.persistence.*;
 @NamedQuery(name = "User.findActiveTokens", query = "SELECT t FROM TokenEntity t WHERE t.user = :user AND t.isUsed = false")
 @NamedQuery(name = "User.findUserByNickname", query = "SELECT u FROM UserEntity u WHERE u.nickname = :nickname")
 @NamedQuery(name = "User.findUserById", query = "SELECT u FROM UserEntity u WHERE u.id = :id")
+@NamedQuery(name = "User.findUserByToken", query = "SELECT u FROM UserEntity u JOIN u.tokens t WHERE t.token = :token")
 public class UserEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

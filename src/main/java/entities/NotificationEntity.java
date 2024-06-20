@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "NotificationEntity.findNotificationByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user")
 @NamedQuery(name = "NotificationEntity.findNotificationByProject", query = "SELECT n FROM NotificationEntity n WHERE n.project = :project")
 @NamedQuery(name = "NotificationEntity.findUnreadNotificationsByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user AND n.isRead = false")
+@NamedQuery(name = "NotificationEntity.findNotificationById", query = "SELECT n FROM NotificationEntity n WHERE n.id = :id")
 public class NotificationEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -23,11 +24,15 @@ public class NotificationEntity implements Serializable {
     @JoinColumn(name = "user_id")
     private UserEntity user;
     @Column (name = "message", nullable = false, unique = false)
-    private NotificationType message;
+    private NotificationType type;
     @Column (name = "is_read", nullable = false, unique = false)
     private boolean isRead;
     @Column (name = "time", nullable = false, unique = false)
     private LocalDateTime time;
+    @ManyToOne
+    @JoinColumn (name = "other_user_id", nullable = true, unique = false)
+    private UserEntity otherUser;
+
 
     public enum NotificationType {
         INVITE,
@@ -44,7 +49,8 @@ public class NotificationEntity implements Serializable {
         PROJECT_CANCEL,
         PROJECT_APPROVED,
         PROJECT_READY,
-        PROJECT_DOING
+        PROJECT_DOING,
+        CHAT
 
     }
 
@@ -57,6 +63,14 @@ public class NotificationEntity implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public UserEntity getOtherUser() {
+        return otherUser;
+    }
+
+    public void setOtherUser(UserEntity otherUser) {
+        this.otherUser = otherUser;
     }
 
     public ProjectEntity getProject() {
@@ -75,12 +89,12 @@ public class NotificationEntity implements Serializable {
         this.user = user;
     }
 
-    public NotificationType getMessage() {
-        return message;
+    public NotificationType getType() {
+        return type;
     }
 
-    public void setMessage(NotificationType message) {
-        this.message = message;
+    public void setType(NotificationType message) {
+        this.type = message;
     }
 
     public boolean isRead() {

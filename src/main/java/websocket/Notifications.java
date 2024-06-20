@@ -61,7 +61,7 @@ public class Notifications {
         }
         if (msg != null) {
             UserEntity user = userBean.findUserById(notificationDto.getUserId());
-            List<TokenEntity> tokens = tokenBean.findTokensByUser(user);
+            List<TokenEntity> tokens = tokenBean.findActiveTokensByUser(user);
             if(tokens != null){
             for (TokenEntity token : tokens) {
                 if (sessions.containsKey(token.getToken())) {

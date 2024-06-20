@@ -11,6 +11,7 @@ import java.util.Set;
 @NamedQuery(name = "ProjectUserEntity.findProjectUserByProject", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.project = :project")
 @NamedQuery(name = "ProjectUserEntity.findAllProjectUsers", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.project = :project")
 @NamedQuery(name = "ProjectUserEntity.findProjectUserByUser", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.user = :user")
+@NamedQuery(name = "ProjectUserEntity.findProjectManagers", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.project = :project AND pu.isProjectManager = true")
 public class ProjectUserEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
