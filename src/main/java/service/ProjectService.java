@@ -149,15 +149,15 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        NotificationDto notification = notificationBean.findNotificationById(notificationId);
+        NotificationDto notification = notificationBean.convertToDto(notificationBean.findNotificationById(notificationId));
         if(notification == null) {
             return Response.status(404).entity("notification not found").build();
         }
-        notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
+
         String operationTypeString = operationType;
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
         if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum)) {
-            NotificationDto updatedNotification = notificationBean.findNotificationById(notificationId);
+            NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
             return Response.status(200).entity(updatedNotification).build();
         }else{
             return Response.status(405).entity("not accepted").build();
@@ -174,8 +174,13 @@ public class ProjectService {
         projectName = projectBean.decodeProjectName(projectName);
         String operationTypeString = operationType; // rename the string variable
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
-        projectBean.rejectRequest(token,projectName,userId,operationTypeEnum);
-        return Response.status(200).entity("rejected").build();
+        if(projectBean.rejectRequest(token,projectName,userId,operationTypeEnum)){
+            NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"REJECT");
+            return Response.status(200).entity(updatedNotification).build();
+        }else{
+            return Response.status(405).entity("not rejected").build();
+        }
+
     }
     @PUT
     @Path("/{projectName}/promote")

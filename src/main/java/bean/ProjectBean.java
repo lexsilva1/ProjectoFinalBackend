@@ -444,8 +444,6 @@ public class ProjectBean {
             notificationDto.setType("ACCEPT");
             notificationDto.setRead(false);
             notificationDto.setOtherUserId(targetUser.getId());
-            notificationBean.createNotification(notificationDto);
-            notificationDto.setNotificationId(notificationBean.findLastNotificationId());
             notificationBean.sendNotification(notificationDto);
         });
         return true;
@@ -473,6 +471,15 @@ public class ProjectBean {
         }
 
         projectUserDao.remove(projectUser);
+        projectUserDao.findProjectManagers(project).forEach(projectManager -> {
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setProjectName(project.getName());
+            notificationDto.setUserId(projectManager.getUser().getId());
+            notificationDto.setType("REJECT");
+            notificationDto.setRead(false);
+            notificationDto.setOtherUserId(targetUser.getId());
+            notificationBean.sendNotification(notificationDto);
+        });
         return true;
     }
 

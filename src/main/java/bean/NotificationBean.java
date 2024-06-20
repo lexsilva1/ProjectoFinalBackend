@@ -80,15 +80,16 @@ public class NotificationBean {
         }
         return sent;
     }
-    public NotificationDto findNotificationById(int id) {
+    public NotificationEntity findNotificationById(int id) {
         NotificationEntity entity = notificationDao.findNotificationById(id);
-        return convertToDto(entity);
+        return entity;
     }
     public NotificationDto updateNotificationMessage( int id, String message) {
         NotificationEntity entity = notificationDao.findNotificationById(id);
         entity.setType(NotificationEntity.NotificationType.valueOf(message));
+        entity.setRead(true);
         notificationDao.merge(entity);
-        return convertToDto(entity);
+        return convertToDto (entity);
     }
     public int findLastNotificationId() {
         return notificationDao.findLastNotificationId();

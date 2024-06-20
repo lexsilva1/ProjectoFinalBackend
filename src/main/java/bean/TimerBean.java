@@ -1,5 +1,6 @@
 package bean;
 
+import dto.ForcedLogoutDto;
 import entities.TokenEntity;
 import entities.UserEntity;
 import jakarta.ejb.EJB;
@@ -26,7 +27,7 @@ public class TimerBean {
     @EJB
     private TokenBean tokenBean;
 
-    //private Gson gson = new Gson();
+    private Gson gson = new Gson();
     //private static final Logger logger = LogManager.getLogger(TimerBean.class);
     @Schedule(hour = "*", minute = "*", second = "*/30", persistent = false)
 
@@ -38,7 +39,8 @@ public class TimerBean {
         for (TokenEntity token : timedOutUsers) {
             UserEntity user = token.getUser();
             userBean.forcedLogout(token);
-            notifier.send(token.getToken(), "You have been logged out due to inactivity.");
+            ForcedLogoutDto forcedLogoutDto = new ForcedLogoutDto();
+            notifier.send(token.getToken(), gson.toJson(forcedLogoutDto));
 
             System.out.println("User " + user.getEmail() + " has been logged out due to inactivity.");
             user=null;  //nullify user to prevent memory leaks
