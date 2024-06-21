@@ -131,6 +131,16 @@ public class UserBean {
         userDto.setRole(user.getRole());
         userDto.setUserId(user.getId());
         userDto.setPrivacy(user.getPrivacy());
+        List<String> skills = new ArrayList<>();
+        for (SkillEntity skill : user.getSkills()) {
+            skills.add(skill.getName());
+        }
+        userDto.setSkills(skills);
+        List<String> interests = new ArrayList<>();
+        for (InterestEntity interest : user.getInterests()) {
+            interests.add(interest.getName());
+        }
+        userDto.setInterests(interests);
         return userDto;
     }
 
