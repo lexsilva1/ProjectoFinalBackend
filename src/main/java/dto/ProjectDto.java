@@ -19,6 +19,7 @@ public class ProjectDto {
     private int maxTeamMembers;
     public LocalDateTime startDate;
     public LocalDateTime endDate;
+    public LocalDateTime createdDate;
 
 
 
@@ -44,6 +45,14 @@ public class ProjectDto {
 
     public String getImage() {
         return image;
+    }
+
+    public LocalDateTime getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate(LocalDateTime createdDate) {
+        this.createdDate = createdDate;
     }
 
     public void setImage(String image) {
@@ -121,4 +130,5 @@ public class ProjectDto {
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
+
 }

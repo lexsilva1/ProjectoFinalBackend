@@ -100,5 +100,23 @@ public class InterestService {
     public Response findAllInterestTypes() {
         return Response.status(200).entity(interestBean.findAllInterestTypes()).build();
     }
+    @POST
+    @Path("/createKeyword")
+    @Produces("application/json")
+    public Response createKeyword(@HeaderParam("token") String token, InterestDto interestDto) {
+        if(userBean.findUserByToken(token) == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        if(interestBean.findInterestByName(interestDto.getName()) != null) {
+            return Response.status(404).entity("keyword already exists").build();
+        }
+        boolean added = interestBean.createInterest(interestDto);
+        if(!added) {
+            return Response.status(405).entity("keyword not added").build();
+        }else {
+            return Response.status(201).entity(interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()))).build();
+        }
 
+    }
 }

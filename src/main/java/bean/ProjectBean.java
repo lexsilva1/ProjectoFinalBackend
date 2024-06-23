@@ -251,6 +251,7 @@ public class ProjectBean {
         projectDto.setMaxTeamMembers(project.getMaxMembers());
         projectDto.setStartDate(project.getStartDate());
         projectDto.setEndDate(project.getEndDate());
+        projectDto.setCreatedDate(project.getCreatedAt());
         return projectDto;
     }
 

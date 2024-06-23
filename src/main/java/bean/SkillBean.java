@@ -236,11 +236,12 @@ public class SkillBean {
     public SkillEntity findSkillByName(String name){
         return skillDao.findSkillByName(name);
     }
-    public void createSkill(SkillDto skillDto){
+    public boolean createSkill(SkillDto skillDto){
         SkillEntity skill = new SkillEntity();
         skill.setName(skillDto.getName());
         skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
         skillDao.persist(skill);
+        return true;
     }
     public Set<SkillEntity> convertStringToSkillEntities(Set<String> skills){
         return skillDao.findSkillsByName(skills);

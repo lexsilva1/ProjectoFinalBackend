@@ -4,6 +4,7 @@ import entities.TokenEntity;
 import entities.UserEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.PersistenceContext;
 
 import java.time.LocalDateTime;
@@ -28,9 +29,14 @@ public class TokenDao {
     }
 
     public UserEntity findUserByToken(String token) {
-          return em.createNamedQuery("TokenEntity.findUSerByToken", UserEntity.class)
-                 .setParameter("token", token)
-                 .getSingleResult();
+        try {
+            return em.createNamedQuery("TokenEntity.findUSerByToken", UserEntity.class)
+                    .setParameter("token", token)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("No user found with token: " + token + " " + e.getMessage());
+            return null;
+        }
     }
     public List<TokenEntity> findTimedOutTokens(LocalDateTime time
     ) {

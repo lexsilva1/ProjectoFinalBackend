@@ -112,11 +112,12 @@ public class InterestBean {
     public InterestEntity findInterestByName(String name) {
         return interestDao.findInterestByName(name);
     }
-    public void createInterest(InterestDto interestDto){
+    public boolean createInterest(InterestDto interestDto){
         InterestEntity interest = new InterestEntity();
         interest.setName(interestDto.getName());
         interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
         interestDao.persist(interest);
+        return true;
     }
     public Set<InterestEntity> convertStringToInterestEntities(Set<String> interests){
         return interestDao.findInterestsByName(interests);

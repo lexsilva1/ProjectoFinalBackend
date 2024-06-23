@@ -115,24 +115,11 @@ public class UserBean {
         userDao.findAll();
         List<UserDto> userDtos = new ArrayList<>();
         for (UserEntity user : userDao.findAll()) {
-            userDtos.add(convertToUserDto(user));
+            userDtos.add(convertToDto(user));
         }
         return userDtos;
     }
 
-    public UserDto convertToUserDto(UserEntity user) {
-        UserDto userDto = new UserDto();
-        userDto.setFirstName(user.getFirstName());
-        userDto.setLastName(user.getLastName());
-        userDto.setNickname(user.getNickname());
-        userDto.setBio(user.getBio());
-        userDto.setLabLocation(user.getLocation().getLocation().name());
-        userDto.setUserPhoto(user.getUserPhoto());
-        userDto.setRole(user.getRole());
-        userDto.setUserId(user.getId());
-        userDto.setPrivacy(user.getPrivacy());
-        return userDto;
-    }
 
     public MyDto convertToMyDto(UserEntity user, String token) {
         MyDto myDto = new MyDto();

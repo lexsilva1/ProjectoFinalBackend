@@ -116,5 +116,24 @@ public class SkillService {
         return Response.status(200).entity(skillBean.findSkillsByName(names)).build();
 
     }
+    @POST
+    @Path("/createSkill")
+    @Produces("application/json")
+    public Response createSkillForProject(@HeaderParam("token") String token, SkillDto skillDto) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(404).entity("user not found").build();
+        }
+        userBean.setLastActivity(token);
+        if(skillBean.findSkillByName(skillDto.getName()) != null) {
+            return Response.status(404).entity("skill already exists").build();
+        }
+        boolean added = skillBean.createSkill(skillDto);
+        SkillDto skill = skillBean.toSkillDtos(skillBean.findSkillByName(skillDto.getName()));
+        if(!added) {
+            return Response.status(404).entity("skill not added").build();
+        } else {
+            return Response.status(201).entity(skill).build();
+        }
+    }
 
 }
