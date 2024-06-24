@@ -234,6 +234,13 @@ public class SkillBean {
         skillDto.setSkillType(skill.getSkillType().toString());
         return skillDto;
     }
+    public Set<SkillEntity> listDtoToEntity(Set<SkillDto> skillDtos){
+        Set<SkillEntity> skills = new HashSet<>();
+        for(SkillDto skillDto : skillDtos){
+            skills.add(toSkillEntity(skillDto));
+        }
+        return skills;
+    }
     public SkillEntity toSkillEntity(SkillDto skillDto){
         SkillEntity skill = new SkillEntity();
         skill.setId(skillDto.getId());

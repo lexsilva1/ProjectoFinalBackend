@@ -311,10 +311,10 @@ public class ProjectBean {
             project.setStartDate(java.time.LocalDateTime.now());
             project.setEndDate(java.time.LocalDateTime.now().plusDays(30));
         }
-        project.setStartDate(projectDto.getStartDate());
-        project.setEndDate(projectDto.getEndDate());
-        project.setSkills(skillBean.convertStringToSkillEntities(new HashSet<>(Arrays.asList(projectDto.getSkills()))));
-        project.setInterests(interestBean.convertStringToInterestEntities(new HashSet<>(Arrays.asList(projectDto.getInterests()))));
+        project.setStartDate(projectDto.getStartDate().atStartOfDay());
+        project.setEndDate(projectDto.getEndDate().atStartOfDay());
+        project.setSkills(skillBean.listDtoToEntity(new HashSet<>((projectDto.getSkills()))));
+        project.setInterests(interestBean.listDtoToEntity(new HashSet<>(projectDto.getInterests())));
 
         projectDao.persist(project);
         if(projectDto.getTeamMembers().size() > project.getMaxMembers()){

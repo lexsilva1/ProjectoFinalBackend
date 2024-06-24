@@ -1,5 +1,6 @@
 package dto;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -9,11 +10,11 @@ public class CreateProjectDto {
     private String image;
     private String lab;
     private int maxTeamMembers;
-    private LocalDateTime startDate;
-    private LocalDateTime endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private String status;
-    private String[] skills;
-    private String[] interests;
+    private Set<SkillDto> skills;
+    private Set<InterestDto> interests;
     private Set<ProjectUserDto> teamMembers;
     private Set<ResourceDto> billOfMaterials;
 
@@ -60,19 +61,19 @@ public class CreateProjectDto {
         this.maxTeamMembers = maxTeamMembers;
     }
 
-    public LocalDateTime getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDateTime startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDateTime getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDateTime endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -84,19 +85,19 @@ public class CreateProjectDto {
         this.status = status;
     }
 
-    public String[] getSkills() {
+    public Set<SkillDto> getSkills() {
         return skills;
     }
 
-    public void setSkills(String[] skills) {
+    public void setSkills(Set<SkillDto> skills) {
         this.skills = skills;
     }
 
-    public String[] getInterests() {
+    public Set<InterestDto> getInterests() {
         return interests;
     }
 
-    public void setInterests(String[] interests) {
+    public void setInterests(Set<InterestDto> interests) {
         this.interests = interests;
     }
 
