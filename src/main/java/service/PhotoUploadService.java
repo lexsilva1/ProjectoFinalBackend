@@ -85,13 +85,10 @@ public class PhotoUploadService {
     @POST
     @Path("/projectPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadProjectPhoto(@HeaderParam("name") String name, MultipartFormDataInput input) {
-        ProjectEntity project = photoBean.findProjectByName(name);
-
-        if (project == null) {
+    public Response uploadProjectPhoto(@HeaderParam("token") String token,@HeaderParam("name") String name, MultipartFormDataInput input) {
+        if(!tokenBean.isTokenValid(token)){
             return Response.status(403).entity("not allowed").build();
         }
-
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
         List<InputPart> inputParts = uploadForm.get("input");
 
@@ -100,8 +97,8 @@ public class PhotoUploadService {
                 InputStream inputStream = inputPart.getBody(InputStream.class, null);
                 byte[] bytes = IOUtils.toByteArray(inputStream);
 
-                String fileName = project.getName() + ".jpg";
-                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + project.getName();
+                String fileName = name + ".jpg";
+                String uploadDirectory = System.getProperty("user.dir") + File.separator + "bin" + File.separator + "ProjectoFinalImages" + File.separator + name;
                 java.nio.file.Path userDirectoryPath = java.nio.file.Paths.get(uploadDirectory);
                 if (!Files.exists(userDirectoryPath)) {
                     Files.createDirectories(userDirectoryPath);
@@ -119,7 +116,7 @@ public class PhotoUploadService {
                 String uniqueTime = "?t=" + System.currentTimeMillis();
                 // Construct the URL to return to the client
                 String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                        request.getContextPath() + "/ProjectoFinalImages/" + project.getName() + "/" + fileName+uniqueTime;
+                        request.getContextPath() + "/ProjectoFinalImages/" + name + "/" + fileName+uniqueTime;
 
                 return Response.status(200).entity(photoUrl).build();
 

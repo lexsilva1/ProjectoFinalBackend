@@ -5,7 +5,7 @@ public class ProjectUserDto {
     private String firstName;
     private String lastName;
     private String nickname;
-    private String projectPhoto;
+    private String userPhoto;
     private boolean isProjectManager;
     private int userId;
     private String approvalStatus;
@@ -42,11 +42,11 @@ public class ProjectUserDto {
     }
 
     public String getUserPhoto() {
-        return projectPhoto;
+        return userPhoto;
     }
 
     public void setUserPhoto(String userPhoto) {
-        this.projectPhoto = userPhoto;
+        this.userPhoto = userPhoto;
     }
 
     public boolean isProjectManager() {
@@ -63,14 +63,6 @@ public class ProjectUserDto {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public String getProjectPhoto() {
-        return projectPhoto;
-    }
-
-    public void setProjectPhoto(String projectPhoto) {
-        this.projectPhoto = projectPhoto;
     }
 
     public String getApprovalStatus() {

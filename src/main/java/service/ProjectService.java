@@ -218,8 +218,8 @@ public class ProjectService {
         projectBean.leaveProject(token,projectName);
         return Response.status(200).entity("left").build();
     }
-    @POST
-    @Path("")
+    @PUT
+    @Path("/")
     @Produces("application/json")
     public Response updateProject(@HeaderParam("token") String token, ProjectDto projectDto){
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {

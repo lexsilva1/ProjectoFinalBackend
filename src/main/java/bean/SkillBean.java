@@ -233,6 +233,13 @@ public class SkillBean {
         skillDto.setSkillType(skill.getSkillType().toString());
         return skillDto;
     }
+    public SkillEntity toSkillEntity(SkillDto skillDto){
+        SkillEntity skill = new SkillEntity();
+        skill.setId(skillDto.getId());
+        skill.setName(skillDto.getName());
+        skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
+        return skill;
+    }
     public SkillEntity findSkillByName(String name){
         return skillDao.findSkillByName(name);
     }

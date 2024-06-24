@@ -233,10 +233,16 @@ public class ProjectBean {
         projectDto.setImage(project.getImage());
         projectDto.setStatus(project.getStatus().name());
         projectDto.setLab(project.getLab().getLocation().name());
-
-        projectDto.setSkills(skillBean.convertSkillEntitiestoString(project.getSkills()));
-
-        projectDto.setInterests(interestBean.convertInterestEntitiesToString(project.getInterests()));
+        Set<SkillDto> skills = new LinkedHashSet<>();
+        for (SkillEntity skill : project.getSkills()) {
+            skills.add(skillBean.toSkillDtos(skill));
+        }
+        projectDto.setSkills(skills);
+        Set<InterestDto> interests = new LinkedHashSet<>();
+        for (InterestEntity interest : project.getInterests()) {
+            interests.add(interestBean.toInterestDto(interest));
+        }
+        projectDto.setInterests(interests);
         List<ProjectUserDto> teamMembers = new ArrayList<>();
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser));
@@ -314,9 +320,16 @@ public class ProjectBean {
         }
         project.setStartDate(projectDto.getStartDate());
         project.setEndDate(projectDto.getEndDate());
-
-        project.setSkills(skillBean.convertStringToSkillEntities(projectDto.getSkills()));
-        project.setInterests(interestBean.convertStringToInterestEntities(projectDto.getInterests()));
+        Set<SkillEntity> skills = new LinkedHashSet<>();
+        for(SkillDto skill : projectDto.getSkills()){
+            skills.add(skillBean.toSkillEntity(skill));
+        }
+        project.setSkills(skills);
+        Set<InterestEntity> interests = new LinkedHashSet<>();
+        for(InterestDto interest : projectDto.getInterests()){
+            interests.add(interestBean.toInterestEntity(interest));
+        }
+        project.setInterests(interests);
         projectDao.persist(project);
         if(projectDto.getTeamMembers().size() > project.getMaxMembers()){
             return false;

@@ -108,6 +108,13 @@ public class InterestBean {
         interestDto.setInterestType(interest.getInterestType().toString());
         return interestDto;
     }
+    public InterestEntity toInterestEntity(InterestDto interestDto){
+        InterestEntity interest = new InterestEntity();
+        interest.setId(interestDto.getId());
+        interest.setName(interestDto.getName());
+        interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
+        return interest;
+    }
 
     public InterestEntity findInterestByName(String name) {
         return interestDao.findInterestByName(name);
