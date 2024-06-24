@@ -73,6 +73,7 @@ public class ProjectService {
     @Path("/")
     @Produces("application/json")
     public Response createProject(@HeaderParam("token") String token, CreateProjectDto projectDto){
+        System.out.println("create project 1 - entrei no endpoint");
         if(userBean.findUserByToken(token) == null ||  !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }

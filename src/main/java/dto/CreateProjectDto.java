@@ -1,6 +1,5 @@
 package dto;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -9,9 +8,9 @@ public class CreateProjectDto {
     private String description;
     private String image;
     private String lab;
-    private int maxTeamMembers;
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private int slots;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
     private String status;
     private Set<SkillDto> skills;
     private Set<InterestDto> interests;
@@ -53,27 +52,27 @@ public class CreateProjectDto {
         this.lab = lab;
     }
 
-    public int getMaxTeamMembers() {
-        return maxTeamMembers;
+    public int getSlots() {
+        return slots;
     }
 
-    public void setMaxTeamMembers(int maxTeamMembers) {
-        this.maxTeamMembers = maxTeamMembers;
+    public void setSlots(int slots) {
+        this.slots = slots;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getEndDate() {
+    public LocalDateTime getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
+    public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
     }
 

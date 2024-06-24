@@ -293,6 +293,7 @@ public class ProjectBean {
     }
 
     public boolean createProject(CreateProjectDto projectDto, String token) {
+        System.out.println("Creating project");
         if (projectDao.findProjectByName(projectDto.getName()) != null) {
             return false;
         }
@@ -305,14 +306,14 @@ public class ProjectBean {
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
         UserEntity creator = userBean.findUserByToken(token);
         project.setCreator(creator);
-        project.setMaxMembers(projectDto.getMaxTeamMembers());
+        project.setMaxMembers(projectDto.getSlots());
         project.setCreatedAt(java.time.LocalDateTime.now());
         if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
             project.setStartDate(java.time.LocalDateTime.now());
             project.setEndDate(java.time.LocalDateTime.now().plusDays(30));
         }
-        project.setStartDate(projectDto.getStartDate().atStartOfDay());
-        project.setEndDate(projectDto.getEndDate().atStartOfDay());
+        project.setStartDate(projectDto.getStartDate());
+        project.setEndDate(projectDto.getEndDate());
         project.setSkills(skillBean.listDtoToEntity(new HashSet<>((projectDto.getSkills()))));
         project.setInterests(interestBean.listDtoToEntity(new HashSet<>(projectDto.getInterests())));
 
@@ -324,7 +325,7 @@ public class ProjectBean {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
                 projectUser.setProject(project);
                 projectUser.setUser(UserDao.findUserById(projectUserDto.getUserId()));
-                projectUser.setProjectManager(projectUserDto.isProjectManager());
+                projectUser.setProjectManager(projectUserDto.getIsProjectManager());
                 projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.valueOf(projectUserDto.getApprovalStatus()));
                 projectUserDao.persist(projectUser);
                 if(projectUserDto.getApprovalStatus().equals("INVITED")){

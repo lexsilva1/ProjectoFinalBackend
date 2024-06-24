@@ -49,7 +49,7 @@ public class ProjectUserDto {
         this.userPhoto = userPhoto;
     }
 
-    public boolean isProjectManager() {
+    public boolean getIsProjectManager() {
         return isProjectManager;
     }
 
