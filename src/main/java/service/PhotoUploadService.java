@@ -115,8 +115,9 @@ public class PhotoUploadService {
                 }
                 String uniqueTime = "?t=" + System.currentTimeMillis();
                 // Construct the URL to return to the client
-                String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() +
-                        request.getContextPath() + "/ProjectoFinalImages/" + name + "/" + fileName+uniqueTime;
+                String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/ProjectoFinalImages/" +  fileName+uniqueTime;
+
+      
 
                 return Response.status(200).entity(photoUrl).build();
 
