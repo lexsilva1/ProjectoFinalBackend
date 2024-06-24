@@ -100,6 +100,13 @@ public class InterestBean {
         }
         return interestDtos;
     }
+    public Set<String> entityToName(Set<InterestEntity> interests){
+        Set<String> interestNames = new HashSet<>();
+        for(InterestEntity interest : interests){
+            interestNames.add(interest.getName());
+        }
+        return interestNames;
+    }
 
     public InterestDto toInterestDto(InterestEntity interest) {
         InterestDto interestDto = new InterestDto();

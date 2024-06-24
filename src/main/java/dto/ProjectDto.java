@@ -12,14 +12,13 @@ public class ProjectDto {
     private String image;
     private String status;
     private String lab;
-    private Set<SkillDto> skills;
-    private Set<InterestDto> interests;
+    private Set<String> skills;
+    private Set<String> interests;
     private List<ProjectUserDto> teamMembers;
     private List<ResourceDto> billOfMaterials;
     private int maxTeamMembers;
     public LocalDateTime startDate;
     public LocalDateTime endDate;
-    public LocalDateTime createdDate;
 
 
 
@@ -47,13 +46,6 @@ public class ProjectDto {
         return image;
     }
 
-    public LocalDateTime getCreatedDate() {
-        return createdDate;
-    }
-
-    public void setCreatedDate(LocalDateTime createdDate) {
-        this.createdDate = createdDate;
-    }
 
     public void setImage(String image) {
         this.image = image;
@@ -75,19 +67,19 @@ public class ProjectDto {
         this.lab = lab;
     }
 
-    public Set<SkillDto> getSkills() {
+    public Set<String> getSkills() {
         return skills;
     }
 
-    public void setSkills(Set<SkillDto> skills) {
+    public void setSkills(Set<String> skills) {
         this.skills = skills;
     }
 
-    public Set<InterestDto> getInterests() {
+    public Set<String> getInterests() {
         return interests;
     }
 
-    public void setInterests(Set<InterestDto> interests) {
+    public void setInterests(Set<String> interests) {
         this.interests = interests;
     }
 

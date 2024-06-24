@@ -233,16 +233,10 @@ public class ProjectBean {
         projectDto.setImage(project.getImage());
         projectDto.setStatus(project.getStatus().name());
         projectDto.setLab(project.getLab().getLocation().name());
-        Set<SkillDto> skills = new LinkedHashSet<>();
-        for (SkillEntity skill : project.getSkills()) {
-            skills.add(skillBean.toSkillDtos(skill));
-        }
-        projectDto.setSkills(skills);
-        Set<InterestDto> interests = new LinkedHashSet<>();
-        for (InterestEntity interest : project.getInterests()) {
-            interests.add(interestBean.toInterestDto(interest));
-        }
-        projectDto.setInterests(interests);
+
+        projectDto.setSkills(skillBean.entityToString(project.getSkills()));
+
+        projectDto.setInterests(interestBean.entityToName(project.getInterests()));
         List<ProjectUserDto> teamMembers = new ArrayList<>();
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser));
@@ -257,7 +251,6 @@ public class ProjectBean {
         projectDto.setMaxTeamMembers(project.getMaxMembers());
         projectDto.setStartDate(project.getStartDate());
         projectDto.setEndDate(project.getEndDate());
-        projectDto.setCreatedDate(project.getCreatedAt());
         return projectDto;
     }
 
@@ -299,7 +292,7 @@ public class ProjectBean {
         return projectDtos;
     }
 
-    public boolean createProject(ProjectDto projectDto, String token) {
+    public boolean createProject(CreateProjectDto projectDto, String token) {
         if (projectDao.findProjectByName(projectDto.getName()) != null) {
             return false;
         }
@@ -320,16 +313,9 @@ public class ProjectBean {
         }
         project.setStartDate(projectDto.getStartDate());
         project.setEndDate(projectDto.getEndDate());
-        Set<SkillEntity> skills = new LinkedHashSet<>();
-        for(SkillDto skill : projectDto.getSkills()){
-            skills.add(skillBean.toSkillEntity(skill));
-        }
-        project.setSkills(skills);
-        Set<InterestEntity> interests = new LinkedHashSet<>();
-        for(InterestDto interest : projectDto.getInterests()){
-            interests.add(interestBean.toInterestEntity(interest));
-        }
-        project.setInterests(interests);
+        project.setSkills(skillBean.convertStringToSkillEntities(new HashSet<>(Arrays.asList(projectDto.getSkills()))));
+        project.setInterests(interestBean.convertStringToInterestEntities(new HashSet<>(Arrays.asList(projectDto.getInterests()))));
+
         projectDao.persist(project);
         if(projectDto.getTeamMembers().size() > project.getMaxMembers()){
             return false;

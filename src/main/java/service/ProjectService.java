@@ -1,6 +1,7 @@
 package service;
 
 import bean.*;
+import dto.CreateProjectDto;
 import dto.NotificationDto;
 import dto.ProjectDto;
 import dto.TaskDto;
@@ -71,7 +72,7 @@ public class ProjectService {
     @POST
     @Path("/")
     @Produces("application/json")
-    public Response createProject(@HeaderParam("token") String token,ProjectDto projectDto){
+    public Response createProject(@HeaderParam("token") String token, CreateProjectDto projectDto){
         if(userBean.findUserByToken(token) == null ||  !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
@@ -221,7 +222,7 @@ public class ProjectService {
     @PUT
     @Path("/")
     @Produces("application/json")
-    public Response updateProject(@HeaderParam("token") String token, ProjectDto projectDto){
+    public Response updateProject(@HeaderParam("token") String token, CreateProjectDto projectDto){
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
