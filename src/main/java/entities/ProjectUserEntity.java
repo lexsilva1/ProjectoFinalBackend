@@ -33,7 +33,8 @@ public class ProjectUserEntity implements Serializable {
     public enum ApprovalStatus {
         INVITED,
         APPLIED,
-        MEMBER
+        MEMBER,
+        CREATOR
     }
     public ApprovalStatus getApprovalStatus() {
         return approvalStatus;

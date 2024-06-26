@@ -61,7 +61,7 @@ public class ProjectBean {
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
             }
-            defaultProject.setCreator(userBean.findUserByEmail("admin@admin.com"));
+
             ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
             defaultProjectUser.setProject(defaultProject);
             defaultProjectUser.setUser(userBean.findUserByEmail("admin@admin.com"));
@@ -111,7 +111,7 @@ public class ProjectBean {
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
             }
-            defaultProject.setCreator(userBean.findUserByEmail("tozemarreco@gmail.com"));
+
             ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
             defaultProjectUser.setProject(defaultProject);
             defaultProjectUser.setUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
@@ -171,7 +171,7 @@ public class ProjectBean {
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
             }
-            defaultProject.setCreator(userBean.findUserByEmail("zetamplario@gmail.com"));
+
             ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
             defaultProjectUser.setProject(defaultProject);
             defaultProjectUser.setUser(userBean.findUserByEmail("zetamplario@gmail.com"));
@@ -304,8 +304,8 @@ public class ProjectBean {
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.Planning);
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
-        UserEntity creator = userBean.findUserByToken(token);
-        project.setCreator(creator);
+
+
         project.setMaxMembers(projectDto.getSlots());
         project.setCreatedAt(java.time.LocalDateTime.now());
         if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {

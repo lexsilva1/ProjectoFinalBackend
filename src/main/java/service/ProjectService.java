@@ -241,4 +241,20 @@ public class ProjectService {
         userBean.setLastActivity(token);
         return Response.status(200).entity(projectBean.getProjectStatistics()).build();
     }
+    @POST
+    @Path("/{projectName}/createTask")
+    @Produces("application/json")
+    public Response createLastTask(@HeaderParam("token") String token, @PathParam("projectName") String projectName, TaskDto taskDto){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        ProjectEntity project = projectBean.findProjectByName(projectName);
+        if(project == null) {
+            return Response.status(404).entity("project not found").build();
+        }
+        taskBean.createTask(token,projectName,taskDto);
+        return Response.status(200).entity("task created").build();
+    }
 }

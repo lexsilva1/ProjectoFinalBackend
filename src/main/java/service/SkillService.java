@@ -129,6 +129,7 @@ public class SkillService {
         }
         boolean added = skillBean.createSkill(skillDto);
         SkillDto skill = skillBean.toSkillDtos(skillBean.findSkillByName(skillDto.getName()));
+        System.out.println(skill.getName()+" "+ skill.getId());
         if(!added) {
             return Response.status(404).entity("skill not added").build();
         } else {

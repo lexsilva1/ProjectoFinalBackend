@@ -17,7 +17,7 @@ import java.util.Set;
 @NamedQuery(name = "ProjectEntity.findProjectBySkill", query = "SELECT p FROM ProjectEntity p WHERE p.skills = :skills")
 @NamedQuery(name = "ProjectEntity.findProjectByInterest", query = "SELECT p FROM ProjectEntity p WHERE p.interests = :interests")
 @NamedQuery(name = "ProjectEntity.findProjectByStatus", query = "SELECT p FROM ProjectEntity p WHERE p.status = :status")
-@NamedQuery(name = "ProjectEntity.findProjectByCreator", query = "SELECT p FROM ProjectEntity p WHERE p.creator = :creator")
+
 @NamedQuery(name = "ProjectEntity.findAllProjects", query = "SELECT p FROM ProjectEntity p")
 @NamedQuery(name = "ProjectEntity.findProjectSkills", query = "SELECT p.skills FROM ProjectEntity p WHERE p = :project")
 @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
@@ -57,9 +57,6 @@ public class ProjectEntity implements Serializable {
     private LabEntity lab;
     @Column (name="maxMembers", nullable = false, unique = false, updatable = true )
     int maxMembers;
-    @OneToOne
-    @PrimaryKeyJoinColumn (name = "creator_id", referencedColumnName = "id")
-    UserEntity creator;
     @Column (name = "image", nullable = true, unique = false, updatable = true)
     private String image;
     @Column (name = "created_at", nullable = false, unique = false, updatable = false)
@@ -113,7 +110,7 @@ public class ProjectEntity implements Serializable {
         this.startDate = projectDto.startDate;
         this.endDate = projectDto.endDate;
         this.createdAt = LocalDateTime.now();
-        this.creator = creator;
+
 
 
     }
@@ -195,14 +192,6 @@ public class ProjectEntity implements Serializable {
 
     public void setMaxMembers(int maxMembers) {
         this.maxMembers = maxMembers;
-    }
-
-    public UserEntity getCreator() {
-        return creator;
-    }
-
-    public void setCreator(UserEntity creator) {
-        this.creator = creator;
     }
 
     public LocalDateTime getCreatedAt() {
