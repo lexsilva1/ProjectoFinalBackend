@@ -71,6 +71,8 @@ public class TaskBean {
         task.setTaskUsers(users);
         task.setCreatedBy(userBean.findUserByToken(token));
         taskDao.persist(task);
+        TaskEntity taskToAdd = taskDao.find(task.getId());
+        projectBean.addTaskToProject(projectname, taskToAdd);
         return true;
 
     }
@@ -174,5 +176,8 @@ public class TaskBean {
         task.setTaskUsers(users);
         taskDao.merge(task);
         return true;
+    }
+    public TaskEntity findTaskById(int id) {
+        return taskDao.find(id);
     }
 }

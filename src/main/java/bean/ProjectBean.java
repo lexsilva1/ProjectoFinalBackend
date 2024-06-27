@@ -652,4 +652,12 @@ public class ProjectBean {
         projectTasksDto.setTasks(tasks);
         return projectTasksDto;
     }
+    public void addTaskToProject( String projectName, TaskEntity task) {
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (project == null) {
+            return;
+        }
+        project.getTasks().add(task);
+        projectDao.persist(project);
+    }
 }
