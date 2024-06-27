@@ -83,10 +83,6 @@ public class ProjectBean {
             task.setCreationDate(java.time.LocalDateTime.now());
             taskDao.persist(task);
             projectDao.persist(defaultProject);
-            ProjectTaskEntity projectTask = new ProjectTaskEntity();
-            projectTask.setProject_id(defaultProject.getName());
-            projectTask.setTask_id(task.getId());
-            projectTaskDao.persist(projectTask);
             projectUserDao.persist(defaultProjectUser);
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
             projectResource.setProject_id(defaultProject.getId());
@@ -131,6 +127,7 @@ public class ProjectBean {
             defaultProject.setStartDate(java.time.LocalDateTime.now().minusDays(10));
             defaultProject.setEndDate(java.time.LocalDateTime.now().plusDays(15));
             defaultProject.setCreatedAt(java.time.LocalDateTime.now().minusDays(15));
+            projectDao.persist(defaultProject);
             TaskEntity task = new TaskEntity();
             task.setTitle("Create the UserInterface");
             task.setDescription("Create the UserInterface for the project");
@@ -141,11 +138,36 @@ public class ProjectBean {
             task.setEndDate(java.time.LocalDateTime.now().plusDays(15));
             task.setCreationDate(java.time.LocalDateTime.now());
             taskDao.persist(task);
-            projectDao.persist(defaultProject);
-            ProjectTaskEntity projectTask = new ProjectTaskEntity();
-            projectTask.setProject_id(defaultProject.getName());
-            projectTask.setTask_id(task.getId());
-            projectTaskDao.persist(projectTask);
+            TaskEntity task2 = new TaskEntity();
+            task2.setTitle("get the ball rolling");
+            task2.setDescription("get the ball rolling for the project");
+            task2.setProject(defaultProject);
+            task2.setResponsibleUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
+            task2.setStatus(TaskEntity.Status.IN_PROGRESS);
+            task2.setStartDate(java.time.LocalDateTime.now().minusDays(10));
+            task2.setEndDate(java.time.LocalDateTime.now().plusDays(15));
+            task2.setCreationDate(java.time.LocalDateTime.now().minusDays(11));
+            task2.setCreatedBy(userBean.findUserByEmail("mariamacaca@gmail.com"));
+            task2.setTaskUsers(new LinkedHashSet<>(List.of(userBean.findUserByEmail("mariamacaca@gmail.com"), userBean.findUserByEmail("tozemarreco@gmail.com"))));
+            task2.setExternalExecutors("Canalizadores Lda");
+            taskDao.persist(task2);
+            TaskEntity task3 = new TaskEntity();
+            task3.setTitle("do something else");
+            task3.setDescription("do something else for the project");
+            task3.setProject(defaultProject);
+            task3.setResponsibleUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
+            task3.setStatus(TaskEntity.Status.NOT_STARTED);
+            task3.setStartDate(java.time.LocalDateTime.now().plusDays(16));
+            task3.setEndDate(java.time.LocalDateTime.now().plusDays(30));
+            task3.setCreationDate(java.time.LocalDateTime.now());
+            task3.setCreatedBy(userBean.findUserByEmail("tozemarreco@gmail.com"));
+            task3.setDependencies(new LinkedHashSet<>(List.of(task2)));
+            task3.setTaskUsers(new LinkedHashSet<>(List.of(userBean.findUserByEmail("mariamacaca@gmail.com"))));
+            taskDao.persist(task3);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, task2, task3)));
+            projectDao.merge(defaultProject);
+
+
             projectUserDao.persist(defaultProjectUser);
             projectUserDao.persist(defaultProjectUser2);
             projectUserDao.persist(defaultProjectUser3);
@@ -203,10 +225,7 @@ public class ProjectBean {
             task.setCreationDate(java.time.LocalDateTime.now().minusDays(6));
             taskDao.persist(task);
             projectDao.persist(defaultProject);
-            ProjectTaskEntity projectTask = new ProjectTaskEntity();
-            projectTask.setProject_id(defaultProject.getName());
-            projectTask.setTask_id(task.getId());
-            projectTaskDao.persist(projectTask);
+
             projectUserDao.persist(defaultProjectUser);
             projectUserDao.persist(defaultProjectUser2);
             projectUserDao.persist(defaultProjectUser3);
@@ -304,8 +323,8 @@ public class ProjectBean {
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.Planning);
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
-
-
+        TaskEntity lastTask = taskBean.createLastTask(token, project, userBean.findUserByToken(token), project.getStartDate(), project.getEndDate(), List.of(userBean.findUserByToken(token).getId()));
+        project.setTasks(new LinkedHashSet<>(List.of(lastTask)));
         project.setMaxMembers(projectDto.getSlots());
         project.setCreatedAt(java.time.LocalDateTime.now());
         if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
@@ -356,11 +375,8 @@ public class ProjectBean {
             resourceSet.add(resource);
         }
         project.setResources(resourceSet);
-        TaskEntity lastTask = taskBean.createLastTask(token, project, userBean.findUserByToken(token), project.getStartDate(), project.getEndDate(), List.of(userBean.findUserByToken(token).getId()));
-        ProjectTaskEntity projectTask = new ProjectTaskEntity();
-        projectTask.setProject_id(project.getName());
-        projectTask.setTask_id(lastTask.getId());
-        projectTaskDao.persist(projectTask);
+
+
 
 
         return true;
@@ -622,5 +638,19 @@ public class ProjectBean {
         projectStatistics.setAverageMembersPerProject(projectDao.getAverageMembersPerProject());
         projectStatistics.setAverageExecutionTime(projectDao.getAverageExecutionTime());
         return projectStatistics;
+    }
+    public ProjectTasksDto findProjectTasks(String projectName) {
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (project == null) {
+            return null;
+        }
+        ProjectTasksDto projectTasksDto = new ProjectTasksDto();
+        projectTasksDto.setProjectName(project.getName());
+        Set<TaskDto> tasks = new HashSet<>();
+        for (TaskEntity task : project.getTasks()) {
+            tasks.add(taskBean.toTasktoDto(task));
+        }
+        projectTasksDto.setTasks(tasks);
+        return projectTasksDto;
     }
 }

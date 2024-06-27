@@ -76,9 +76,21 @@ public class ProjectEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "resource_id")
     )
     private Set<ResourceEntity> resources;
+    @OneToMany(mappedBy = "project")
+    @JoinTable(
+            name = "project_tasks",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "task_id")
+    )
+    private Set<TaskEntity> tasks;
 
+    public Set<TaskEntity> getTasks() {
+        return tasks;
+    }
 
-
+    public void setTasks(Set<TaskEntity> tasks) {
+        this.tasks = tasks;
+    }
 
     public enum Status {
         Planning(100),

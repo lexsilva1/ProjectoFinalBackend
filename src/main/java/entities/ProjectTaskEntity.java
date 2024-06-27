@@ -12,10 +12,12 @@ public class ProjectTaskEntity implements Serializable {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true)
     private int id;
+    @ManyToOne
     @JoinColumn(name = "task_id", nullable = false, unique = true, updatable = false)
-    private int task_id;
+    private TaskEntity task;
+    @ManyToOne
     @JoinColumn(name = "projectName", nullable = false, unique = true, updatable = false)
-    private String projectName;
+    private ProjectEntity project;
 
     public int getId() {
         return id;
@@ -25,19 +27,19 @@ public class ProjectTaskEntity implements Serializable {
         this.id = id;
     }
 
-    public int getTask_id() {
-        return task_id;
+    public TaskEntity getTask() {
+        return task;
     }
 
-    public void setTask_id(int task_id) {
-        this.task_id = task_id;
+    public void setTask(TaskEntity task) {
+        this.task = task;
     }
 
-    public String getProjectName() {
-        return projectName;
+    public ProjectEntity getProject() {
+        return project;
     }
 
-    public void setProject_id(String projectName) {
-        this.projectName = projectName;
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
 }

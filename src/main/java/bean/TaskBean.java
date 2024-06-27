@@ -1,6 +1,7 @@
 package bean;
 
 import dao.TaskDao;
+import dto.ProjectTasksDto;
 import dto.TaskDto;
 import entities.ProjectEntity;
 import entities.TaskEntity;
@@ -34,6 +35,9 @@ public class TaskBean {
     public List<TaskEntity> findTasksByUser(UserEntity user) {
         return taskDao.findTasksByUser(user);
     }
+
+
+
     public boolean createTask(String token, String projectname, TaskDto taskDto) {
         TaskEntity task = new TaskEntity();
         task.setTitle(taskDto.getTitle());
@@ -93,7 +97,7 @@ public class TaskBean {
         taskDao.persist(task);
         return task;
     }
-    public TaskDto tasktoDto(TaskEntity task) {
+    public TaskDto toTasktoDto(TaskEntity task) {
         TaskDto taskDto = new TaskDto();
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
@@ -117,5 +121,20 @@ public class TaskBean {
         taskDto.setExternalExecutors(task.getExternalExecutors());
         taskDto.setUsers(usersIds);
         return taskDto;
+    }
+    public ProjectTasksDto getProjectTasks(String projectName) {
+        ProjectEntity project = projectBean.findProjectByName(projectName);
+        if(project == null) {
+            return null;
+        }
+        ProjectTasksDto projectTasksDto = new ProjectTasksDto();
+        projectTasksDto.setProjectName(projectName);
+        Set<TaskEntity> tasks = project.getTasks();
+        Set<TaskDto> taskDtos = new HashSet<>();
+        for(TaskEntity t : tasks) {
+            taskDtos.add(toTasktoDto(t));
+        }
+        projectTasksDto.setTasks(taskDtos);
+        return projectTasksDto;
     }
 }
