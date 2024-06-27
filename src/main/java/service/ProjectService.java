@@ -81,7 +81,7 @@ public class ProjectService {
         if(!created) {
             return Response.status(404).entity("project not created").build();
         }
-        return Response.status(201).entity("project created").build();
+        return Response.status(201).entity("created").build();
     }
     @GET
     @Path("/allStatus")
@@ -97,8 +97,14 @@ public class ProjectService {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
-        taskBean.createTask(token,projectName,taskDto);
-        return Response.status(200).entity("task created").build();
+        projectName = projectBean.decodeProjectName(projectName);
+        if(taskBean.createTask(token,projectName,taskDto)) {
+            TaskDto taskDto1 = taskBean.getTaskById(taskDto.getId());
+            return Response.status(201).entity(taskDto1).build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
+
     }
     @GET
     @Path("/{projectName}")
@@ -241,22 +247,8 @@ public class ProjectService {
         userBean.setLastActivity(token);
         return Response.status(200).entity(projectBean.getProjectStatistics()).build();
     }
-    @POST
-    @Path("/{projectName}/createTask")
-    @Produces("application/json")
-    public Response createLastTask(@HeaderParam("token") String token, @PathParam("projectName") String projectName, TaskDto taskDto){
-        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
-            return Response.status(403).entity("not allowed").build();
-        }
-        userBean.setLastActivity(token);
-        projectName = projectBean.decodeProjectName(projectName);
-        ProjectEntity project = projectBean.findProjectByName(projectName);
-        if(project == null) {
-            return Response.status(404).entity("project not found").build();
-        }
-        taskBean.createTask(token,projectName,taskDto);
-        return Response.status(200).entity("task created").build();
-    }
+
+
     @GET
     @Path("/{projectName}/tasks")
     @Produces("application/json")
@@ -271,6 +263,22 @@ public class ProjectService {
             return Response.status(404).entity("project not found").build();
         }else{
             return Response.status(200).entity(projectBean.findProjectTasks(projectName)).build();
+        }
+    }
+    @PUT
+    @Path("/{projectName}/tasks")
+    @Produces("application/json")
+    public Response updateTask(@HeaderParam("token") String token, @PathParam("projectName") String projectName, TaskDto taskDto){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        if(taskBean.updateTask(token,projectName,taskDto)) {
+            TaskDto taskDto1 = taskBean.getTaskById(taskDto.getId());
+            return Response.status(200).entity(taskDto1).build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
         }
     }
 }

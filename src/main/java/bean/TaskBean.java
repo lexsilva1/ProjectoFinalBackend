@@ -1,6 +1,8 @@
 package bean;
 
 import dao.TaskDao;
+import dto.CreateProjectDto;
+import dto.ProjectDto;
 import dto.ProjectTasksDto;
 import dto.TaskDto;
 import entities.ProjectEntity;
@@ -72,7 +74,7 @@ public class TaskBean {
         return true;
 
     }
-    public TaskEntity createLastTask(String token,ProjectEntity project, UserEntity user, LocalDateTime startDate, LocalDateTime endDate, List<Integer> users) {
+    public TaskEntity createLastTask(String token, CreateProjectDto project, UserEntity user, List<Integer> users) {
         TaskEntity task = new TaskEntity();
         task.setTitle("Final Presentation");
         task.setDescription("Final presentation of the finalized project");
@@ -134,5 +136,43 @@ public class TaskBean {
         }
         projectTasksDto.setTasks(taskDtos);
         return projectTasksDto;
+    }
+    public TaskDto getTaskById(int id) {
+        TaskEntity task = taskDao.find(id);
+        if(task == null) {
+            return null;
+        }
+        return toTasktoDto(task);
+    }
+    public boolean updateTask(String token, String projectName, TaskDto taskDto) {
+        TaskEntity task = taskDao.find(taskDto.getId());
+        if(task == null) {
+            return false;
+        }
+        task.setTitle(taskDto.getTitle());
+        task.setExternalExecutors(taskDto.getExternalExecutors());
+        task.setDescription(taskDto.getDescription());
+        task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
+        task.setStatus(TaskEntity.Status.valueOf(taskDto.getStatus()));
+        task.setStartDate(taskDto.getStartDate());
+        task.setEndDate(taskDto.getEndDate());
+        Set dependencies = new HashSet();
+        for(Integer i : taskDto.getDependencies()) {
+            TaskEntity dep = taskDao.find(i);
+            if(dep != null) {
+                dependencies.add(dep);
+            }
+        }
+        task.setDependencies(dependencies);
+        Set users = new HashSet();
+        for(Integer i : taskDto.getUsers()) {
+            UserEntity u = userBean.findUserById(i);
+            if(u != null) {
+                users.add(u);
+            }
+        }
+        task.setTaskUsers(users);
+        taskDao.merge(task);
+        return true;
     }
 }

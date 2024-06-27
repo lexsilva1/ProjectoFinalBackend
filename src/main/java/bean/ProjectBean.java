@@ -321,7 +321,7 @@ public class ProjectBean {
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.Planning);
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
-        TaskEntity lastTask = taskBean.createLastTask(token, project, userBean.findUserByToken(token), project.getStartDate(), project.getEndDate(), List.of(userBean.findUserByToken(token).getId()));
+        TaskEntity lastTask = taskBean.createLastTask(token, projectDto, userBean.findUserByToken(token), List.of(userBean.findUserByToken(token).getId()));
         project.setTasks(new LinkedHashSet<>(List.of(lastTask)));
         project.setMaxMembers(projectDto.getSlots());
         project.setCreatedAt(java.time.LocalDateTime.now());
