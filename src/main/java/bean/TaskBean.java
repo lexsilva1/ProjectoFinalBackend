@@ -97,6 +97,7 @@ public class TaskBean {
     }
     public TaskDto toTasktoDto(TaskEntity task) {
         TaskDto taskDto = new TaskDto();
+        taskDto.setId(task.getId());
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
         taskDto.setResponsibleId(task.getResponsibleUser().getId());
