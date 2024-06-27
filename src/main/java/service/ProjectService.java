@@ -89,6 +89,7 @@ public class ProjectService {
     public Response findAllStatus(){
         return Response.status(200).entity(projectBean.findAllStatus()).build();
     }
+
     @POST
     @Path("/{projectName}/tasks")
     @Produces("application/json")
@@ -132,8 +133,11 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        projectBean.applyToProject(token,projectName);
-        return Response.status(200).entity("applied").build();
+        if(projectBean.applyToProject(token,projectName)) {
+            return Response.status(200).entity("applied").build();
+        }else {
+            return Response.status(405).entity("you cannot apply to this project").build();
+        }
     }
     @POST
     @Path("/{projectName}/invite")
