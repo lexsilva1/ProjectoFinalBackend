@@ -11,6 +11,7 @@ import jakarta.persistence.criteria.Root;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class TaskDao extends AbstractDao<TaskEntity>{
@@ -28,15 +29,7 @@ public class TaskDao extends AbstractDao<TaskEntity>{
             return null;
         }
     }
-    public TaskEntity findTaskByProject(ProjectEntity project) {
-        try {
-            return (TaskEntity) em.createNamedQuery("TaskEntity.findTaskByProject").setParameter("project", project)
-                    .getSingleResult();
 
-        } catch (Exception e) {
-            return null;
-        }
-    }
     public List<TaskEntity> findTasksByUser(UserEntity user) {
         try {
             return em.createNamedQuery("TaskEntity.findTasksByUser").setParameter("user", user)
@@ -55,6 +48,7 @@ public class TaskDao extends AbstractDao<TaskEntity>{
             return null;
         }
     }
+
     public List<TaskEntity> findTasks(String taskName, String projectName, int userId, TaskEntity.Status status, LocalDateTime startDate, LocalDateTime endDate) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<TaskEntity> cq = cb.createQuery(TaskEntity.class);

@@ -31,8 +31,7 @@ public class ProjectBean {
     TaskBean taskBean;
     @Inject
     TaskDao taskDao;
-    @Inject
-    ProjectTaskDao projectTaskDao;
+
     @Inject
     ProjectResourceDao projectResourceDao;
     @Inject
@@ -75,13 +74,13 @@ public class ProjectBean {
             TaskEntity task = new TaskEntity();
             task.setTitle("Create the database");
             task.setDescription("Create the database for the project");
-            task.setProject(defaultProject);
             task.setResponsibleUser(userBean.findUserByEmail("admin@admin.com"));
             task.setStatus(TaskEntity.Status.NOT_STARTED);
             task.setStartDate(java.time.LocalDateTime.now().minusDays(5));
             task.setEndDate(java.time.LocalDateTime.now().plusDays(30));
             task.setCreationDate(java.time.LocalDateTime.now());
             taskDao.persist(task);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task)));
             projectDao.persist(defaultProject);
             projectUserDao.persist(defaultProjectUser);
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
@@ -131,7 +130,7 @@ public class ProjectBean {
             TaskEntity task = new TaskEntity();
             task.setTitle("Create the UserInterface");
             task.setDescription("Create the UserInterface for the project");
-            task.setProject(defaultProject);
+
             task.setResponsibleUser(userBean.findUserByEmail("mariamacaca@gmail.com"));
             task.setStatus(TaskEntity.Status.NOT_STARTED);
             task.setStartDate(java.time.LocalDateTime.now().minusDays(10));
@@ -141,7 +140,7 @@ public class ProjectBean {
             TaskEntity task2 = new TaskEntity();
             task2.setTitle("get the ball rolling");
             task2.setDescription("get the ball rolling for the project");
-            task2.setProject(defaultProject);
+
             task2.setResponsibleUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
             task2.setStatus(TaskEntity.Status.IN_PROGRESS);
             task2.setStartDate(java.time.LocalDateTime.now().minusDays(10));
@@ -154,7 +153,7 @@ public class ProjectBean {
             TaskEntity task3 = new TaskEntity();
             task3.setTitle("do something else");
             task3.setDescription("do something else for the project");
-            task3.setProject(defaultProject);
+
             task3.setResponsibleUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
             task3.setStatus(TaskEntity.Status.NOT_STARTED);
             task3.setStartDate(java.time.LocalDateTime.now().plusDays(16));
@@ -217,7 +216,6 @@ public class ProjectBean {
             TaskEntity task = new TaskEntity();
             task.setTitle("Create the database");
             task.setDescription("Create the database for the project");
-            task.setProject(defaultProject);
             task.setResponsibleUser(userBean.findUserByEmail("zetamplario@gmail.com"));
             task.setStatus(TaskEntity.Status.IN_PROGRESS);
             task.setStartDate(java.time.LocalDateTime.now().minusDays(5));

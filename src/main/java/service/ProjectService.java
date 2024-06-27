@@ -270,7 +270,7 @@ public class ProjectService {
         if(project == null) {
             return Response.status(404).entity("project not found").build();
         }else{
-            return Response.status(200).entity(projectBean.findProjectTasks(project.getName())).build();
+            return Response.status(200).entity(projectBean.findProjectTasks(projectName)).build();
         }
     }
 }

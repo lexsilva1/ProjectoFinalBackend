@@ -17,7 +17,7 @@ import java.util.Set;
 @NamedQuery(name = "ProjectEntity.findProjectBySkill", query = "SELECT p FROM ProjectEntity p WHERE p.skills = :skills")
 @NamedQuery(name = "ProjectEntity.findProjectByInterest", query = "SELECT p FROM ProjectEntity p WHERE p.interests = :interests")
 @NamedQuery(name = "ProjectEntity.findProjectByStatus", query = "SELECT p FROM ProjectEntity p WHERE p.status = :status")
-
+@NamedQuery(name = "ProjectEntity.findProjectTasks", query = "SELECT p.tasks FROM ProjectEntity p WHERE p = :project")
 @NamedQuery(name = "ProjectEntity.findAllProjects", query = "SELECT p FROM ProjectEntity p")
 @NamedQuery(name = "ProjectEntity.findProjectSkills", query = "SELECT p.skills FROM ProjectEntity p WHERE p = :project")
 @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
@@ -76,7 +76,7 @@ public class ProjectEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "resource_id")
     )
     private Set<ResourceEntity> resources;
-    @OneToMany(mappedBy = "project")
+    @ManyToMany (fetch = FetchType.EAGER)
     @JoinTable(
             name = "project_tasks",
             joinColumns = @JoinColumn(name = "project_id"),

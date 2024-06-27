@@ -1,9 +1,6 @@
 package dao;
 
-import entities.LabEntity;
-import entities.ProjectEntity;
-import entities.ProjectUserEntity;
-import entities.SkillEntity;
+import entities.*;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -12,6 +9,7 @@ import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 @Stateless
 public class ProjectDao extends AbstractDao<ProjectEntity> {
@@ -201,5 +199,14 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
     public double getAverageExecutionTime(){
         List<Object> results = em.createQuery("SELECT AVG(FUNCTION('DATEDIFF', p.endDate, p.startDate)) FROM ProjectEntity p").getResultList();
         return  (double) results.get(0);
+    }
+    public List<TaskEntity> findProjectTasks(ProjectEntity project) {
+        try {
+            return em.createNamedQuery("ProjectEntity.findProjectTasks").setParameter("project", project)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

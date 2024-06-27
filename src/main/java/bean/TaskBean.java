@@ -29,9 +29,7 @@ public class TaskBean {
     public TaskEntity findTaskByName(String title) {
         return taskDao.findTaskByName(title);
     }
-    public TaskEntity findTaskByProject(ProjectEntity project) {
-        return taskDao.findTaskByProject(project);
-    }
+
     public List<TaskEntity> findTasksByUser(UserEntity user) {
         return taskDao.findTasksByUser(user);
     }
@@ -47,7 +45,7 @@ public class TaskBean {
         if(project == null) {
             return false;
         }
-        task.setProject(project);
+
         task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
         task.setStatus(TaskEntity.Status.NOT_STARTED);
         task.setStartDate(taskDto.getStartDate());
@@ -78,7 +76,7 @@ public class TaskBean {
         TaskEntity task = new TaskEntity();
         task.setTitle("Final Presentation");
         task.setDescription("Final presentation of the finalized project");
-        task.setProject(project);
+
         task.setResponsibleUser(user);
         task.setStatus(TaskEntity.Status.NOT_STARTED);
         task.setStartDate(project.getEndDate().minusDays(1));
@@ -101,7 +99,6 @@ public class TaskBean {
         TaskDto taskDto = new TaskDto();
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
-        taskDto.setProjectName(task.getProject().getName());
         taskDto.setResponsibleId(task.getResponsibleUser().getId());
         taskDto.setStartDate(task.getStartDate());
         taskDto.setEndDate(task.getEndDate());

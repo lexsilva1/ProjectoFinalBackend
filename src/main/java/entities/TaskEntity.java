@@ -12,12 +12,11 @@ import java.io.Serializable;
 /**
  * TaskEntity class
  */
-@NamedQuery(name = "TaskEntity.findTaskByProject", query = "SELECT t FROM TaskEntity t WHERE t.project = :project")
 @NamedQuery(name = "TaskEntity.findTasksByUser", query = "SELECT t FROM TaskEntity t WHERE t.responsibleUser = :user")
 @NamedQuery(name = "TaskEntity.findTasksByStatus", query = "SELECT t FROM TaskEntity t WHERE t.status = :status")
 @NamedQuery(name = "TaskEntity.findTaskByDate", query = "SELECT t FROM TaskEntity t WHERE t.startDate = :date")
 @NamedQuery(name = "TaskEntity.findTaskByTitle", query = "SELECT t FROM TaskEntity t WHERE t.title = :title")
-
+@NamedQuery(name = "TaskEntity.findTaskByProject", query = "SELECT t FROM TaskEntity t WHERE t.task = :task")
 public class TaskEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -45,9 +44,7 @@ public class TaskEntity implements Serializable {
     LocalDateTime startDate;
     @Column (name = "End_date", nullable = false, unique = false)
     LocalDateTime endDate;
-    @ManyToOne
-    @JoinColumn(name = "project_id")
-    private ProjectEntity project;
+
     @ManyToOne
     @JoinColumn(name = "created_by")
     private UserEntity createdBy;
@@ -150,14 +147,6 @@ public class TaskEntity implements Serializable {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
-    }
-
-    public ProjectEntity getProject() {
-        return project;
-    }
-
-    public void setProject(ProjectEntity project) {
-        this.project = project;
     }
 
     public UserEntity getCreatedBy() {
