@@ -16,7 +16,7 @@ import java.io.Serializable;
 @NamedQuery(name = "TaskEntity.findTasksByStatus", query = "SELECT t FROM TaskEntity t WHERE t.status = :status")
 @NamedQuery(name = "TaskEntity.findTaskByDate", query = "SELECT t FROM TaskEntity t WHERE t.startDate = :date")
 @NamedQuery(name = "TaskEntity.findTaskByTitle", query = "SELECT t FROM TaskEntity t WHERE t.title = :title")
-@NamedQuery(name = "TaskEntity.findTaskByProject", query = "SELECT t FROM TaskEntity t WHERE t.task = :task")
+
 public class TaskEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -25,17 +25,12 @@ public class TaskEntity implements Serializable {
 
     @Column (name = "title", nullable = false, unique = false)
     String title;
-    @ManyToOne
-    @JoinColumn(name = "task_id")
-    private TaskEntity task;
-
-    @ManyToOne
-    @JoinColumn(name = "parent_task_id")
-    private TaskEntity parentTask;
-
-    @OneToMany(mappedBy = "parentTask")
-    @Column (name = "dependencies", nullable = true, unique = false)
-    private Set<TaskEntity> dependencies;
+    @ManyToMany
+    @JoinTable(
+            name = "task_dependencies",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "dependency_id"))
+    Set<TaskEntity> dependencies;
     @Column (name = "description", nullable = false, unique = false)
     String description;
     @Column (name = "status", nullable = false, unique = false)
@@ -99,22 +94,6 @@ public class TaskEntity implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public TaskEntity getTask() {
-        return task;
-    }
-
-    public void setTask(TaskEntity task) {
-        this.task = task;
-    }
-
-    public TaskEntity getParentTask() {
-        return parentTask;
-    }
-
-    public void setParentTask(TaskEntity parentTask) {
-        this.parentTask = parentTask;
     }
 
     public Set<TaskEntity> getDependencies() {
