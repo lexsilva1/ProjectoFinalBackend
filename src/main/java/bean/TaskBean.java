@@ -2,7 +2,6 @@ package bean;
 
 import dao.TaskDao;
 import dto.CreateProjectDto;
-import dto.ProjectDto;
 import dto.ProjectTasksDto;
 import dto.TaskDto;
 import entities.ProjectEntity;
@@ -11,7 +10,6 @@ import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
@@ -50,9 +48,9 @@ public class TaskBean {
 
         task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
         task.setStatus(TaskEntity.Status.NOT_STARTED);
-        task.setStartDate(taskDto.getStartDate());
-        task.setEndDate(taskDto.getEndDate());
-        task.setCreationDate(taskDto.getCreationDate());
+        task.setStartDate(taskDto.getStart());
+        task.setEndDate(taskDto.getEnd());
+        task.setCreationDate(LocalDateTime.now());
         Set dependencies = new HashSet();
         for(Integer i : taskDto.getDependencies()) {
             TaskEntity dep = taskDao.find(i);
@@ -105,8 +103,8 @@ public class TaskBean {
         taskDto.setTitle(task.getTitle());
         taskDto.setDescription(task.getDescription());
         taskDto.setResponsibleId(task.getResponsibleUser().getId());
-        taskDto.setStartDate(task.getStartDate());
-        taskDto.setEndDate(task.getEndDate());
+        taskDto.setStart(task.getStartDate());
+        taskDto.setEnd(task.getEndDate());
         taskDto.setCreationDate(task.getCreationDate());
         taskDto.setStatus(task.getStatus().toString());
         Set<TaskEntity> dependencies = task.getDependencies();
@@ -156,8 +154,8 @@ public class TaskBean {
         task.setDescription(taskDto.getDescription());
         task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
         task.setStatus(TaskEntity.Status.valueOf(taskDto.getStatus()));
-        task.setStartDate(taskDto.getStartDate());
-        task.setEndDate(taskDto.getEndDate());
+        task.setStartDate(taskDto.getStart());
+        task.setEndDate(taskDto.getEnd());
         Set dependencies = new HashSet();
         for(Integer i : taskDto.getDependencies()) {
             TaskEntity dep = taskDao.find(i);
