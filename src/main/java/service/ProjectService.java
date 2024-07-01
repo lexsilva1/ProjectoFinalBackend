@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.time.LocalDateTime;
 
 @Path("/projects")
 public class ProjectService {
@@ -188,9 +189,11 @@ public class ProjectService {
                 return Response.status(404).entity("notification not found").build();
 
             }
-            NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
+            NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPTED");
             return Response.status(201).entity(updatedNotification).build();
-        }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && operationType.equals("ACCEPT_APPLICATION")){
+        }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && operationType.equals("ACCEPT_APPLICATION")) {
+            NotificationDto acceptedNotification= new NotificationDto("ACCEPTED",userId,projectName,false, LocalDateTime.now());
+            notificationBean.sendNotification(acceptedNotification);
             return Response.status(200).entity("accepted").build();
         }else{
             return Response.status(405).entity("not accepted").build();

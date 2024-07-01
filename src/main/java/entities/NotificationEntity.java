@@ -37,7 +37,7 @@ public class NotificationEntity implements Serializable {
     public enum NotificationType {
         INVITE,
         APPLY,
-        ACCEPT,
+        ACCEPT_APPLICATION,
         ACCEPTED,
         REJECT,
         REJECTED,
