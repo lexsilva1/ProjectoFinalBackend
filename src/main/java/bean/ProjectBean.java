@@ -80,7 +80,18 @@ public class ProjectBean {
             task.setEndDate(java.time.LocalDateTime.now().plusDays(30));
             task.setCreationDate(java.time.LocalDateTime.now());
             taskDao.persist(task);
-            defaultProject.setTasks(new LinkedHashSet<>(List.of(task)));
+            TaskEntity finaltask = new TaskEntity();
+            finaltask.setTitle("Final Presentation");
+            finaltask.setDescription("Final presentation of the finalized project");
+
+            finaltask.setResponsibleUser(userBean.findUserById(1));
+            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
+            finaltask.setEndDate(defaultProject.getEndDate());
+            finaltask.setCreationDate(LocalDateTime.now());
+            finaltask.setCreatedBy(userBean.findUserById(1));
+            taskDao.persist(finaltask);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(finaltask,task)));
             projectDao.persist(defaultProject);
             projectUserDao.persist(defaultProjectUser);
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
@@ -99,7 +110,7 @@ public class ProjectBean {
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
-            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setStatus((ProjectEntity.Status.Approved));
             defaultProject.setDescription("UserInterface is a project that aims to create a new hardware that will revolutionize the way we interact with technology.");
             defaultProject.setMaxMembers(5);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.CAUSES);
@@ -457,7 +468,7 @@ public class ProjectBean {
             NotificationDto notificationDto = new NotificationDto();
             notificationDto.setProjectName(project.getName());
             notificationDto.setUserId(projectManager.getUser().getId());
-            notificationDto.setType("ACCEPT");
+            notificationDto.setType("ACCEPT_APPLICATION");
             notificationDto.setRead(false);
             notificationDto.setOtherUserId(targetUser.getId());
             notificationBean.sendNotification(notificationDto);
@@ -659,5 +670,63 @@ public class ProjectBean {
         }
         project.getTasks().add(task);
         projectDao.persist(project);
+    }
+    public int convertStatus(String status){
+        int newStatus;
+        switch (status){
+            case "Planning":
+                newStatus = 100;
+                break;
+            case "Ready":
+                newStatus = 200;
+                break;
+            case "Approved":
+                newStatus = 300;
+                break;
+            case "In_Progress":
+                newStatus = 400;
+                break;
+            case "Finished":
+                newStatus = 500;
+                break;
+            case "Cancelled":
+                newStatus = 0;
+                break;
+            default:
+                newStatus = -1;
+        }
+
+      return newStatus;
+    }
+    public boolean updateProjectStatus(String token, String projectName, String status) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(projectDao.findProjectByName(projectName), user);
+        int newStatus = convertStatus(status);
+        if(newStatus == -1){
+            return false;
+        }
+        if(newStatus == 300 && (user.getRole().getValue() > 1 || project.getStatus().getValue() != 200)){
+            return false;
+        }
+        if (newStatus == 200 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 100)) {
+            return false;
+        }
+        if(newStatus == 0 && (user.getRole().getValue() > 1 || !projectUser.getApprovalStatus().equals("CREATOR"))){
+            return false;
+        }
+        if(newStatus == 400 && (user.getRole().getValue() > 1 || project.getStatus().getValue() != 300)){
+            return false;
+        }
+        if(newStatus == 500 && (user.getRole().getValue() > 1 || project.getStatus().getValue() != 400)){
+            return false;
+        }
+        if(newStatus == 100 && (user.getRole().getValue() > 1 || project.getStatus().getValue() >= 200)){
+            return false;
+        }
+
+        project.setStatus(ProjectEntity.Status.fromValue(newStatus));
+        projectDao.persist(project);
+        return true;
     }
 }

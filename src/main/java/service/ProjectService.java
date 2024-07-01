@@ -124,6 +124,22 @@ public class ProjectService {
             return Response.status(200).entity(projectDto).build();
         }
     }
+    @PUT
+    @Path("/{projectName}/status")
+    @Produces("application/json")
+    public Response updateProjectStatus(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("status") String status){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        if(projectBean.updateProjectStatus(token,projectName,status)) {
+            return Response.status(200).entity("status updated").build();
+        }else{
+            return Response.status(400).entity("something went wrong").build();
+        }
+    }
+
     @POST
     @Path("/{projectName}/apply")
     @Produces("application/json")
@@ -168,9 +184,11 @@ public class ProjectService {
 
         String operationTypeString = operationType;
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
-        if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum)) {
+        if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && ProjectBean.OperationType.ACCEPT_INVITATION.equals(operationTypeEnum)) {
             NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
             return Response.status(200).entity(updatedNotification).build();
+        }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && ProjectBean.OperationType.ACCEPT_APPLICATION.equals(operationTypeEnum)){
+            return Response.status(200).entity("accepted").build();
         }else{
             return Response.status(405).entity("not accepted").build();
         }

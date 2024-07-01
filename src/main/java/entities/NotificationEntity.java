@@ -38,7 +38,9 @@ public class NotificationEntity implements Serializable {
         INVITE,
         APPLY,
         ACCEPT,
+        ACCEPTED,
         REJECT,
+        REJECTED,
         EXCLUDE,
         PROMOTED,
         DEMOTED,
@@ -50,6 +52,8 @@ public class NotificationEntity implements Serializable {
         PROJECT_APPROVED,
         PROJECT_READY,
         PROJECT_DOING,
+        PROJECT_REJECTED,
+        PROJECT_INFO,
         CHAT
 
     }

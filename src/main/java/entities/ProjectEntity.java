@@ -4,10 +4,7 @@ import dto.ProjectDto;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -97,7 +94,7 @@ public class ProjectEntity implements Serializable {
         Ready(200),
         Approved(300),
         In_Progress(400),
-        Completed(500),
+        Finished(500),
         Cancelled(0);
 
         public final int value;
@@ -108,6 +105,15 @@ public class ProjectEntity implements Serializable {
         public int getValue() {
             return value;
         }
+        public static Status fromValue(int value) {
+            for (Status status : Status.values()) {
+                if (status.getValue() == value) {
+                    return status;
+                }
+            }
+            throw new IllegalArgumentException("Invalid status value: " + value);
+        }
+
 
     }
     public ProjectEntity() {

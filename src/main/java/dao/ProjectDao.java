@@ -9,7 +9,6 @@ import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 @Stateless
 public class ProjectDao extends AbstractDao<ProjectEntity> {
@@ -143,7 +142,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
     }
     public HashMap<String,Integer> getCompletedProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
-                .setParameter("status", ProjectEntity.Status.Completed)
+                .setParameter("status", ProjectEntity.Status.Finished)
                 .getResultList();
         HashMap<String, Integer> projectsByLab = new HashMap<>();
         for (Object[] result : results) {
