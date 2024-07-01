@@ -182,7 +182,7 @@ public class ProjectService {
 
         String operationTypeString = operationType;
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
-        if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && ProjectBean.OperationType.ACCEPT_INVITATION.equals(operationTypeEnum)) {
+        if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && operationType.equals("ACCEPT_INVITATION")) {
             NotificationDto notification = notificationBean.convertToDto(notificationBean.findNotificationById(notificationId));
             if(notification == null) {
                 return Response.status(404).entity("notification not found").build();
@@ -190,7 +190,7 @@ public class ProjectService {
             }
             NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
             return Response.status(201).entity(updatedNotification).build();
-        }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && ProjectBean.OperationType.ACCEPT_APPLICATION.equals(operationTypeEnum)){
+        }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && operationType.equals("ACCEPT_APPLICATION")){
             return Response.status(200).entity("accepted").build();
         }else{
             return Response.status(405).entity("not accepted").build();
