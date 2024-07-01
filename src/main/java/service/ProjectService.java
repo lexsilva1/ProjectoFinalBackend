@@ -177,16 +177,19 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        NotificationDto notification = notificationBean.convertToDto(notificationBean.findNotificationById(notificationId));
-        if(notification == null) {
-            return Response.status(404).entity("notification not found").build();
-        }
+
+
 
         String operationTypeString = operationType;
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
         if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && ProjectBean.OperationType.ACCEPT_INVITATION.equals(operationTypeEnum)) {
+            NotificationDto notification = notificationBean.convertToDto(notificationBean.findNotificationById(notificationId));
+            if(notification == null) {
+                return Response.status(404).entity("notification not found").build();
+
+            }
             NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPT");
-            return Response.status(200).entity(updatedNotification).build();
+            return Response.status(201).entity(updatedNotification).build();
         }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && ProjectBean.OperationType.ACCEPT_APPLICATION.equals(operationTypeEnum)){
             return Response.status(200).entity("accepted").build();
         }else{
