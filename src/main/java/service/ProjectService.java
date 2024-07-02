@@ -326,4 +326,19 @@ public class ProjectService {
         ProjectEntity project = projectBean.findProjectByName(projectName);
         return Response.status(200).entity(projectBean.findProjectUsers(project)).build();
     }
+    @DELETE
+    @Path("/{projectName}/ProjectUser")
+    @Produces("application/json")
+    public Response removeProjectUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        if(projectBean.removeProjectUser(token,projectName,userId)) {
+            return Response.status(200).entity("user removed").build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
+    }
 }

@@ -738,4 +738,17 @@ public class ProjectBean {
         projectDao.persist(project);
         return true;
     }
+    public boolean removeProjectUser(String token, String projectName, int userId) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, UserDao.findUserById(userId));
+        if (user == null || project == null || projectUser == null) {
+            return false;
+        }
+        if (projectUser.isProjectManager() && projectUser.getApprovalStatus().equals(ProjectUserEntity.ApprovalStatus.MEMBER)) {
+            return false;
+        }
+        projectUserDao.remove(projectUser);
+        return true;
+    }
 }

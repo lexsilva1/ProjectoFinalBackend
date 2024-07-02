@@ -1,6 +1,7 @@
 package websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.GroupChatDto;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
 import jakarta.websocket.Session;
@@ -17,6 +18,18 @@ public class GroupChat {
     private final ObjectMapper mapper = contextResolver.getContext(ObjectMapper.class);
     public void send(String projectName, String msg) {
         System.out.println("sending.......... " + msg);
+    }
+    public void sendChat(String projectName, GroupChatDto groupChatDto) {
+        String conversationToken = projectName + "/" + groupChatDto.getSender();
+
+        if (sessions.containsKey(conversationToken)) {
+            try {
+                String msg = mapper.writeValueAsString(groupChatDto);
+                sessions.get(conversationToken).getAsyncRemote().sendText(msg);
+            } catch (Exception e) {
+                System.out.println("Something went wrong!");
+            }
+        }
     }
 
     public void toDoOnOpen(Session session, String projectName, String token) {
