@@ -16,6 +16,9 @@ public class GroupChatDao extends AbstractDao<ChatEntity> {
     public GroupChatDao() {
         super(ChatEntity.class);
     }
+    public void create(ChatEntity chat) {
+        super.persist(chat);
+    }
 
     public List<ChatEntity> getAllChatByProject(ProjectEntity project) {
         try {

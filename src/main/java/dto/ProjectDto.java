@@ -19,6 +19,7 @@ public class ProjectDto {
     private int maxTeamMembers;
     public LocalDateTime startDate;
     public LocalDateTime endDate;
+    public LocalDateTime creationDate;
 
 
 
@@ -123,4 +124,11 @@ public class ProjectDto {
         this.endDate = endDate;
     }
 
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
+    }
 }

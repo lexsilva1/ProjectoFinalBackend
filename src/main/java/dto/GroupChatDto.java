@@ -12,11 +12,11 @@ public class GroupChatDto {
     public GroupChatDto() {
     }
 
-    public GroupChatDto(String projectName, String sender,int senderId, String message, LocalDateTime time) {
+    public GroupChatDto(String projectName, String sender,int senderId, String message) {
         this.projectName = projectName;
         this.sender = sender;
         this.message = message;
-        this.time = time;
+        this.time = LocalDateTime.now();
         this.senderId = senderId;
     }
 

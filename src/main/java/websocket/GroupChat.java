@@ -1,10 +1,16 @@
 package websocket;
 
+import bean.GroupChatBean;
+import bean.ProjectBean;
+import bean.UserBean;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.GroupChatDto;
+import entities.ProjectEntity;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
-import jakarta.websocket.Session;
+import jakarta.websocket.*;
+import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import service.ObjectMapperContextResolver;
 
@@ -15,6 +21,12 @@ import java.util.List;
 @Singleton
 @ServerEndpoint("/websocket/groupchat/{ProjectName}/{token}")
 public class GroupChat {
+    @EJB
+    private UserBean userBean;
+    @EJB
+    private GroupChatBean groupChatBean;
+    @EJB
+    private ProjectBean projectBean;
     private final HashMap<String, Session> sessions = new HashMap<>();
     private final ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
     private final ObjectMapper mapper = contextResolver.getContext(ObjectMapper.class);
@@ -40,25 +52,35 @@ public class GroupChat {
         }
         return projectSessions;
     }
-
-    public void toDoOnOpen(Session session, String projectName, String token) {
+    @OnOpen
+    public void toDoOnOpen(Session session, @PathParam("projectName") String projectName, @PathParam("token") String token) {
         System.out.println("A new group chat WebSocket session is opened for client with token: " + token);
         String conversationToken = projectName + "/" + token;
         sessions.put(conversationToken, session);
     }
-
-    public void toDoOnClose(Session session, String projectName, String token) {
+    @OnClose
+    public void toDoOnClose(Session session, @PathParam("projectName") String projectName, @PathParam("token") String token) {
         System.out.println("A group chat WebSocket session is closed for client with token: " + token);
         String conversationToken = projectName + "/" + token;
         sessions.remove(conversationToken);
     }
-
-    public void toDoOnError(Session session, String projectName, String token, Throwable error) {
+    @OnError
+    public void toDoOnError(Session session, @PathParam("projectName") String projectName, @PathParam("token") String token, Throwable error) {
         System.out.println("An error occurred in group chat WebSocket session for client with token: " + token);
         String conversationToken = projectName + "/" + token;
         sessions.remove(conversationToken);
     }
-    public  void toDoOnMessage(  String message) {
+    @OnMessage
+
+    public  void toDoOnMessage( String message, @PathParam("projectName") String projectName, @PathParam("token") String token) {
+        UserEntity sender = userBean.findUserByToken(token);
+        ProjectEntity project = projectBean.findProjectByName(projectName);
+        boolean created = groupChatBean.createChat(projectName, sender.getId(), message);
+        if(!created) {
+            return;
+        }
+        GroupChatDto groupChatDto = new GroupChatDto(project.getName(), sender.getFirstName(), sender.getId(), message);
+        sendChat(projectName, groupChatDto);
 
 
     }

@@ -30,7 +30,8 @@ public class ProjectService {
     TokenBean tokenBean;
     @EJB
     NotificationBean notificationBean;
-
+    @EJB
+    GroupChatBean groupChatBean;
 
 
     @GET
@@ -340,5 +341,16 @@ public class ProjectService {
         }else {
             return Response.status(400).entity("something went wrong").build();
         }
+    }
+    @GET
+    @Path("/{projectName}/chat")
+    @Produces("application/json")
+    public Response fetchProjectChat(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        return Response.status(200).entity(groupChatBean.fetchProjectChat(projectName)).build();
     }
 }

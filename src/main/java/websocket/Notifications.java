@@ -79,7 +79,7 @@ public class Notifications {
 
     @OnOpen
     public void toDoOnOpen(Session session, @PathParam("token") String token) {
-        System.out.println("A new WebSocket session is opened for client with token: " + token);
+        System.out.println("A new Notifications WebSocket session is opened for client with token: " + token);
         sessions.put(token, session);
         System.out.println(sessions.keySet());
     }

@@ -17,11 +17,19 @@ public class GroupChatBean {
     private GroupChatDao groupChatDao;
     @EJB
     private ProjectBean projectBean;
+    @EJB
+    private UserBean userBean;
 
     public GroupChatBean() {
     }
     public GroupChatDto convertToDto(ChatEntity chat) {
-        return new GroupChatDto(chat.getProject().getName(), chat.getSender().getFirstName(),chat.getSender().getId(), chat.getMessage(), chat.getTime());
+        GroupChatDto chatDto = new GroupChatDto();
+        chatDto.setProjectName(chat.getProject().getName());
+        chatDto.setSender(chat.getSender().getFirstName());
+        chatDto.setMessage(chat.getMessage());
+        chatDto.setTime(chat.getTime());
+        chatDto.setSenderId(chat.getSender().getId());
+        return chatDto;
     }
     public List<GroupChatDto> fetchProjectChat(String projectName) {
        ProjectEntity project= projectBean.findProjectByName(projectName);
@@ -31,5 +39,22 @@ public class GroupChatBean {
             chatDtos.add(convertToDto(chat));
         }
         return chatDtos;
+    }
+    public boolean createChat(String projectName, int senderId, String message) {
+        boolean created = false;
+        ProjectEntity project = projectBean.findProjectByName(projectName);
+        if(project == null) {
+            return created;
+        }
+        ChatEntity chat = new ChatEntity();
+        chat.setProject(project);
+        chat.setSender(userBean.findUserById(senderId));
+        if(chat.getSender() == null) {
+            return created;
+        }
+        chat.setMessage(message);
+        groupChatDao.create(chat);
+        created = true;
+        return created;
     }
 }

@@ -261,7 +261,7 @@ public class ProjectBean {
         projectDto.setImage(project.getImage());
         projectDto.setStatus(project.getStatus().name());
         projectDto.setLab(project.getLab().getLocation().name());
-
+        projectDto.setCreationDate(project.getCreatedAt());
         projectDto.setSkills(skillBean.entityToString(project.getSkills()));
 
         projectDto.setInterests(interestBean.entityToName(project.getInterests()));
