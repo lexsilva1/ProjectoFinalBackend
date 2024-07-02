@@ -270,10 +270,17 @@ public class ProjectBean {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser));
         }
         projectDto.setTeamMembers(teamMembers);
-        Set<ResourceEntity> resources = project.getResources();
+        List<ProjectResourceEntity> resources = getProjectResources(project.getName());
+        Set<ResourceEntity> resourceSet = project.getResources();
         List<ResourceDto> resourceDtos = new ArrayList<>();
-        for (ResourceEntity resource : resources) {
-            resourceDtos.add(resourceBean.convertToDto(resource));
+        for (ResourceEntity resource : resourceSet) {
+            ResourceDto resourceDto = resourceBean.convertToDto(resource);
+            for (ProjectResourceEntity projectResource : resources) {
+                if (projectResource.getResource_id() == resource.getId()) {
+                    resourceDto.setQuantity(projectResource.getQuantity());
+                }
+            }
+            resourceDtos.add(resourceDto);
         }
         projectDto.setBillOfMaterials(resourceDtos);
         projectDto.setMaxTeamMembers(project.getMaxMembers());
@@ -756,5 +763,24 @@ public class ProjectBean {
             return false;
         }
         return projectUser.isProjectManager();
+    }
+    public List<ProjectResourceEntity> getProjectResources(String projectName){
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (project == null) {
+            return null;
+        }
+        return projectResourceDao.findProjectResources(project.getId());
+    }
+    public List<ResourceDto> convertToDto(Set<ResourceEntity> resources, List<ProjectResourceEntity> projectResources){
+        List<ResourceDto> resourceDtos = new ArrayList<>();
+        for (ResourceEntity resource : resources) {
+            resourceDtos.add(resourceBean.convertToDto(resource));
+        }
+        for (ProjectResourceEntity projectResource : projectResources) {
+            ResourceDto resourceDto = resourceBean.convertToDto(resourceDao.findResourceById(projectResource.getResource_id()));
+            resourceDto.setQuantity(projectResource.getQuantity());
+            resourceDtos.add(resourceDto);
+        }
+        return resourceDtos;
     }
 }

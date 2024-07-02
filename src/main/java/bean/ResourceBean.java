@@ -2,6 +2,7 @@ package bean;
 
 import dao.ResourceDao;
 import dto.ResourceDto;
+import entities.ProjectResourceEntity;
 import entities.ResourceEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
@@ -85,6 +86,15 @@ public class ResourceBean {
         resourceDto.setObservations(resourceEntity.getObservations());
         return resourceDto;
     }
+    public ProjectResourceDto convertToProjectResourceDto(ProjectResourceEntity projectResourceEntity) {
+        ProjectResourceDto projectResourceDto = new ProjectResourceDto();
+        projectResourceDto.setId(projectResourceEntity.getId());
+        projectResourceDto.setProjectId(projectResourceEntity.getProject_id());
+        projectResourceDto.setResourceId(projectResourceEntity.getResource_id());
+        projectResourceDto.setQuantity(projectResourceEntity.getQuantity());
+        return projectResourceDto;
+    }
+
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
 
         List<ResourceEntity> entities = resourceDao.findAllResources(name, identifier, supplier, type);

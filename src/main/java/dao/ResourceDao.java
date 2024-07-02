@@ -27,7 +27,15 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
             return null;
         }
     }
+ public ResourceEntity findResourceById(int id) {
+        try {
+            return (ResourceEntity) em.createNamedQuery("Resource.findResourceById").setParameter("id", id)
+                    .getSingleResult();
 
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public List<ResourceEntity> findAllResources(String name, String identifier, String supplier, String type) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
