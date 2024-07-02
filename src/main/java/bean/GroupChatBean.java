@@ -8,6 +8,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class GroupChatBean {
         chatDto.setMessage(chat.getMessage());
         chatDto.setTime(chat.getTime());
         chatDto.setSenderId(chat.getSender().getId());
+        chatDto.setUserPhoto(chat.getSender().getUserPhoto());
         return chatDto;
     }
     public List<GroupChatDto> fetchProjectChat(String projectName) {
@@ -53,6 +55,7 @@ public class GroupChatBean {
             return created;
         }
         chat.setMessage(message);
+        chat.setTime(LocalDateTime.now());
         groupChatDao.create(chat);
         created = true;
         return created;

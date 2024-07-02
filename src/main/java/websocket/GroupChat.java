@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Singleton
-@ServerEndpoint("/websocket/groupchat/{ProjectName}/{token}")
+@ServerEndpoint("/websocket/groupchat/{projectName}/{token}")
 public class GroupChat {
     @EJB
     private UserBean userBean;
@@ -54,32 +54,36 @@ public class GroupChat {
     }
     @OnOpen
     public void toDoOnOpen(Session session, @PathParam("projectName") String projectName, @PathParam("token") String token) {
+        projectName = projectBean.decodeProjectName(projectName); // decode project name (replace %20 with space
         System.out.println("A new group chat WebSocket session is opened for client with token: " + token);
         String conversationToken = projectName + "/" + token;
         sessions.put(conversationToken, session);
     }
     @OnClose
     public void toDoOnClose(Session session, @PathParam("projectName") String projectName, @PathParam("token") String token) {
+        projectName = projectBean.decodeProjectName(projectName); // decode project name (replace %20 with space
         System.out.println("A group chat WebSocket session is closed for client with token: " + token);
         String conversationToken = projectName + "/" + token;
         sessions.remove(conversationToken);
     }
     @OnError
     public void toDoOnError(Session session, @PathParam("projectName") String projectName, @PathParam("token") String token, Throwable error) {
+        projectName = projectBean.decodeProjectName(projectName); // decode project name (replace %20 with space
         System.out.println("An error occurred in group chat WebSocket session for client with token: " + token);
         String conversationToken = projectName + "/" + token;
         sessions.remove(conversationToken);
     }
     @OnMessage
-
-    public  void toDoOnMessage( String message, @PathParam("projectName") String projectName, @PathParam("token") String token) {
+    public void toDoOnMessage( String message, @PathParam("projectName") String projectName, @PathParam("token") String token) {
+        projectName = projectBean.decodeProjectName(projectName); // decode project name (replace %20 with space
+        System.out.println("Received message: " + message + " from client with token: " + token + " in project: " + projectName);
         UserEntity sender = userBean.findUserByToken(token);
         ProjectEntity project = projectBean.findProjectByName(projectName);
         boolean created = groupChatBean.createChat(projectName, sender.getId(), message);
         if(!created) {
             return;
         }
-        GroupChatDto groupChatDto = new GroupChatDto(project.getName(), sender.getFirstName(), sender.getId(), message);
+        GroupChatDto groupChatDto = new GroupChatDto(project.getName(), sender.getFirstName(), sender.getId(),sender.getUserPhoto(), message);
         sendChat(projectName, groupChatDto);
 
 

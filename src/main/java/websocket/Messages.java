@@ -68,7 +68,6 @@ public class Messages {
 
     @OnMessage
     public void toDoOnMessage(@PathParam("token") String token, @PathParam("id") int id, String message) {
-
         System.out.println("Received message: " + message);
         UserEntity sender = userBean.findUserByToken(token);
         UserEntity receiver = userBean.findUserById(id);

@@ -771,16 +771,4 @@ public class ProjectBean {
         }
         return projectResourceDao.findProjectResources(project.getId());
     }
-    public List<ResourceDto> convertToDto(Set<ResourceEntity> resources, List<ProjectResourceEntity> projectResources){
-        List<ResourceDto> resourceDtos = new ArrayList<>();
-        for (ResourceEntity resource : resources) {
-            resourceDtos.add(resourceBean.convertToDto(resource));
-        }
-        for (ProjectResourceEntity projectResource : projectResources) {
-            ResourceDto resourceDto = resourceBean.convertToDto(resourceDao.findResourceById(projectResource.getResource_id()));
-            resourceDto.setQuantity(projectResource.getQuantity());
-            resourceDtos.add(resourceDto);
-        }
-        return resourceDtos;
-    }
 }

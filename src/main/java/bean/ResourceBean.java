@@ -86,14 +86,7 @@ public class ResourceBean {
         resourceDto.setObservations(resourceEntity.getObservations());
         return resourceDto;
     }
-    public ProjectResourceDto convertToProjectResourceDto(ProjectResourceEntity projectResourceEntity) {
-        ProjectResourceDto projectResourceDto = new ProjectResourceDto();
-        projectResourceDto.setId(projectResourceEntity.getId());
-        projectResourceDto.setProjectId(projectResourceEntity.getProject_id());
-        projectResourceDto.setResourceId(projectResourceEntity.getResource_id());
-        projectResourceDto.setQuantity(projectResourceEntity.getQuantity());
-        return projectResourceDto;
-    }
+
 
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
 

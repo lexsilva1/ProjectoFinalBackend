@@ -8,20 +8,31 @@ public class GroupChatDto {
     private int senderId;
     private String message;
     private LocalDateTime time;
+    private String userPhoto;
 
     public GroupChatDto() {
     }
 
-    public GroupChatDto(String projectName, String sender,int senderId, String message) {
+    public GroupChatDto(String projectName, String sender,int senderId, String userPhoto, String message) {
         this.projectName = projectName;
         this.sender = sender;
         this.message = message;
         this.time = LocalDateTime.now();
         this.senderId = senderId;
+        this.userPhoto = userPhoto;
+
     }
 
     public String getProjectName() {
         return projectName;
+    }
+
+    public String getUserPhoto() {
+        return userPhoto;
+    }
+
+    public void setUserPhoto(String userPhoto) {
+        this.userPhoto = userPhoto;
     }
 
     public void setProjectName(String projectName) {
