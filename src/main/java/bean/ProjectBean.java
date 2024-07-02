@@ -745,10 +745,16 @@ public class ProjectBean {
         if (user == null || project == null || projectUser == null) {
             return false;
         }
-        if (projectUser.isProjectManager() && projectUser.getApprovalStatus().equals(ProjectUserEntity.ApprovalStatus.MEMBER)) {
-            return false;
-        }
         projectUserDao.remove(projectUser);
         return true;
+    }
+    public boolean isProjectManager(String token, String projectName){
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
+        if (user == null || project == null || projectUser == null) {
+            return false;
+        }
+        return projectUser.isProjectManager();
     }
 }

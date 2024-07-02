@@ -8,7 +8,9 @@ import jakarta.websocket.Session;
 import jakarta.websocket.server.ServerEndpoint;
 import service.ObjectMapperContextResolver;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Singleton
 @ServerEndpoint("/websocket/groupchat/{ProjectName}/{token}")
@@ -20,16 +22,23 @@ public class GroupChat {
         System.out.println("sending.......... " + msg);
     }
     public void sendChat(String projectName, GroupChatDto groupChatDto) {
-        String conversationToken = projectName + "/" + groupChatDto.getSender();
-
-        if (sessions.containsKey(conversationToken)) {
+        List<Session> projectSessions = getSessionsByProjectName(projectName);
+        for (Session session : projectSessions) {
             try {
-                String msg = mapper.writeValueAsString(groupChatDto);
-                sessions.get(conversationToken).getAsyncRemote().sendText(msg);
+                session.getBasicRemote().sendText(mapper.writeValueAsString(groupChatDto));
             } catch (Exception e) {
                 System.out.println("Something went wrong!");
             }
         }
+    }
+    public List<Session> getSessionsByProjectName(String projectName) {
+        List<Session> projectSessions = new ArrayList<>();
+        for (String key : sessions.keySet()) {
+            if (key.startsWith(projectName + "/")) {
+                projectSessions.add(sessions.get(key));
+            }
+        }
+        return projectSessions;
     }
 
     public void toDoOnOpen(Session session, String projectName, String token) {
@@ -49,10 +58,9 @@ public class GroupChat {
         String conversationToken = projectName + "/" + token;
         sessions.remove(conversationToken);
     }
-    public  void toDoOnMessage(Session session, String projectName, String token, String message) {
-        System.out.println("A new message is received in group chat WebSocket session for client with token: " + token);
-        String conversationToken = projectName + "/" + token;
-        sessions.get(conversationToken).getAsyncRemote().sendText(message);
+    public  void toDoOnMessage(  String message) {
+
+
     }
 
 }

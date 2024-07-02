@@ -330,7 +330,7 @@ public class ProjectService {
     @Path("/{projectName}/ProjectUser")
     @Produces("application/json")
     public Response removeProjectUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId){
-        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
