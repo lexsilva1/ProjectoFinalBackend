@@ -292,6 +292,15 @@ public class ProjectBean {
 
         return users;
     }
+    public List<ProjectUserDto> findTeamMembers(ProjectEntity project) {
+        List<ProjectUserEntity> projectUsers = projectUserDao.findTeamMembers(project);
+        List<ProjectUserDto> users = new ArrayList<>();
+        for (ProjectUserEntity projectUser : projectUsers) {
+            users.add(userBean.convertToProjectUserDto(projectUser));
+        }
+
+        return users;
+    }
 
     public List<SkillDto> findProjectSkills(ProjectEntity project) {
         List<SkillEntity> projectSkills = projectDao.findProjectSkills(project);
@@ -715,10 +724,10 @@ public class ProjectBean {
         if(newStatus == 0 && (user.getRole().getValue() > 1 || !projectUser.getApprovalStatus().equals("CREATOR"))){
             return false;
         }
-        if(newStatus == 400 && (user.getRole().getValue() > 1 || project.getStatus().getValue() != 300)){
+        if(newStatus == 400 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 300)){
             return false;
         }
-        if(newStatus == 500 && (user.getRole().getValue() > 1 || project.getStatus().getValue() != 400)){
+        if(newStatus == 500 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 400)){
             return false;
         }
         if(newStatus == 100 && (user.getRole().getValue() > 1 || project.getStatus().getValue() >= 200)){

@@ -36,6 +36,10 @@ public class GroupChat {
         String conversationToken = projectName + "/" + token;
         sessions.remove(conversationToken);
     }
-
+    public  void toDoOnMessage(Session session, String projectName, String token, String message) {
+        System.out.println("A new message is received in group chat WebSocket session for client with token: " + token);
+        String conversationToken = projectName + "/" + token;
+        sessions.get(conversationToken).getAsyncRemote().sendText(message);
+    }
 
 }

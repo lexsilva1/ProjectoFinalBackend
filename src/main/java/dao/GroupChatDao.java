@@ -1,6 +1,7 @@
 package dao;
 
 import entities.ChatEntity;
+import entities.ProjectEntity;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -16,9 +17,11 @@ public class GroupChatDao extends AbstractDao<ChatEntity> {
         super(ChatEntity.class);
     }
 
-    public List<ChatEntity> getAllChatByProject(int projectId) {
+    public List<ChatEntity> getAllChatByProject(ProjectEntity project) {
         try {
-            return em.createNamedQuery("ChatEntity.getAllChatsByProject").setParameter("project", projectId).getResultList();
+            return em.createNamedQuery("ChatEntity.getAllChatsByProject").setParameter("project", project)
+                    .getResultList();
+
         } catch (Exception e) {
             return null;
         }

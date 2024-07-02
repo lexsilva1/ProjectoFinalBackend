@@ -25,9 +25,44 @@ public class ChatEntity implements Serializable {
     private String message;
     @Column(name = "time", nullable = false, unique = false)
     private LocalDateTime time;
-    @Column(name = "is_read", nullable = false, unique = false)
-    private boolean isRead;
 
+    public int getChatId() {
+        return chatId;
+    }
 
+    public void setChatId(int chatId) {
+        this.chatId = chatId;
+    }
 
+    public UserEntity getSender() {
+        return sender;
+    }
+
+    public void setSender(UserEntity sender) {
+        this.sender = sender;
+    }
+
+    public ProjectEntity getProject() {
+        return project;
+    }
+
+    public void setProject(ProjectEntity project) {
+        this.project = project;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public LocalDateTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalDateTime time) {
+        this.time = time;
+    }
 }

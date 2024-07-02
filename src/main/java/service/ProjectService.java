@@ -172,33 +172,38 @@ public class ProjectService {
     @POST
     @Path("/{projectName}/accept")
     @Produces("application/json")
-    public Response acceptUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType, @QueryParam("notificationId")int notificationId){
-        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+    public Response acceptUser(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("userId") int userId,@QueryParam("operationType") String operationType, @QueryParam("notificationId")int notificationId) {
+        if (userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-
+        ProjectEntity project = projectBean.findProjectByName(projectName);
 
 
         String operationTypeString = operationType;
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
-        if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && operationType.equals("ACCEPT_INVITATION")) {
-            NotificationDto notification = notificationBean.convertToDto(notificationBean.findNotificationById(notificationId));
-            if(notification == null) {
-                return Response.status(404).entity("notification not found").build();
+        if (operationType.equals("ACCEPT_INVITATION")) {
+            if (projectBean.acceptRequest(token, projectName, userId, operationTypeEnum)) {
+                NotificationDto notification = notificationBean.convertToDto(notificationBean.findNotificationById(notificationId));
+                if (notification == null) {
+                    return Response.status(404).entity("notification not found").build();
 
+                }
+                NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId, "ACCEPTED");
+                return Response.status(201).entity(updatedNotification).build();
             }
-            NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"ACCEPTED");
-            return Response.status(201).entity(updatedNotification).build();
-        }else if(projectBean.acceptRequest(token,projectName,userId,operationTypeEnum) && operationType.equals("ACCEPT_APPLICATION")) {
-            NotificationDto acceptedNotification= new NotificationDto("ACCEPTED",userId,projectName,false, LocalDateTime.now());
+        } else if (projectBean.acceptRequest(token, projectName, userId, operationTypeEnum)) {
+            NotificationDto acceptedNotification = new NotificationDto("ACCEPTED", userId, projectName, false, LocalDateTime.now());
             notificationBean.sendNotification(acceptedNotification);
-            return Response.status(200).entity("accepted").build();
-        }else{
-            return Response.status(405).entity("not accepted").build();
+            return Response.status(200).entity(projectBean.findTeamMembers(project)).build();
         }
+        return Response.status(405).entity("not allowed").build();
     }
+
+
+
+
     @DELETE
     @Path("/{projectName}/reject")
     @Produces("application/json")
@@ -308,5 +313,17 @@ public class ProjectService {
         }else {
             return Response.status(400).entity("something went wrong").build();
         }
+    }
+    @GET
+    @Path("/{projectName}/projectUsers")
+    @Produces("application/json")
+    public Response fetchProjectUsers(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        ProjectEntity project = projectBean.findProjectByName(projectName);
+        return Response.status(200).entity(projectBean.findProjectUsers(project)).build();
     }
 }
