@@ -1,10 +1,7 @@
 package bean;
 
 import dao.TaskDao;
-import dto.CreateProjectDto;
-import dto.ProjectLogDto;
-import dto.ProjectTasksDto;
-import dto.TaskDto;
+import dto.*;
 import entities.ProjectEntity;
 import entities.TaskEntity;
 import entities.UserEntity;
@@ -26,6 +23,8 @@ public class TaskBean {
     ProjectBean projectBean;
     @EJB
     ProjectLogBean projectLogBean;
+    @EJB
+    NotificationBean notificationBean;
 
     public TaskBean() {
     }
@@ -67,6 +66,7 @@ public class TaskBean {
             UserEntity u = userBean.findUserById(i);
             if(u != null) {
                 users.add(u);
+                notificationBean.sendNotification(new NotificationDto("TASK_EXECUTOR", i,projectname,false,LocalDateTime.now()));
             }
         }
         task.setTaskUsers(users);
@@ -75,9 +75,9 @@ public class TaskBean {
         TaskEntity taskToAdd = taskDao.find(task.getId());
         projectBean.addTaskToProject(projectname, taskToAdd);
         ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), project, "Task created: " + task.getTitle());
-        projectLogDto.setType("TASK_CREATED");
+        projectLogDto.setType("CREATE_TASK");
         projectLogBean.createProjectLog(projectLogDto);
-
+        notificationBean.sendNotification(new NotificationDto("TASK_ASSIGN", taskDto.getResponsibleId(),projectname,false,LocalDateTime.now()));
         return true;
 
     }

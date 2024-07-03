@@ -11,6 +11,9 @@ public class NotificationDto {
     private int notificationId;
     private LocalDateTime time;
     private int otherUserId;
+    private int taskId;
+    private String taskName;
+    private String status;
 
     public NotificationDto() {
     }
@@ -79,5 +82,29 @@ public class NotificationDto {
 
     public void setOtherUserId(int otherUserId) {
         this.otherUserId = otherUserId;
+    }
+
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
+
+    public String getTaskName() {
+        return taskName;
+    }
+
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

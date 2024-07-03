@@ -842,13 +842,7 @@ public class ProjectBean {
         }
        return projectLogBean.getProjectLogs(project.getId());
     }
-    public ProjectLogDto addProjectLog(String token, String projectName, String log){
-        UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectByName(projectName);
-        if (user == null || project == null) {
-            return null;
-        }
-        ProjectLogDto dto = new ProjectLogDto(user,project,log);
+    public ProjectLogDto addProjectLog(ProjectLogDto dto){
 
         if( projectLogBean.createProjectLog(dto)){
             return dto;

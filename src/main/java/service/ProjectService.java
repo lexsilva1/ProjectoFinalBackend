@@ -280,6 +280,8 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectBean.createProject(projectDto,token);
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectDto.getName()), "Project updated");
+        projectLogDto.setType("UPDATE_PROJECT_DETAILS");
         return Response.status(200).entity("project updated").build();
     }
     @GET
@@ -387,7 +389,10 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        projectLogDto = projectBean.addProjectLog(token,projectName,projectLogDto.getLog());
+        projectLogDto.setProject(projectName);
+        projectLogDto.setUserId(userBean.findUserByToken(token).getId());
+        projectLogDto.setType("OTHER");
+        projectLogDto = projectBean.addProjectLog(projectLogDto);
         if(projectLogDto != null){
             return Response.status(201).entity(projectLogDto).build();
         }else {

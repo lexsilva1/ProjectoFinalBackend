@@ -1,7 +1,6 @@
 package dto;
 
 import entities.ProjectEntity;
-import entities.ProjectLogEntity;
 import entities.UserEntity;
 
 import java.time.LocalDateTime;
@@ -15,8 +14,8 @@ public class ProjectLogDto {
     private int userId;
     private int otherUserId;
     private int taskId;
-    private int ResourceId;
-    private String Status;
+    private int resourceId;
+    private String status;
     public ProjectLogDto() {
     }
     public ProjectLogDto(UserEntity user, ProjectEntity project,String log) {
@@ -93,18 +92,18 @@ public class ProjectLogDto {
     }
 
     public int getResourceId() {
-        return ResourceId;
+        return resourceId;
     }
 
     public void setResourceId(int resourceId) {
-        ResourceId = resourceId;
+        this.resourceId = resourceId;
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
     }
 }

@@ -32,6 +32,9 @@ public class NotificationEntity implements Serializable {
     @ManyToOne
     @JoinColumn (name = "other_user_id", nullable = true, unique = false)
     private UserEntity otherUser;
+    @ManyToOne
+    @JoinColumn (name = "task_id", nullable = true, unique = false)
+    private TaskEntity task;
 
 
     public enum NotificationType {
@@ -45,6 +48,7 @@ public class NotificationEntity implements Serializable {
         PROMOTED,
         DEMOTED,
         TASK_ASSIGN,
+        TASK_EXECUTOR,
         TASK_DOING,
         TASK_COMPLETE,
         PROJECT_COMPLETE,
@@ -115,5 +119,13 @@ public class NotificationEntity implements Serializable {
 
     public void setTime(LocalDateTime time) {
         this.time = time;
+    }
+
+    public TaskEntity getTask() {
+        return task;
+    }
+
+    public void setTask(TaskEntity task) {
+        this.task = task;
     }
 }

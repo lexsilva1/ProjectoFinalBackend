@@ -27,6 +27,8 @@ public class NotificationBean {
     private ProjectDao projectDao;
     @Inject
     private Notifications notifications;
+    @Inject
+    private TaskBean taskBean;
 
 
     public NotificationBean() {
@@ -43,6 +45,12 @@ public class NotificationBean {
         if(entity.getOtherUser() != null) {
             dto.setOtherUserId(entity.getOtherUser().getId());
         }
+        if(entity.getTask() != null) {
+            dto.setTaskId(entity.getTask().getId());
+            dto.setTaskName(entity.getTask().getTitle());
+        }
+        dto.setType(entity.getType().name());
+        dto.setStatus(convertTypeTpStatus(entity.getType()));
         return dto;
     }
     public boolean createNotification(NotificationDto dto) {
@@ -55,6 +63,12 @@ public class NotificationBean {
         entity.setProject(projectDao.findProjectByName(dto.getProjectName()));
         if(entity.getUser() == null || entity.getProject() == null) {
             return created;
+        }
+        if(dto.getOtherUserId() != 0) {
+            entity.setOtherUser(userDao.findUserById(dto.getOtherUserId()));
+        }
+        if(dto.getTaskId() != 0) {
+            entity.setTask(taskBean.findTaskById(dto.getTaskId()));
         }
         notificationDao.persist(entity);
         created = true;
@@ -93,5 +107,33 @@ public class NotificationBean {
     }
     public int findLastNotificationId() {
         return notificationDao.findLastNotificationId();
+    }
+    public String convertTypeTpStatus(NotificationEntity.NotificationType type){
+        String status = "";
+        switch (type) {
+
+            case TASK_DOING:
+                         status ="IN_PROGRESS";
+                        break;
+            case TASK_COMPLETE:
+                        status = "COMPLETE";
+                        break;
+            case PROJECT_COMPLETE:
+                        status = "Finished";
+                        break;
+            case PROJECT_CANCEL:
+                        status = "Cancelled";
+                        break;
+            case PROJECT_APPROVED:
+                        status = "Approved";
+                        break;
+            case PROJECT_READY:
+                        status = "Ready";
+                        break;
+            case PROJECT_DOING:
+                        status = "In_Progress";
+                        break;
+    }
+    return status;
     }
 }
