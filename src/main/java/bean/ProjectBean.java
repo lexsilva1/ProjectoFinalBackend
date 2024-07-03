@@ -559,7 +559,7 @@ public class ProjectBean {
             return false;
         }
         projectUser.setProjectManager(true);
-        projectUserDao.persist(projectUser);
+        projectUserDao.merge(projectUser);
         return true;
     }
 
@@ -664,6 +664,12 @@ public class ProjectBean {
         projectStatistics.setTotalReadyProjects(projectDao.getReadyProjectsByLab());
         projectStatistics.setAverageMembersPerProject(projectDao.getAverageMembersPerProject());
         projectStatistics.setAverageExecutionTime(projectDao.getAverageExecutionTime());
+        projectStatistics.setMostUsedResource(projectDao.getMostUsedResource());
+        projectStatistics.setMostUsedSkill(projectDao.getMostUsedSkill());
+        projectStatistics.setMostUsedInterest(projectDao.getMostUsedInterest());
+        projectStatistics.setMostUsedResourceCount(projectDao.getMostUsedResourceCount());
+        projectStatistics.setMostUsedResourceType(projectDao.getMostUsedResourceType());
+        projectStatistics.setMostUsedResourceTypeCount(projectDao.getMostUsedResourceTypeCount());
         return projectStatistics;
     }
     public ProjectTasksDto findProjectTasks(String projectName) {
@@ -781,5 +787,21 @@ public class ProjectBean {
             return null;
         }
        return projectLogBean.getProjectLogs(project.getId());
+    }
+    public ProjectLogDto addProjectLog(String token, String projectName, String log){
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (user == null || project == null) {
+            return null;
+        }
+        ProjectLogDto dto = new ProjectLogDto(user,project,log);
+
+        if( projectLogBean.createProjectLog(dto)){
+            return dto;
+        }else {
+            return null;
+        }
+
+
     }
 }

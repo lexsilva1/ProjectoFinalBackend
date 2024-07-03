@@ -29,7 +29,7 @@ public class ProjectLogBean {
             log1.setProject_id(1);
             log1.setLog("Project created");
             log1.setUser_id(1);
-            log1.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            log1.setType(ProjectLogEntity.LogType.PROJECT_CREATED);
             log1.setDate(LocalDateTime.now());
             projectLogDao.persist(log1);
         }
@@ -38,7 +38,7 @@ public class ProjectLogBean {
             log2.setProject_id(2);
             log2.setLog("Project created");
             log2.setUser_id(1);
-            log2.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            log2.setType(ProjectLogEntity.LogType.PROJECT_CREATED);
             log2.setDate(LocalDateTime.now());
             projectLogDao.persist(log2);
         }
@@ -47,7 +47,7 @@ public class ProjectLogBean {
             log3.setProject_id(3);
             log3.setLog("Project created");
             log3.setUser_id(1);
-            log3.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            log3.setType(ProjectLogEntity.LogType.PROJECT_CREATED);
             log3.setDate(LocalDateTime.now());
             projectLogDao.persist(log3);
         }
@@ -75,5 +75,18 @@ public class ProjectLogBean {
         projectLogDto.setResourceId(projectLogEntity.getProject_resource_id());
         projectLogDto.setType(projectLogEntity.getType().name());
         return projectLogDto;
+    }
+    public boolean createProjectLog(ProjectLogDto projectLogDto) {
+        ProjectLogEntity projectLogEntity = new ProjectLogEntity();
+        projectLogEntity.setProject_id(projectBean.findProjectByName(projectLogDto.getProject()).getId());
+        projectLogEntity.setLog(projectLogDto.getLog());
+        projectLogEntity.setUser_id(projectLogDto.getUserId());
+        projectLogEntity.setOther_user_id(projectLogDto.getOtherUserId());
+        projectLogEntity.setTask_id(projectLogDto.getTaskId());
+        projectLogEntity.setProject_resource_id(projectLogDto.getResourceId());
+        projectLogEntity.setDate(LocalDateTime.now());
+        projectLogEntity.setType(ProjectLogEntity.LogType.valueOf(projectLogDto.getType()));
+        projectLogDao.persist(projectLogEntity);
+        return true;
     }
 }

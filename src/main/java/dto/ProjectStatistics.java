@@ -14,6 +14,15 @@ public class ProjectStatistics {
     private HashMap<String,Integer> projectsByLab;
     private double averageMembersPerProject;
     private double averageExecutionTime;
+    private String mostUsedResource;
+    private int mostUsedResourceCount;
+    private String mostUsedResourceType;
+    private int mostUsedResourceTypeCount;
+    private String mostUsedSkill;
+    private int mostUsedSkillCount;
+    private String mostUsedInterest;
+    private int mostUsedInterestCount;
+
 
 
     public ProjectStatistics() {
@@ -97,5 +106,69 @@ public class ProjectStatistics {
 
     public void setTotalReadyProjects(HashMap<String, Integer> totalReadyProjects) {
         this.totalReadyProjects = totalReadyProjects;
+    }
+
+    public String getMostUsedResource() {
+        return mostUsedResource;
+    }
+
+    public void setMostUsedResource(String mostUsedResource) {
+        this.mostUsedResource = mostUsedResource;
+    }
+
+    public int getMostUsedResourceCount() {
+        return mostUsedResourceCount;
+    }
+
+    public void setMostUsedResourceCount(int mostUsedResourceCount) {
+        this.mostUsedResourceCount = mostUsedResourceCount;
+    }
+
+    public String getMostUsedResourceType() {
+        return mostUsedResourceType;
+    }
+
+    public void setMostUsedResourceType(String mostUsedResourceType) {
+        this.mostUsedResourceType = mostUsedResourceType;
+    }
+
+    public int getMostUsedResourceTypeCount() {
+        return mostUsedResourceTypeCount;
+    }
+
+    public void setMostUsedResourceTypeCount(int mostUsedResourceTypeCount) {
+        this.mostUsedResourceTypeCount = mostUsedResourceTypeCount;
+    }
+
+    public String getMostUsedSkill() {
+        return mostUsedSkill;
+    }
+
+    public void setMostUsedSkill(String mostUsedSkill) {
+        this.mostUsedSkill = mostUsedSkill;
+    }
+
+    public int getMostUsedSkillCount() {
+        return mostUsedSkillCount;
+    }
+
+    public void setMostUsedSkillCount(int mostUsedSkillCount) {
+        this.mostUsedSkillCount = mostUsedSkillCount;
+    }
+
+    public String getMostUsedInterest() {
+        return mostUsedInterest;
+    }
+
+    public void setMostUsedInterest(String mostUsedInterest) {
+        this.mostUsedInterest = mostUsedInterest;
+    }
+
+    public int getMostUsedInterestCount() {
+        return mostUsedInterestCount;
+    }
+
+    public void setMostUsedInterestCount(int mostUsedInterestCount) {
+        this.mostUsedInterestCount = mostUsedInterestCount;
     }
 }

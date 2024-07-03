@@ -208,4 +208,28 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    public String getMostUsedSkill(){
+        List<Object[]> results = em.createQuery("SELECT t.skill.name, COUNT(t) FROM TaskEntity t GROUP BY t.skill.name ORDER BY COUNT(t) DESC").getResultList();
+        return (String) results.get(0)[0];
+    }
+    public String getMostUsedResource(){
+        List<Object[]> results = em.createQuery("SELECT t.resource.name, COUNT(t) FROM ProjectEntity t GROUP BY t.resource.name ORDER BY COUNT(t) DESC").getResultList();
+        return (String) results.get(0)[0];
+    }
+    public String getMostUsedInterest(){
+        List<Object[]> results = em.createQuery("SELECT t.interest.name, COUNT(t) FROM ProjectEntity t GROUP BY t.interest.name ORDER BY COUNT(t) DESC").getResultList();
+        return (String) results.get(0)[0];
+    }
+    public int getMostUsedResourceCount(){
+        List<Object[]> results = em.createQuery("SELECT t.resource.name, COUNT(t) FROM ProjectEntity t GROUP BY t.resource.name ORDER BY COUNT(t) DESC").getResultList();
+        return (int) results.get(0)[1];
+    }
+    public int getMostUsedResourceTypeCount(){
+        List<Object[]> results = em.createQuery("SELECT t.resource.type, COUNT(t) FROM ProjectEntity t GROUP BY t.resource.type ORDER BY COUNT(t) DESC").getResultList();
+        return (int) results.get(0)[1];
+    }
+    public String getMostUsedResourceType(){
+        List<Object[]> results = em.createQuery("SELECT t.resources, COUNT(t) FROM ProjectEntity t GROUP BY t.resources ORDER BY COUNT(t) DESC").getResultList();
+        return (String) results.get(0)[0];
+    }
 }

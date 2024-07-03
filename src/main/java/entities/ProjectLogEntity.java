@@ -27,7 +27,9 @@ public class ProjectLogEntity implements Serializable {
     LocalDateTime date;
     @Column (name = "project_resource_id", nullable = true, unique = false)
     private int project_resource_id;
-    @Column (name = "log", nullable = false, unique = false)
+    @Column (name = "status", nullable = true, unique = false)
+    private String status;
+    @Column (name = "log", nullable = true, unique = false)
     private String log;
     @Column (name = "type", nullable = false, unique = false)
     private LogType type;
@@ -43,6 +45,7 @@ public class ProjectLogEntity implements Serializable {
         UPDATE_PROJECT_STATUS,
         UPDATE_PROJECT_DETAILS,
         REQUEST_RESOURCE,
+        PROJECT_CREATED,
         OTHER
     }
 
@@ -116,5 +119,13 @@ public class ProjectLogEntity implements Serializable {
 
     public void setProject_resource_id(int project_resource_id) {
         this.project_resource_id = project_resource_id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

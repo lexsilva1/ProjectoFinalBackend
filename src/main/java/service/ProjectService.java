@@ -1,10 +1,7 @@
 package service;
 
 import bean.*;
-import dto.CreateProjectDto;
-import dto.NotificationDto;
-import dto.ProjectDto;
-import dto.TaskDto;
+import dto.*;
 import entities.ProjectEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
@@ -372,5 +369,21 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         return Response.status(200).entity(projectBean.getProjectLogs(projectName)).build();
+    }
+    @POST
+    @Path("/{projectName}/logs")
+    @Produces("application/json")
+    public Response createProjectLog(@HeaderParam("token") String token, @PathParam("projectName") String projectName, ProjectLogDto projectLogDto){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        projectLogDto = projectBean.addProjectLog(token,projectName,projectLogDto.getLog());
+        if(projectLogDto != null){
+            return Response.status(201).entity(projectLogDto).build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
     }
 }

@@ -1,6 +1,8 @@
 package dto;
 
+import entities.ProjectEntity;
 import entities.ProjectLogEntity;
+import entities.UserEntity;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +17,14 @@ public class ProjectLogDto {
     private int taskId;
     private int ResourceId;
     public ProjectLogDto() {
+    }
+    public ProjectLogDto(UserEntity user, ProjectEntity project,String log) {
+        this.userId = user.getId();
+        this.project = project.getName();
+        this.time = LocalDateTime.now();
+        this.log = log;
+        this.type = "OTHER";
+
     }
 
     public int getId() {
