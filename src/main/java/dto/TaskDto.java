@@ -9,11 +9,11 @@ public class TaskDto {
     private String title;
     private String description;
     private String projectName;
-    private int CreatorId;
-    private int ResponsibleId;
+    private int creatorId;
+    private int responsibleId;
     private Set<Integer> dependencies;
     private Set<Integer> users;
-    private String Status;
+    private String status;
     private LocalDateTime start;
     private LocalDateTime end;
     private LocalDateTime creationDate;
@@ -54,19 +54,19 @@ public class TaskDto {
     }
 
     public int getCreatorId() {
-        return CreatorId;
+        return creatorId;
     }
 
     public void setCreatorId(int creatorId) {
-        CreatorId = creatorId;
+        this.creatorId = creatorId;
     }
 
     public int getResponsibleId() {
-        return ResponsibleId;
+        return responsibleId;
     }
 
     public void setResponsibleId(int responsibleId) {
-        ResponsibleId = responsibleId;
+        this.responsibleId = responsibleId;
     }
 
     public Set<Integer> getDependencies() {
@@ -86,11 +86,11 @@ public class TaskDto {
     }
 
     public String getStatus() {
-        return Status;
+        return status;
     }
 
     public void setStatus(String status) {
-        Status = status;
+        this.status = status;
     }
 
     public LocalDateTime getStart() {

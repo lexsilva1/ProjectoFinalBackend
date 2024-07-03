@@ -471,6 +471,7 @@ public class ProjectBean {
         if (projectUser != null) {
             return false;
         }
+        projectUser = new ProjectUserEntity();
         projectUser.setProject(project);
         projectUser.setUser(invitedUser);
         projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);

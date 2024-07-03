@@ -117,7 +117,7 @@ public class PhotoUploadService {
                 // Construct the URL to return to the client
                 String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/ProjectoFinalImages/" +  fileName+uniqueTime;
 
-      
+
 
                 return Response.status(200).entity(photoUrl).build();
 
