@@ -30,4 +30,12 @@ public class ProjectLogDao extends AbstractDao{
             return null;
         }
     }
+    public boolean create(ProjectLogEntity projectLogEntity) {
+        try {
+            em.persist(projectLogEntity);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 }

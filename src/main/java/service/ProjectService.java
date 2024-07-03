@@ -29,6 +29,8 @@ public class ProjectService {
     NotificationBean notificationBean;
     @EJB
     GroupChatBean groupChatBean;
+    @EJB
+    ProjectLogBean projectLogBean;
 
 
     @GET
@@ -219,6 +221,9 @@ public class ProjectService {
         ProjectBean.OperationType operationTypeEnum = ProjectBean.OperationType.valueOf(operationTypeString);
         if(projectBean.rejectRequest(token,projectName,userId,operationTypeEnum)){
             NotificationDto updatedNotification = notificationBean.updateNotificationMessage(notificationId,"REJECT");
+            ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectName), "User rejected: " + userBean.findUserById(userId).getFirstName());
+            projectLogDto.setType("REJECT_USER");
+            projectLogBean.createProjectLog(projectLogDto);
             return Response.status(200).entity(updatedNotification).build();
         }else{
             return Response.status(405).entity("not rejected").build();
@@ -316,6 +321,9 @@ public class ProjectService {
         projectName = projectBean.decodeProjectName(projectName);
         if(taskBean.updateTask(token,projectName,taskDto)) {
             TaskDto taskDto1 = taskBean.getTaskById(taskDto.getId());
+            ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectName), "Task updated: " + taskDto.getTitle());
+            projectLogDto.setType("UPDATE_TASK");
+            projectLogBean.createProjectLog(projectLogDto);
             return Response.status(200).entity(taskDto1).build();
         }else {
             return Response.status(400).entity("something went wrong").build();

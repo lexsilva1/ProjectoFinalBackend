@@ -87,7 +87,8 @@ public class ProjectLogBean {
         projectLogEntity.setProject_resource_id(projectLogDto.getResourceId());
         projectLogEntity.setDate(LocalDateTime.now());
         projectLogEntity.setType(ProjectLogEntity.LogType.valueOf(projectLogDto.getType()));
-        projectLogDao.persist(projectLogEntity);
-        return true;
+        projectLogEntity.setStatus(projectLogDto.getStatus());
+        return projectLogDao.create(projectLogEntity);
+
     }
 }
