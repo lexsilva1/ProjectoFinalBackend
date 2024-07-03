@@ -175,7 +175,18 @@ public class ProjectBean {
             task3.setDependencies(new LinkedHashSet<>(List.of(task2)));
             task3.setTaskUsers(new LinkedHashSet<>(List.of(userBean.findUserByEmail("mariamacaca@gmail.com"))));
             taskDao.persist(task3);
-            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, task2, task3)));
+            TaskEntity finaltask = new TaskEntity();
+            finaltask.setTitle("Final Presentation");
+            finaltask.setDescription("Final presentation of the finalized project");
+
+            finaltask.setResponsibleUser(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
+            finaltask.setEndDate(defaultProject.getEndDate());
+            finaltask.setCreationDate(LocalDateTime.now());
+            finaltask.setCreatedBy(userBean.findUserById(1));
+            taskDao.persist(finaltask);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, task2, task3, finaltask)));
             projectDao.merge(defaultProject);
 
 
@@ -234,6 +245,18 @@ public class ProjectBean {
             task.setEndDate(java.time.LocalDateTime.now().plusDays(2));
             task.setCreationDate(java.time.LocalDateTime.now().minusDays(6));
             taskDao.persist(task);
+            TaskEntity finaltask = new TaskEntity();
+            finaltask.setTitle("Final Presentation");
+            finaltask.setDescription("Final presentation of the finalized project");
+
+            finaltask.setResponsibleUser(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
+            finaltask.setEndDate(defaultProject.getEndDate());
+            finaltask.setCreationDate(LocalDateTime.now());
+            finaltask.setCreatedBy(userBean.findUserById(1));
+            taskDao.persist(finaltask);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, finaltask)));
             projectDao.persist(defaultProject);
 
             projectUserDao.persist(defaultProjectUser);

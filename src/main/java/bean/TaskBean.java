@@ -181,7 +181,7 @@ public class TaskBean {
         task.setTaskUsers(users);
         taskDao.merge(task);
         ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), projectBean.findProjectByName(projectName), "Task updated: " + task.getTitle());
-        projectLogDto.setType("TASK_UPDATED");
+        projectLogDto.setType("UPDATE_TASK");
         projectLogDto.setStatus(task.getStatus().toString());
         projectLogBean.createProjectLog(projectLogDto);
         return true;
