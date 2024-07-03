@@ -22,6 +22,32 @@ public class ProjectLogBean {
 
     public ProjectLogBean() {
     }
+    public void createDefaultLogs() {
+        if(projectLogDao.findProjectLogByProjectId(1) == null) {
+            ProjectLogEntity log1 = new ProjectLogEntity();
+            log1.setProject_id(1);
+            log1.setLog("Project created");
+            log1.setUser_id(1);
+            log1.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            projectLogDao.persist(log1);
+        }
+        if(projectLogDao.findProjectLogByProjectId(2) == null) {
+            ProjectLogEntity log2 = new ProjectLogEntity();
+            log2.setProject_id(2);
+            log2.setLog("Project created");
+            log2.setUser_id(1);
+            log2.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            projectLogDao.persist(log2);
+        }
+        if(projectLogDao.findProjectLogByProjectId(3) == null) {
+            ProjectLogEntity log3 = new ProjectLogEntity();
+            log3.setProject_id(3);
+            log3.setLog("Project created");
+            log3.setUser_id(1);
+            log3.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            projectLogDao.persist(log3);
+        }
+    }
 
     public List<ProjectLogDto> getProjectLogs(int projectId) {
         List<ProjectLogEntity> logEntities = projectLogDao.findProjectLogsByProjectId(projectId);
