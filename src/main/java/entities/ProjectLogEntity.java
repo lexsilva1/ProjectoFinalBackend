@@ -36,7 +36,7 @@ public class ProjectLogEntity implements Serializable {
 
     public enum LogType {
         CREATE_TASK,
-        UPDATE_TASK_STATUS,
+        UPDATE_TASK,
         DELETE_TASK,
         APPROVE_USER,
         REJECT_USER,

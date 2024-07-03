@@ -2,6 +2,7 @@ package bean;
 
 import dao.TaskDao;
 import dto.CreateProjectDto;
+import dto.ProjectLogDto;
 import dto.ProjectTasksDto;
 import dto.TaskDto;
 import entities.ProjectEntity;
@@ -23,6 +24,8 @@ public class TaskBean {
     UserBean userBean;
     @EJB
     ProjectBean projectBean;
+    @EJB
+    ProjectLogBean projectLogBean;
 
     public TaskBean() {
     }
@@ -71,6 +74,10 @@ public class TaskBean {
         taskDao.persist(task);
         TaskEntity taskToAdd = taskDao.find(task.getId());
         projectBean.addTaskToProject(projectname, taskToAdd);
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), project, "Task created: " + task.getTitle());
+        projectLogDto.setType("TASK_CREATED");
+        projectLogBean.createProjectLog(projectLogDto);
+
         return true;
 
     }
@@ -173,6 +180,10 @@ public class TaskBean {
         }
         task.setTaskUsers(users);
         taskDao.merge(task);
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), projectBean.findProjectByName(projectName), "Task updated: " + task.getTitle());
+        projectLogDto.setType("TASK_UPDATED");
+        projectLogDto.setStatus(task.getStatus().toString());
+        projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
     public TaskEntity findTaskById(int id) {
