@@ -8,6 +8,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ProjectLogBean {
             log1.setLog("Project created");
             log1.setUser_id(1);
             log1.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            log1.setDate(LocalDateTime.now());
             projectLogDao.persist(log1);
         }
         if(projectLogDao.findProjectLogByProjectId(2) == null) {
@@ -37,6 +39,7 @@ public class ProjectLogBean {
             log2.setLog("Project created");
             log2.setUser_id(1);
             log2.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            log2.setDate(LocalDateTime.now());
             projectLogDao.persist(log2);
         }
         if(projectLogDao.findProjectLogByProjectId(3) == null) {
@@ -45,6 +48,7 @@ public class ProjectLogBean {
             log3.setLog("Project created");
             log3.setUser_id(1);
             log3.setType(ProjectLogEntity.LogType.UPDATE_PROJECT_STATUS);
+            log3.setDate(LocalDateTime.now());
             projectLogDao.persist(log3);
         }
     }

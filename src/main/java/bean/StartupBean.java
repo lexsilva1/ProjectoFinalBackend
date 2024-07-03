@@ -31,6 +31,8 @@ public class StartupBean {
     ResourceBean resourceBean;
     @Inject
     MessageBean messageBean;
+    @Inject
+    ProjectLogBean projectLogBean;
 
     @PostConstruct
     public void init() {
@@ -41,5 +43,7 @@ public class StartupBean {
         skillBean.createDefaultSkills();
         interestBean.createDefaultInterests();
         projectBean.createDefaultProjects();
+        projectLogBean.createDefaultLogs();
+
     }
 }

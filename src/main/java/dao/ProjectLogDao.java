@@ -1,11 +1,12 @@
 package dao;
 
 import entities.ProjectLogEntity;
+import jakarta.ejb.Stateless;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
-
+@Stateless
 public class ProjectLogDao extends AbstractDao{
     @PersistenceContext
     private EntityManager em;
