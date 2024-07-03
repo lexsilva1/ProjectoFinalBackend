@@ -569,6 +569,11 @@ public class ProjectBean {
         if (user == null || project == null || projectUser == null) {
             return false;
         }
+        List <TaskEntity> tasks = taskDao.findTasksByResponsibleUser(user);
+        for (TaskEntity task : tasks) {
+            task.setResponsibleUser(projectUserDao.findProjectCreator(project).getUser());
+            taskDao.persist(task);
+        }
         projectUserDao.remove(projectUser);
         return true;
     }
