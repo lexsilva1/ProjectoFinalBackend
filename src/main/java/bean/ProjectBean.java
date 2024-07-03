@@ -401,10 +401,9 @@ public class ProjectBean {
             resourceSet.add(resource);
         }
         project.setResources(resourceSet);
-
-
-
-
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), project, "Project created");
+        projectLogDto.setType("PROJECT_CREATED");
+        projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
 
@@ -432,6 +431,9 @@ public class ProjectBean {
         projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.APPLIED);
         projectUser.setProjectManager(false);
         projectUserDao.persist(projectUser);
+        ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "User " + user.getFirstName() + " applied to project");
+        projectLogDto.setType("APPLY_USER");
+        projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
 
@@ -451,6 +453,10 @@ public class ProjectBean {
         projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
         projectUser.setProjectManager(false);
         projectUserDao.persist(projectUser);
+        ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "User " + invitedUser.getFirstName() + " invited to project");
+        projectLogDto.setType("INVITE_USER");
+        projectLogDto.setOtherUserId(userId);
+        projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
 
@@ -490,6 +496,9 @@ public class ProjectBean {
             notificationDto.setOtherUserId(targetUser.getId());
             notificationBean.sendNotification(notificationDto);
         });
+        ProjectLogDto projectLogDto = new ProjectLogDto(targetUser, project, "User " + targetUser.getFirstName() + " accepted invitation to project");
+        projectLogDto.setType("ACCEPT_USER");
+        projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
 
@@ -524,6 +533,9 @@ public class ProjectBean {
             notificationDto.setOtherUserId(targetUser.getId());
             notificationBean.sendNotification(notificationDto);
         });
+        ProjectLogDto projectLogDto = new ProjectLogDto(targetUser, project, "User " + targetUser.getFirstName() + " rejected invitation from project");
+        projectLogDto.setType("REJECT_USER");
+        projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
 
@@ -559,6 +571,10 @@ public class ProjectBean {
             return false;
         }
         projectUser.setProjectManager(true);
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserById(userId), project, "User " + userBean.findUserById(userId).getFirstName() + " promoted to project manager");
+        projectLogDto.setType("PROMOTE_USER");
+        projectLogDto.setOtherUserId(userId);
+        projectLogBean.createProjectLog(projectLogDto);
         projectUserDao.merge(projectUser);
         return true;
     }
@@ -572,6 +588,10 @@ public class ProjectBean {
             return false;
         }
         projectUser.setProjectManager(false);
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserById(userId), project, "User " + userBean.findUserById(userId).getFirstName() + " demoted from project manager");
+        projectLogDto.setType("DEMOTE_USER");
+        projectLogDto.setOtherUserId(userId);
+        projectLogBean.createProjectLog(projectLogDto);
         projectUserDao.persist(projectUser);
         return true;
     }
@@ -692,6 +712,9 @@ public class ProjectBean {
             return;
         }
         project.getTasks().add(task);
+        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserById(task.getCreatedBy().getId()), project, "Task " + task.getTitle() + " added to project");
+        projectLogDto.setType("CREATE_TASK");
+        projectLogDto.setTaskId(task.getId());
         projectDao.persist(project);
     }
     public int convertStatus(String status){
@@ -749,6 +772,10 @@ public class ProjectBean {
         }
 
         project.setStatus(ProjectEntity.Status.fromValue(newStatus));
+        ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "Status changed to " + status);
+        projectLogDto.setType("UPDATE_PROJECT_STATUS");
+        projectLogDto.setStatus(status);
+        projectLogBean.createProjectLog(projectLogDto);
         projectDao.persist(project);
         return true;
     }
@@ -759,6 +786,10 @@ public class ProjectBean {
         if (user == null || project == null || projectUser == null) {
             return false;
         }
+        ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "User " + userBean.findUserById(userId) + " removed from project");
+        projectLogDto.setType("REMOVE_USER");
+        projectLogDto.setOtherUserId(userId);
+        projectLogBean.createProjectLog(projectLogDto);
         projectUserDao.remove(projectUser);
         return true;
     }

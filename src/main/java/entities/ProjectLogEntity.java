@@ -15,7 +15,7 @@ public class ProjectLogEntity implements Serializable {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
-    @Column(name = "project_id", nullable = false, unique = true, updatable = false)
+    @Column(name = "project_id", nullable = false, unique = false, updatable = false)
     private int project_id;
     @Column (name = "user_id", nullable = false, unique = false)
     private int user_id;
@@ -40,12 +40,15 @@ public class ProjectLogEntity implements Serializable {
         DELETE_TASK,
         APPROVE_USER,
         REJECT_USER,
+        APPLY_USER,
         INVITE_USER,
-        UPDATE_USER_ROLE,
+        PROMOTE_USER,
+        DEMOTE_USER,
         UPDATE_PROJECT_STATUS,
         UPDATE_PROJECT_DETAILS,
         REQUEST_RESOURCE,
         PROJECT_CREATED,
+        REMOVE_USER,
         OTHER
     }
 

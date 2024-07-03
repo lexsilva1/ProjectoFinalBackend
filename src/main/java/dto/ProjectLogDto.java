@@ -16,6 +16,7 @@ public class ProjectLogDto {
     private int otherUserId;
     private int taskId;
     private int ResourceId;
+    private String Status;
     public ProjectLogDto() {
     }
     public ProjectLogDto(UserEntity user, ProjectEntity project,String log) {
@@ -97,5 +98,13 @@ public class ProjectLogDto {
 
     public void setResourceId(int resourceId) {
         ResourceId = resourceId;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
     }
 }

@@ -74,6 +74,7 @@ public class ProjectLogBean {
         projectLogDto.setTaskId(projectLogEntity.getTask_id());
         projectLogDto.setResourceId(projectLogEntity.getProject_resource_id());
         projectLogDto.setType(projectLogEntity.getType().name());
+        projectLogDto.setStatus(projectLogEntity.getStatus());
         return projectLogDto;
     }
     public boolean createProjectLog(ProjectLogDto projectLogDto) {
