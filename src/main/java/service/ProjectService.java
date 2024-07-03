@@ -166,8 +166,12 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        projectBean.inviteToProject(token,projectName,userId);
-        return Response.status(200).entity("invited").build();
+        if(projectBean.inviteToProject(token,projectName,userId)) {
+            notificationBean.sendNotification(new NotificationDto("INVITE",userId,projectName,false,LocalDateTime.now()));
+            return Response.status(200).entity("invited").build();
+        }else {
+            return Response.status(405).entity("you cannot invite to this project").build();
+        }
     }
 
     @POST
@@ -233,8 +237,13 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
-        projectBean.promoteUserToProjectManager(token,projectName,userId);
-        return Response.status(200).entity("promoted").build();
+        if(projectBean.promoteUserToProjectManager(token,projectName,userId)) {
+            notificationBean.sendNotification(new NotificationDto("PROMOTED",userId,projectName,false,LocalDateTime.now()));
+            return Response.status(200).entity("promoted").build();
+        }
+        else {
+            return Response.status(400).entity("something went wrong").build();
+        }
     }
     @PUT
     @Path("/{projectName}/demote")
@@ -352,5 +361,16 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         return Response.status(200).entity(groupChatBean.fetchProjectChat(projectName)).build();
+    }
+    @GET
+    @Path("/{projectName}/logs")
+    @Produces("application/json")
+    public Response fetchProjectLogs(@HeaderParam("token") String token, @PathParam("projectName") String projectName){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        return Response.status(200).entity(projectBean.getProjectLogs(projectName)).build();
     }
 }

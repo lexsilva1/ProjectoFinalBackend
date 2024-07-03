@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "project_logs")
+@NamedQuery(name = "ProjectLogEntity.getLogsByProject", query = "SELECT p FROM ProjectLogEntity p WHERE p.project_id = :project_id ORDER BY p.date DESC")
+@NamedQuery(name = "ProjectLogEntity.getLogsByUser", query = "SELECT p FROM ProjectLogEntity p WHERE p.user_id = :user_id ORDER BY p.date DESC")
+@NamedQuery(name = "ProjectLogEntity.getLogsByTask", query = "SELECT p FROM ProjectLogEntity p WHERE p.task_id = :task_id ORDER BY p.date DESC")
 public class ProjectLogEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
@@ -22,6 +25,8 @@ public class ProjectLogEntity implements Serializable {
     private int task_id;
     @Column (name = "date", nullable = false, unique = false)
     LocalDateTime date;
+    @Column (name = "project_resource_id", nullable = true, unique = false)
+    private int project_resource_id;
     @Column (name = "log", nullable = false, unique = false)
     private String log;
     @Column (name = "type", nullable = false, unique = false)
@@ -103,5 +108,13 @@ public class ProjectLogEntity implements Serializable {
 
     public void setType(LogType type) {
         this.type = type;
+    }
+
+    public int getProject_resource_id() {
+        return project_resource_id;
+    }
+
+    public void setProject_resource_id(int project_resource_id) {
+        this.project_resource_id = project_resource_id;
     }
 }

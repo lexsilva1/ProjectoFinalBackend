@@ -31,7 +31,8 @@ public class ProjectBean {
     TaskBean taskBean;
     @Inject
     TaskDao taskDao;
-
+    @Inject
+    ProjectLogBean projectLogBean;
     @Inject
     ProjectResourceDao projectResourceDao;
     @Inject
@@ -770,5 +771,15 @@ public class ProjectBean {
             return null;
         }
         return projectResourceDao.findProjectResources(project.getId());
+    }
+    public ProjectEntity findProjectById(int id){
+        return projectDao.findProjectById(id);
+    }
+    public List<ProjectLogDto> getProjectLogs(String projectName){
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (project == null) {
+            return null;
+        }
+       return projectLogBean.getProjectLogs(project.getId());
     }
 }
