@@ -594,17 +594,6 @@ public class ProjectBean {
         return true;
     }
 
-    public boolean removeUserFromProject(String token, String projectName, int userId) {
-        UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectByName(projectName);
-        UserEntity removedUser = UserDao.findUserById(userId);
-        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, removedUser);
-        if (user == null || project == null || removedUser == null || projectUser == null) {
-            return false;
-        }
-        projectUserDao.remove(projectUser);
-        return true;
-    }
 
     public boolean promoteUserToProjectManager(String token, String projectName, int userId) {
         UserEntity user = userBean.findUserByToken(token);
@@ -637,17 +626,6 @@ public class ProjectBean {
         projectLogDto.setOtherUserId(userId);
         projectLogBean.createProjectLog(projectLogDto);
         projectUserDao.persist(projectUser);
-        return true;
-    }
-
-    public boolean changeProjectStatus(String token, String projectName, String status) {
-        UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectByName(projectName);
-        if (user == null || project == null) {
-            return false;
-        }
-        project.setStatus(ProjectEntity.Status.valueOf(status));
-        projectDao.persist(project);
         return true;
     }
 
@@ -830,6 +808,24 @@ public class ProjectBean {
         if (user == null || project == null || projectUser == null) {
             return false;
         }
+        UserEntity userToRemove = UserDao.findUserById(userId);
+        List <TaskEntity> tasks = taskDao.findTasksByResponsibleUser(userToRemove);
+        if(tasks != null) {
+            for (TaskEntity task : tasks) {
+                ProjectEntity projectTask = projectDao.findProjectByTask(task);
+                UserEntity projectTaskCreator = projectUserDao.findProjectCreator(projectTask).getUser();
+                task.setResponsibleUser(projectUserDao.findProjectCreator(project).getUser());
+                taskDao.persist(task);
+                notificationBean.sendNotification(new NotificationDto("TASK_ASSIGN", projectTaskCreator.getId(), projectTask.getName(), false, LocalDateTime.now()));
+                ProjectLogDto projectLogDto = new ProjectLogDto(projectTaskCreator, projectTask, "User " + userToRemove.getFirstName() + " left project, task reassigned to project creator");
+                projectLogDto.setType("UPDATE_TASK");
+                projectLogDto.setTaskId(task.getId());
+                projectLogDto.setOtherUserId(userToRemove.getId());
+                projectLogBean.createProjectLog(projectLogDto);
+
+            }
+        }
+
         ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "User " + userBean.findUserById(userId) + " removed from project");
         projectLogDto.setType("REMOVE_USER");
         projectLogDto.setOtherUserId(userId);

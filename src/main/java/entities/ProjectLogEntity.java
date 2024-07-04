@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "ProjectLogEntity.getLogsByProject", query = "SELECT p FROM ProjectLogEntity p WHERE p.project_id = :project_id ORDER BY p.date DESC")
 @NamedQuery(name = "ProjectLogEntity.getLogsByUser", query = "SELECT p FROM ProjectLogEntity p WHERE p.user_id = :user_id ORDER BY p.date DESC")
 @NamedQuery(name = "ProjectLogEntity.getLogsByTask", query = "SELECT p FROM ProjectLogEntity p WHERE p.task_id = :task_id ORDER BY p.date DESC")
+
 public class ProjectLogEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
