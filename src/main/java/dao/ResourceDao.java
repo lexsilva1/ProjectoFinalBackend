@@ -6,6 +6,7 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Stateless
@@ -79,6 +80,7 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
             return null;
         }
     }
+
 }
 
 

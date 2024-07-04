@@ -217,4 +217,53 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    public ResourceEntity findMostUsedResource() {
+        List<Object[]> results = em.createQuery(
+                "SELECT r, COUNT(r) FROM ProjectEntity p JOIN p.resources r GROUP BY r ORDER BY COUNT(r) DESC"
+        ).getResultList();
+
+        if (results.isEmpty()) {
+            return null;
+        }
+
+
+        // The first element in the results list is the most used resource
+        return (ResourceEntity) results.get(0)[0];
+    }
+    public SkillEntity findMostUsedSkill() {
+        List<Object[]> results = em.createQuery(
+                "SELECT s, COUNT(s) FROM ProjectEntity p JOIN p.skills s GROUP BY s ORDER BY COUNT(s) DESC"
+        ).getResultList();
+
+        if (results.isEmpty()) {
+            return null;
+        }
+
+        // The first element in the results list is the most used skill
+        return (SkillEntity) results.get(0)[0];
+    }
+    public InterestEntity findMostUsedInterest() {
+        List<Object[]> results = em.createQuery(
+                "SELECT i, COUNT(i) FROM ProjectEntity p JOIN p.interests i GROUP BY i ORDER BY COUNT(i) DESC"
+        ).getResultList();
+
+        if (results.isEmpty()) {
+            return null;
+        }
+
+        // The first element in the results list is the most used interest
+        return (InterestEntity) results.get(0)[0];
+    }
+    public HashMap<String,String> findMostCommonResourcesPerLab() {
+        List<Object[]> results = em.createQuery(
+                "SELECT p.lab.location, r.name, COUNT(r) FROM ProjectEntity p JOIN p.resources r GROUP BY p.lab.location, r.name ORDER BY COUNT(r) DESC"
+        ).getResultList();
+
+        HashMap<String, String> mostCommonResourcesPerLab = new HashMap<>();
+        for (Object[] result : results) {
+            mostCommonResourcesPerLab.put(((LabEntity.Lab) result[0]).name(), (String) result[1]);
+        }
+
+        return mostCommonResourcesPerLab;
+    }
 }

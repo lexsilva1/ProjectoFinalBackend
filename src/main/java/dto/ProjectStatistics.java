@@ -12,6 +12,7 @@ public class ProjectStatistics {
     private HashMap<String,Integer> totalInProgressProjects;
     private HashMap<String,Integer> totalReadyProjects;
     private HashMap<String,Integer> projectsByLab;
+    private HashMap<String,String> mostCommonResourcesByLab;
     private double averageMembersPerProject;
     private double averageExecutionTime;
     private String mostUsedResource;
@@ -22,6 +23,7 @@ public class ProjectStatistics {
     private int mostUsedSkillCount;
     private String mostUsedInterest;
     private int mostUsedInterestCount;
+
 
 
 
@@ -170,5 +172,13 @@ public class ProjectStatistics {
 
     public void setMostUsedInterestCount(int mostUsedInterestCount) {
         this.mostUsedInterestCount = mostUsedInterestCount;
+    }
+
+    public HashMap<String, String> getMostCommonResourcesByLab() {
+        return mostCommonResourcesByLab;
+    }
+
+    public void setMostCommonResourcesByLab(HashMap<String, String> mostCommonResourcesByLab) {
+        this.mostCommonResourcesByLab = mostCommonResourcesByLab;
     }
 }

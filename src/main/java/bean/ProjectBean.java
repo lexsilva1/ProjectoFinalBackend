@@ -98,7 +98,7 @@ public class ProjectBean {
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
             projectResource.setProject_id(defaultProject.getId());
             projectResource.setResource_id(resourceDao.findResourceByName("CPU").getId());
-            projectResource.setQuantity(3);
+            projectResource.setQuantity(5);
             projectResourceDao.persist(projectResource);
 
 
@@ -196,7 +196,7 @@ public class ProjectBean {
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
             projectResource.setProject_id(defaultProject.getId());
             projectResource.setResource_id(resourceDao.findResourceByName("RAM").getId());
-            projectResource.setQuantity(3);
+            projectResource.setQuantity(4);
             projectResourceDao.persist(projectResource);
             notificationBean.createNotification(new NotificationDto("INVITE",userBean.findUserByEmail("zetamplario@gmail.com").getId(), "UserInterface",  false, LocalDateTime.now()));
         }
@@ -640,16 +640,39 @@ public class ProjectBean {
         return true;
     }
 
-    public boolean addResourceToProject(String token, String projectName, String resourceName, int quantity) {
+    public boolean addResourceToProject(String token, String projectName, int resourceId, int quantity) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
-        ResourceEntity resource = resourceDao.findResourceByName(resourceName);
+        ResourceEntity resource = resourceDao.findResourceById(resourceId);
         if (user == null || project == null || resource == null) {
             return false;
         }
         ProjectResourceEntity projectResource = new ProjectResourceEntity();
         projectResource.setProject_id(project.getId());
         projectResource.setResource_id(resource.getId());
+        projectResource.setQuantity(quantity);
+        projectResourceDao.persist(projectResource);
+        return true;
+    }
+    public boolean removeResourceFromProject(String token, String projectName, int resourceId) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ResourceEntity resource = resourceDao.findResourceById(resourceId);
+        if (user == null || project == null || resource == null) {
+            return false;
+        }
+        ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(), resource.getId());
+        projectResourceDao.remove(projectResource);
+        return true;
+    }
+    public boolean updateResourceQuantity(String token, String projectName, int resourceId, int quantity) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        ResourceEntity resource = resourceDao.findResourceById(resourceId);
+        if (user == null || project == null || resource == null) {
+            return false;
+        }
+        ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(), resource.getId());
         projectResource.setQuantity(quantity);
         projectResourceDao.persist(projectResource);
         return true;
@@ -717,6 +740,13 @@ public class ProjectBean {
         projectStatistics.setTotalReadyProjects(projectDao.getReadyProjectsByLab());
         projectStatistics.setAverageMembersPerProject(projectDao.getAverageMembersPerProject());
         projectStatistics.setAverageExecutionTime(projectDao.getAverageExecutionTime());
+        projectStatistics.setMostUsedResource(resourceDao.findResourceById(projectResourceDao.findMostUsedResource().getResource_id()).getName());
+        projectStatistics.setMostUsedResourceType(projectDao.findMostUsedResource().getType().name());
+        projectStatistics.setMostUsedSkill(projectDao.findMostUsedSkill().getName());
+        projectStatistics.setMostUsedInterest(projectDao.findMostUsedInterest().getName());
+        projectStatistics.setMostUsedSkill(projectDao.findMostUsedSkill().getName());
+        projectStatistics.setMostUsedInterest(projectDao.findMostUsedInterest().getName());
+        projectStatistics.setMostCommonResourcesByLab(projectDao.findMostCommonResourcesPerLab());
         return projectStatistics;
     }
     public ProjectTasksDto findProjectTasks(String projectName) {

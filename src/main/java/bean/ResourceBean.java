@@ -1,19 +1,22 @@
 package bean;
 
+import dao.ProjectResourceDao;
 import dao.ResourceDao;
 import dto.ResourceDto;
-import entities.ProjectResourceEntity;
 import entities.ResourceEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Stateless
 public class ResourceBean {
     @EJB
     ResourceDao resourceDao;
+    @EJB
+    ProjectResourceDao projectResourcedao;
 
     public ResourceBean() {
     }
@@ -133,4 +136,5 @@ public class ResourceBean {
     public ResourceEntity findResourceByNameAndSupplier(String name, String supplier) {
         return resourceDao.findResourceByNameAndSupplier(name, supplier);
     }
+
 }

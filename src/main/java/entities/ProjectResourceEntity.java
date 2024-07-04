@@ -7,6 +7,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "project_resources")
 @NamedQuery(name = "ProjectResourceEntity.findProjectResourcesByProjectId", query = "SELECT pr FROM ProjectResourceEntity pr WHERE pr.project_id = :projectId")
+@NamedQuery(name = "ProjectResourceEntity.findMostUsedResource", query = "SELECT pr FROM ProjectResourceEntity pr WHERE pr.quantity = (SELECT MAX(pr.quantity) FROM ProjectResourceEntity pr)")
 public class ProjectResourceEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

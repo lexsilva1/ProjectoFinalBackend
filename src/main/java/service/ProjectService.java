@@ -413,4 +413,49 @@ public class ProjectService {
         TaskEntity task = taskBean.findTaskById(taskId);
         return Response.status(200).entity(projectBean.findProjectCreatorByTask(task)).build();
     }
+    @POST
+    @Path("/{projectName}/resources")
+    @Produces("application/json")
+    public Response addResourceToProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("resourceId") int resourceId, @QueryParam("quantity") int quantity){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        if(projectBean.addResourceToProject(token,projectName,resourceId,quantity)) {
+            return Response.status(200).entity("resource added").build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
+    }
+    @DELETE
+    @Path("/{projectName}/resources")
+    @Produces("application/json")
+    public Response removeResourceFromProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("resourceId") int resourceId, @QueryParam("quantity") int quantity){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        if(projectBean.removeResourceFromProject(token,projectName,resourceId)) {
+            return Response.status(200).entity("resource removed").build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
+    }
+    @PUT
+    @Path("/{projectName}/resources")
+    @Produces("application/json")
+    public Response updateResourceInProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("resourceId") int resourceId, @QueryParam("quantity") int quantity){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        if(projectBean.updateResourceQuantity(token,projectName,resourceId,quantity)) {
+            return Response.status(200).entity("resource updated").build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
+    }
 }
