@@ -791,9 +791,12 @@ public class ProjectBean {
         if (newStatus == 200 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 100)) {
             return false;
         }
-        if(newStatus == 0 && (user.getRole().getValue() > 1 || !projectUser.getApprovalStatus().equals("CREATOR"))){
-            return false;
+        if(newStatus == 0 && (user.getRole().getValue() > 1  )){
+            if(!projectUser.getApprovalStatus().equals(ProjectUserEntity.ApprovalStatus.CREATOR)){
+                return false;
+            }
         }
+
         if(newStatus == 400 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 300)){
             return false;
         }
