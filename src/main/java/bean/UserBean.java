@@ -130,6 +130,7 @@ public class UserBean {
         myDto.setImage(user.getUserPhoto());
         myDto.setToken(token);
         myDto.setId(user.getId());
+        myDto.setRole(user.getRole().getValue());
         return myDto;
     }
 
