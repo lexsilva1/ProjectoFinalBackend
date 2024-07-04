@@ -471,6 +471,7 @@ public class ProjectBean {
         if (projectUser != null) {
             return false;
         }
+        projectUser = new ProjectUserEntity();
         projectUser.setProject(project);
         projectUser.setUser(invitedUser);
         projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
@@ -799,7 +800,7 @@ public class ProjectBean {
         if(newStatus == 500 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 400)){
             return false;
         }
-        if(newStatus == 100 && (user.getRole().getValue() > 1 || project.getStatus().getValue() >= 200)){
+        if(newStatus == 100 && (user.getRole().getValue() > 1 || project.getStatus().getValue() > 200)){
             return false;
         }
 
