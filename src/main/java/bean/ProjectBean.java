@@ -123,7 +123,7 @@ public class ProjectBean {
             defaultProjectUser.setProject(defaultProject);
             defaultProjectUser.setUser(userBean.findUserByEmail("tozemarreco@gmail.com"));
             defaultProjectUser.setProjectManager(true);
-            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
             ProjectUserEntity defaultProjectUser2 = new ProjectUserEntity();
             defaultProjectUser2.setProject(defaultProject);
             defaultProjectUser2.setUser(userBean.findUserByEmail("mariamacaca@gmail.com"));
@@ -592,7 +592,12 @@ public class ProjectBean {
         notificationBean.sendNotification(new NotificationDto("USER_LEFT", projectUserDao.findProjectCreator(project).getUser().getId(), projectName, false, LocalDateTime.now()));
         return true;
     }
+ public UserDto findProjectCreatorByTask(TaskEntity task) {
+        ProjectEntity project = projectDao.findProjectByTask(task);
+        ProjectUserEntity projectUser = projectUserDao.findProjectCreator(project);
+        return userBean.convertToDto(projectUser.getUser());
 
+    }
 
     public boolean promoteUserToProjectManager(String token, String projectName, int userId) {
         UserEntity user = userBean.findUserByToken(token);

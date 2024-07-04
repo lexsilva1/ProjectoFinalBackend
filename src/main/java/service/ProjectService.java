@@ -3,6 +3,7 @@ package service;
 import bean.*;
 import dto.*;
 import entities.ProjectEntity;
+import entities.TaskEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -398,5 +399,17 @@ public class ProjectService {
         }else {
             return Response.status(400).entity("something went wrong").build();
         }
+    }
+    @GET
+    @Path("/{projectName}/ProjectCreatorByTask")
+    @Produces("application/json")
+    public Response findProjectCreatorByTask(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("taskId") int taskId){
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        projectName = projectBean.decodeProjectName(projectName);
+        TaskEntity task = taskBean.findTaskById(taskId);
+        return Response.status(200).entity(projectBean.findProjectCreatorByTask(task)).build();
     }
 }

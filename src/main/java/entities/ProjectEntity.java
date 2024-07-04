@@ -19,7 +19,7 @@ import java.util.Set;
 @NamedQuery(name = "ProjectEntity.findProjectSkills", query = "SELECT p.skills FROM ProjectEntity p WHERE p = :project")
 @NamedQuery(name = "ProjectEntity.findProjectById", query = "SELECT p FROM ProjectEntity p WHERE p.id = :id")
 @NamedQuery(name = "ProjectEntity.findMostUsedResource", query = "SELECT p.resources FROM ProjectEntity p WHERE p = :project")
-@NamedQuery(name = "ProjectEntity.findProjectByTask", query = "SELECT p FROM ProjectEntity p WHERE p.tasks = :task")
+@NamedQuery(name = "ProjectEntity.findProjectByTask", query = "SELECT p FROM ProjectEntity p WHERE :task MEMBER OF p.tasks")
 public class ProjectEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
