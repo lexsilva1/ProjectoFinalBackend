@@ -32,6 +32,8 @@ public class ProjectService {
     GroupChatBean groupChatBean;
     @EJB
     ProjectLogBean projectLogBean;
+    @EJB
+    ResourceBean resourceBean;
 
 
     @GET
@@ -423,7 +425,9 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         if(projectBean.addResourceToProject(token,projectName,resourceId,quantity)) {
-            return Response.status(200).entity("resource added").build();
+            ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectName), "Resource added: " + resourceBean.findResourceById(resourceId).getName());
+            projectLogDto.setType("PROJECT_RESOURCE_ADDED");
+            return Response.status(200).entity(resourceBean.findResourceById(resourceId)).build();
         }else {
             return Response.status(400).entity("something went wrong").build();
         }
@@ -438,6 +442,9 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         if(projectBean.removeResourceFromProject(token,projectName,resourceId)) {
+            ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectName), "Resource removed: " + resourceBean.findResourceById(resourceId).getName());
+            projectLogDto.setType("PROJECT_RESOURCE_REMOVED");
+            projectLogBean.createProjectLog(projectLogDto);
             return Response.status(200).entity("resource removed").build();
         }else {
             return Response.status(400).entity("something went wrong").build();
@@ -453,7 +460,10 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         if(projectBean.updateResourceQuantity(token,projectName,resourceId,quantity)) {
-            return Response.status(200).entity("resource updated").build();
+           ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectName), "Resource updated: " + resourceBean.findResourceById(resourceId).getName());
+           projectLogDto.setType("PROJECT_RESOURCE_UPDATED");
+              projectLogBean.createProjectLog(projectLogDto);
+            return Response.status(200).entity(resourceBean.findResourceById(resourceId)).build();
         }else {
             return Response.status(400).entity("something went wrong").build();
         }

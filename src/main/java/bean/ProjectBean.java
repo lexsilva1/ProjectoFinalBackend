@@ -669,7 +669,7 @@ public class ProjectBean {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
         ResourceEntity resource = resourceDao.findResourceById(resourceId);
-        if (user == null || project == null || resource == null) {
+        if (user == null || project == null || resource == null || quantity <= 0) {
             return false;
         }
         ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(), resource.getId());

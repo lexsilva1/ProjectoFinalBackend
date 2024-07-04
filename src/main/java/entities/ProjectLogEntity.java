@@ -48,7 +48,9 @@ public class ProjectLogEntity implements Serializable {
         USER_LEFT,
         UPDATE_PROJECT_STATUS,
         UPDATE_PROJECT_DETAILS,
-        REQUEST_RESOURCE,
+        PROJECT_RESOURCE_UPDATED,
+        PROJECT_RESOURCE_ADDED,
+        PROJECT_RESOURCE_REMOVED,
         PROJECT_CREATED,
         REMOVE_USER,
         OTHER

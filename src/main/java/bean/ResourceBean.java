@@ -137,4 +137,7 @@ public class ResourceBean {
         return resourceDao.findResourceByNameAndSupplier(name, supplier);
     }
 
+    public ResourceDto findResourceById(int id) {
+        return convertToDto(resourceDao.findResourceById(id));
+    }
 }
