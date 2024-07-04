@@ -570,11 +570,24 @@ public class ProjectBean {
             return false;
         }
         List <TaskEntity> tasks = taskDao.findTasksByResponsibleUser(user);
-        for (TaskEntity task : tasks) {
-            task.setResponsibleUser(projectUserDao.findProjectCreator(project).getUser());
-            taskDao.persist(task);
+        if(tasks != null) {
+            for (TaskEntity task : tasks) {
+                task.setResponsibleUser(projectUserDao.findProjectCreator(project).getUser());
+                taskDao.persist(task);
+                notificationBean.sendNotification(new NotificationDto("TASK_ASSIGN", projectUserDao.findProjectCreator(project).getUser().getId(), projectName, false, LocalDateTime.now()));
+                ProjectLogDto projectLogDto = new ProjectLogDto(projectUserDao.findProjectCreator(project).getUser(), project, "User " + user.getFirstName() + " left project, task reassigned to project creator");
+                projectLogDto.setType("UPDATE_TASK");
+                projectLogDto.setTaskId(task.getId());
+                projectLogDto.setOtherUserId(user.getId());
+                projectLogBean.createProjectLog(projectLogDto);
+
+            }
         }
         projectUserDao.remove(projectUser);
+        ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "User " + user.getFirstName() + " left project");
+        projectLogDto.setType("USER_LEFT");
+        projectLogBean.createProjectLog(projectLogDto);
+        notificationBean.sendNotification(new NotificationDto("USER_LEFT", projectUserDao.findProjectCreator(project).getUser().getId(), projectName, false, LocalDateTime.now()));
         return true;
     }
 

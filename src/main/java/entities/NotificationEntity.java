@@ -47,6 +47,7 @@ public class NotificationEntity implements Serializable {
         EXCLUDE,
         PROMOTED,
         DEMOTED,
+        USER_LEFT,
         TASK_ASSIGN,
         TASK_EXECUTOR,
         TASK_DOING,

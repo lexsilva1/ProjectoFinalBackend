@@ -44,6 +44,7 @@ public class ProjectLogEntity implements Serializable {
         INVITE_USER,
         PROMOTE_USER,
         DEMOTE_USER,
+        USER_LEFT,
         UPDATE_PROJECT_STATUS,
         UPDATE_PROJECT_DETAILS,
         REQUEST_RESOURCE,
