@@ -258,6 +258,7 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.demoteUserFromProjectManager(token,projectName,userId);
+        notificationBean.sendNotification(new NotificationDto("DEMOTE",userId,projectName,false,LocalDateTime.now()));
         return Response.status(200).entity("demoted").build();
     }
     @POST

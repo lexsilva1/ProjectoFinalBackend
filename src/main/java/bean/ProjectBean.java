@@ -571,8 +571,14 @@ public class ProjectBean {
             return false;
         }
         List <TaskEntity> tasks = taskDao.findTasksByResponsibleUser(user);
-        if(tasks != null) {
-            for (TaskEntity task : tasks) {
+        List<TaskEntity> filteredTasks = new ArrayList<>();
+        for (TaskEntity task : tasks) {
+            if (project.getTasks().contains(task)) {
+                filteredTasks.add(task);
+            }
+        }
+        if(filteredTasks != null) {
+            for (TaskEntity task : filteredTasks) {
                 ProjectEntity projectTask = projectDao.findProjectByTask(task);
                 UserEntity projectTaskCreator = projectUserDao.findProjectCreator(projectTask).getUser();
                 task.setResponsibleUser(projectUserDao.findProjectCreator(project).getUser());
@@ -794,7 +800,7 @@ public class ProjectBean {
         if(newStatus == 500 && (!projectUser.isProjectManager() || project.getStatus().getValue() != 400)){
             return false;
         }
-        if(newStatus == 100 && (user.getRole().getValue() > 1 || project.getStatus().getValue() >= 200)){
+        if(newStatus == 100 && (user.getRole().getValue() > 1 || project.getStatus().getValue() > 200)){
             return false;
         }
 
