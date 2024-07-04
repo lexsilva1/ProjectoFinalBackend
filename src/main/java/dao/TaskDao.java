@@ -88,6 +88,15 @@ public class TaskDao extends AbstractDao<TaskEntity>{
         cq.where(cb.equal(task.get("title"), "Final Presentation"));
         return em.createQuery(cq).getSingleResult();
     }
+    public List<TaskEntity> findTasksByResponsibleUser(UserEntity user) {
+        try {
+            return em.createNamedQuery("TaskEntity.findTasksByResponsibleUser").setParameter("responsibleUser", user)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 
 

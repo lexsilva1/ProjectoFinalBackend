@@ -185,4 +185,7 @@ public class TaskBean {
     public TaskEntity findTaskById(int id) {
         return taskDao.find(id);
     }
+    public List<TaskEntity> findTasksByResponsibleUser(UserEntity user) {
+        return taskDao.findTasksByResponsibleUser(user);
+    }
 }

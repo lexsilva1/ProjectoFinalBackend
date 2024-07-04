@@ -16,7 +16,7 @@ import java.io.Serializable;
 @NamedQuery(name = "TaskEntity.findTasksByStatus", query = "SELECT t FROM TaskEntity t WHERE t.status = :status")
 @NamedQuery(name = "TaskEntity.findTaskByDate", query = "SELECT t FROM TaskEntity t WHERE t.startDate = :date")
 @NamedQuery(name = "TaskEntity.findTaskByTitle", query = "SELECT t FROM TaskEntity t WHERE t.title = :title")
-
+@NamedQuery(name = "TaskEntity.findTasksByResponsibleUser", query = "SELECT t FROM TaskEntity t WHERE t.responsibleUser = :responsibleUser")
 public class TaskEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
