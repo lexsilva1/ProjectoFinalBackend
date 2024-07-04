@@ -1,6 +1,5 @@
 package dto;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class ProjectStatistics {
@@ -13,6 +12,8 @@ public class ProjectStatistics {
     private HashMap<String,Integer> totalReadyProjects;
     private HashMap<String,Integer> projectsByLab;
     private HashMap<String,String> mostCommonResourcesByLab;
+    private HashMap<String,HashMap<String,Integer>> allResourcesByLab;
+    private HashMap<String,Integer> resourceQuantityPerProject;
     private double averageMembersPerProject;
     private double averageExecutionTime;
     private String mostUsedResource;
@@ -20,14 +21,21 @@ public class ProjectStatistics {
     private String mostUsedResourceType;
     private int mostUsedResourceTypeCount;
     private String mostUsedSkill;
-    private int mostUsedSkillCount;
     private String mostUsedInterest;
-    private int mostUsedInterestCount;
+
 
 
 
 
     public ProjectStatistics() {
+    }
+
+    public HashMap<String, Integer> getResourceQuantityPerProject() {
+        return resourceQuantityPerProject;
+    }
+
+    public void setResourceQuantityPerProject(HashMap<String, Integer> resourceQuantityPerProject) {
+        this.resourceQuantityPerProject = resourceQuantityPerProject;
     }
 
     public int getTotalProjects() {
@@ -150,14 +158,6 @@ public class ProjectStatistics {
         this.mostUsedSkill = mostUsedSkill;
     }
 
-    public int getMostUsedSkillCount() {
-        return mostUsedSkillCount;
-    }
-
-    public void setMostUsedSkillCount(int mostUsedSkillCount) {
-        this.mostUsedSkillCount = mostUsedSkillCount;
-    }
-
     public String getMostUsedInterest() {
         return mostUsedInterest;
     }
@@ -166,19 +166,19 @@ public class ProjectStatistics {
         this.mostUsedInterest = mostUsedInterest;
     }
 
-    public int getMostUsedInterestCount() {
-        return mostUsedInterestCount;
-    }
-
-    public void setMostUsedInterestCount(int mostUsedInterestCount) {
-        this.mostUsedInterestCount = mostUsedInterestCount;
-    }
-
     public HashMap<String, String> getMostCommonResourcesByLab() {
         return mostCommonResourcesByLab;
     }
 
     public void setMostCommonResourcesByLab(HashMap<String, String> mostCommonResourcesByLab) {
         this.mostCommonResourcesByLab = mostCommonResourcesByLab;
+    }
+
+    public HashMap<String, HashMap<String, Integer>> getAllResourcesByLab() {
+        return allResourcesByLab;
+    }
+
+    public void setAllResourcesByLab(HashMap<String, HashMap<String, Integer>> allResourcesByLab) {
+        this.allResourcesByLab = allResourcesByLab;
     }
 }

@@ -728,6 +728,43 @@ public class ProjectBean {
         projectDao.persist(project);
         return true;
     }
+    public HashMap<String,HashMap<String,Integer>> getResourceQuantitiesByLab(){
+        List<LabEntity> labs = labDao.findAllLabs();
+        List<ProjectEntity> projects = projectDao.findAllProjects();
+        HashMap<String,HashMap<String,Integer>> resources = new HashMap<>();
+        for(LabEntity lab : labs){
+            HashMap<String,Integer> resourceQuantities = new HashMap<>();
+            for(ProjectEntity project : projects){
+                if(project.getLab().equals(lab)){
+                    for(ResourceEntity resource : project.getResources()){
+                        ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(),resource.getId());
+                        if(resourceQuantities.containsKey(resource.getName())){
+                            resourceQuantities.put(resource.getName(),resourceQuantities.get(resource.getName()) + projectResource.getQuantity());
+                        }else{
+                            resourceQuantities.put(resource.getName(),projectResource.getQuantity());
+                        }
+                    }
+                }
+            }
+            resources.put(lab.getLocation().name(),resourceQuantities);
+        }
+        return resources;
+    }
+    public HashMap<String,Integer> resourceQuantitiesByProject(){
+        List<ProjectEntity> projects = projectDao.findAllProjects();
+        HashMap<String,Integer> resourcesPerProject = new HashMap<>();
+        for(ProjectEntity project : projects){
+            int totalResources = 0;
+            for(ResourceEntity resource : project.getResources()){
+                ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(),resource.getId());
+                totalResources += projectResource.getQuantity();
+            }
+            resourcesPerProject.put(project.getName(),totalResources);
+        }
+        return resourcesPerProject;
+    }
+
+
     public ProjectStatistics getProjectStatistics() {
         ProjectStatistics projectStatistics = new ProjectStatistics();
         projectStatistics.setTotalProjects(projectDao.findAllProjects().size());
@@ -747,6 +784,8 @@ public class ProjectBean {
         projectStatistics.setMostUsedSkill(projectDao.findMostUsedSkill().getName());
         projectStatistics.setMostUsedInterest(projectDao.findMostUsedInterest().getName());
         projectStatistics.setMostCommonResourcesByLab(projectDao.findMostCommonResourcesPerLab());
+        projectStatistics.setAllResourcesByLab(getResourceQuantitiesByLab());
+        projectStatistics.setResourceQuantityPerProject(resourceQuantitiesByProject());
         return projectStatistics;
     }
     public ProjectTasksDto findProjectTasks(String projectName) {

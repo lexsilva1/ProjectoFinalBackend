@@ -27,7 +27,7 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
-    public List<ProjectEntity> findProjectsByLab(ProjectEntity lab) {
+    public List<ProjectEntity> findProjectsByLab(LabEntity lab) {
         try {
             return em.createNamedQuery("ProjectEntity.findProjectsByLab").setParameter("lab", lab)
                     .getResultList();
