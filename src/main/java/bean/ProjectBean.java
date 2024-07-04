@@ -717,12 +717,6 @@ public class ProjectBean {
         projectStatistics.setTotalReadyProjects(projectDao.getReadyProjectsByLab());
         projectStatistics.setAverageMembersPerProject(projectDao.getAverageMembersPerProject());
         projectStatistics.setAverageExecutionTime(projectDao.getAverageExecutionTime());
-        projectStatistics.setMostUsedResource(projectDao.getMostUsedResource());
-        projectStatistics.setMostUsedSkill(projectDao.getMostUsedSkill());
-        projectStatistics.setMostUsedInterest(projectDao.getMostUsedInterest());
-        projectStatistics.setMostUsedResourceCount(projectDao.getMostUsedResourceCount());
-        projectStatistics.setMostUsedResourceType(projectDao.getMostUsedResourceType());
-        projectStatistics.setMostUsedResourceTypeCount(projectDao.getMostUsedResourceTypeCount());
         return projectStatistics;
     }
     public ProjectTasksDto findProjectTasks(String projectName) {
