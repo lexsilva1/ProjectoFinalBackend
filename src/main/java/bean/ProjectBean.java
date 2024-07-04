@@ -572,10 +572,12 @@ public class ProjectBean {
         List <TaskEntity> tasks = taskDao.findTasksByResponsibleUser(user);
         if(tasks != null) {
             for (TaskEntity task : tasks) {
+                ProjectEntity projectTask = projectDao.findProjectByTask(task);
+                UserEntity projectTaskCreator = projectUserDao.findProjectCreator(projectTask).getUser();
                 task.setResponsibleUser(projectUserDao.findProjectCreator(project).getUser());
                 taskDao.persist(task);
-                notificationBean.sendNotification(new NotificationDto("TASK_ASSIGN", projectUserDao.findProjectCreator(project).getUser().getId(), projectName, false, LocalDateTime.now()));
-                ProjectLogDto projectLogDto = new ProjectLogDto(projectUserDao.findProjectCreator(project).getUser(), project, "User " + user.getFirstName() + " left project, task reassigned to project creator");
+                notificationBean.sendNotification(new NotificationDto("TASK_ASSIGN", projectTaskCreator.getId(), projectTask.getName(), false, LocalDateTime.now()));
+                ProjectLogDto projectLogDto = new ProjectLogDto(projectTaskCreator, projectTask, "User " + user.getFirstName() + " left project, task reassigned to project creator");
                 projectLogDto.setType("UPDATE_TASK");
                 projectLogDto.setTaskId(task.getId());
                 projectLogDto.setOtherUserId(user.getId());

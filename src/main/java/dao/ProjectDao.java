@@ -232,4 +232,13 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         List<Object[]> results = em.createQuery("SELECT t.resources, COUNT(t) FROM ProjectEntity t GROUP BY t.resources ORDER BY COUNT(t) DESC").getResultList();
         return (String) results.get(0)[0];
     }
+    public ProjectEntity findProjectByTask(TaskEntity task) {
+        try {
+            return (ProjectEntity) em.createNamedQuery("ProjectEntity.findProjectByTask").setParameter("task", task)
+                    .getSingleResult();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }
