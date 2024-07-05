@@ -5,10 +5,7 @@ import bean.SystemVariablesBean;
 import bean.UserBean;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.ws.rs.HeaderParam;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 
@@ -47,6 +44,16 @@ public class SystemVariablesService {
             return Response.status(200).entity("max users set").build();
         }
         return Response.status(405).entity("max users exceeded").build();
+    }
+    @GET
+    @Path("")
+    @Produces("application/json")
+    public Response getSystemVariables(@HeaderParam("token") String token) {
+        if (userBean.findUserByToken(token).getRole().getValue() >= 1) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        return Response.status(200).entity(systemVariablesBean.getSystemVariables()).build();
     }
 }
 

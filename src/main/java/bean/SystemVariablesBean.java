@@ -1,6 +1,7 @@
 package bean;
 
 import dao.SystemVariablesDao;
+import dto.SystemVariablesDto;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -43,5 +44,11 @@ public boolean setMaxUsers(int maxUsers) {
 public int getMaxUsers() {
     return systemVariablesDao.findSystemVariableById(1).getMaxUsers();
 }
-
+public SystemVariablesDto getSystemVariables() {
+    SystemVariablesEntity systemVariablesEntity = systemVariablesDao.findSystemVariableById(1);
+    SystemVariablesDto systemVariablesDto = new SystemVariablesDto();
+    systemVariablesDto.setTimeout(systemVariablesEntity.getTimeout());
+    systemVariablesDto.setMaxUsers(systemVariablesEntity.getMaxUsers());
+    return systemVariablesDto;
+}
 }

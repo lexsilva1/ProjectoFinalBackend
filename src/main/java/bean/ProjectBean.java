@@ -435,7 +435,7 @@ public class ProjectBean {
         if(project.getMaxMembers()> systemVariablesBean.getMaxUsers()){
             project.setMaxMembers(systemVariablesBean.getMaxUsers());
             projectDao.persist(project);
-            NotificationDto notificationDto = new NotificationDto("PROJECT_FULL", userBean.findUserByToken(token).getId(), project.getName(), false, LocalDateTime.now());
+            NotificationDto notificationDto = new NotificationDto("PROJECT_USERS_EXCEEDED", userBean.findUserByToken(token).getId(), project.getName(), false, LocalDateTime.now());
             if(notificationBean.createNotification(notificationDto)){
                 notificationBean.sendNotification(notificationDto);
             }
