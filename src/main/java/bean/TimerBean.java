@@ -26,6 +26,8 @@ public class TimerBean {
     private Notifications notifier;
     @EJB
     private TokenBean tokenBean;
+    @Inject
+    SystemVariablesBean systemVariablesBean;
 
     private Gson gson = new Gson();
     //private static final Logger logger = LogManager.getLogger(TimerBean.class);
@@ -34,7 +36,7 @@ public class TimerBean {
     public void checkTimeouts() {
         //logger.info("Checking for timeouts...");
         System.out.println("Checking for timeouts...");
-        List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusMinutes(30));
+        List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusMinutes(systemVariablesBean.getSessionTimeout()));
 
         for (TokenEntity token : timedOutUsers) {
             UserEntity user = token.getUser();

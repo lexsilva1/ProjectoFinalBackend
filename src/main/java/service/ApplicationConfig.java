@@ -24,6 +24,7 @@ public class ApplicationConfig extends Application{
         resources.add(ResourceService.class);
         resources.add(NotificationService.class);
         resources.add(MessageService.class);
+        resources.add(SystemVariablesService.class);
         return resources;
     }
 

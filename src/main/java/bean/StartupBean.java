@@ -33,9 +33,13 @@ public class StartupBean {
     MessageBean messageBean;
     @Inject
     ProjectLogBean projectLogBean;
+    @Inject
+    SystemVariablesBean systemVariablesBean;
+
 
     @PostConstruct
     public void init() {
+        systemVariablesBean.createDefaultSystemVariables();
         labBean.createDefaultLocations();
         userBean.createDefaultUsers();
         messageBean.createDefaultMessage();

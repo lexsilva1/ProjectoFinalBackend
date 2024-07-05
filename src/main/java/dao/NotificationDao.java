@@ -52,6 +52,7 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
             predicates.add(cb.equal(root.get("isRead"), isRead));
         }
         cq.where(cb.and(predicates.toArray(new Predicate[0])));
+        cq.orderBy(cb.desc(root.get("time"))); // Order by time in descending order
         return em.createQuery(cq).getResultList();
     }
     public int findLastNotificationId() {

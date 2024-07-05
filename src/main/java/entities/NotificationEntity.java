@@ -59,6 +59,7 @@ public class NotificationEntity implements Serializable {
         PROJECT_DOING,
         PROJECT_REJECTED,
         PROJECT_INFO,
+        PROJECT_FULL,
         CHAT
 
     }

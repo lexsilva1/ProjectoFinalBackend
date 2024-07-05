@@ -119,8 +119,9 @@ public class UserBean {
         }
         return userDtos;
     }
-
-
+public List<UserEntity> getAllUsers() {
+    return userDao.findAll();
+}
 
     public MyDto convertToMyDto(UserEntity user, String token) {
         MyDto myDto = new MyDto();

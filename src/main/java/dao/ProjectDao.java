@@ -266,4 +266,14 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
 
         return mostCommonResourcesPerLab;
     }
+    public List<ProjectEntity> findProjectsByMaxMembers(int maxMembers) {
+        try {
+            return em.createNamedQuery("ProjectEntity.findProjectsByMaxMembers").setParameter("maxMembers", maxMembers)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
 }

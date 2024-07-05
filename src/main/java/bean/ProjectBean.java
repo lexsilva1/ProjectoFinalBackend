@@ -43,6 +43,8 @@ public class ProjectBean {
     InterestBean interestBean;
     @Inject
     NotificationBean notificationBean;
+    @Inject
+    SystemVariablesBean systemVariablesBean;
 
 
     public void createDefaultProjects() {
@@ -56,7 +58,7 @@ public class ProjectBean {
             }
             defaultProject.setStatus((ProjectEntity.Status.Planning));
             defaultProject.setDescription("Forge X is a project that aims to create a new software that will revolutionize the way we interact with technology.");
-            defaultProject.setMaxMembers(5);
+            defaultProject.setMaxMembers(4);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.KNOWLEDGE);
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
@@ -113,7 +115,7 @@ public class ProjectBean {
             }
             defaultProject.setStatus((ProjectEntity.Status.Approved));
             defaultProject.setDescription("UserInterface is a project that aims to create a new hardware that will revolutionize the way we interact with technology.");
-            defaultProject.setMaxMembers(5);
+            defaultProject.setMaxMembers(4);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.CAUSES);
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
@@ -210,7 +212,7 @@ public class ProjectBean {
             }
             defaultProject.setStatus((ProjectEntity.Status.Planning));
             defaultProject.setDescription("Project X is a project that aims to create a new software that will revolutionize the way we interact with technology.");
-            defaultProject.setMaxMembers(5);
+            defaultProject.setMaxMembers(4);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
@@ -374,6 +376,9 @@ public class ProjectBean {
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
         TaskEntity lastTask = taskBean.createLastTask(token, projectDto, userBean.findUserByToken(token), List.of(userBean.findUserByToken(token).getId()));
         project.setTasks(new LinkedHashSet<>(List.of(lastTask)));
+        if(projectDto.getSlots() == 0){
+            projectDto.setSlots(4);
+        }
         project.setMaxMembers(projectDto.getSlots());
         project.setCreatedAt(java.time.LocalDateTime.now());
         if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
@@ -427,6 +432,14 @@ public class ProjectBean {
         ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), project, "Project created");
         projectLogDto.setType("PROJECT_CREATED");
         projectLogBean.createProjectLog(projectLogDto);
+        if(project.getMaxMembers()> systemVariablesBean.getMaxUsers()){
+            project.setMaxMembers(systemVariablesBean.getMaxUsers());
+            projectDao.persist(project);
+            NotificationDto notificationDto = new NotificationDto("PROJECT_FULL", userBean.findUserByToken(token).getId(), project.getName(), false, LocalDateTime.now());
+            if(notificationBean.createNotification(notificationDto)){
+                notificationBean.sendNotification(notificationDto);
+            }
+        }
         return true;
     }
 
@@ -944,6 +957,21 @@ public class ProjectBean {
             return null;
         }
 
+
+    }
+    public void checkMaxMembers(int maxMembers){
+
+        List<ProjectEntity> exceeded= projectDao.findProjectsByMaxMembers(maxMembers);
+        if(!exceeded.isEmpty()){
+            for(ProjectEntity project : exceeded){
+                project.setMaxMembers(systemVariablesBean.getMaxUsers());
+                projectDao.persist(project);
+                NotificationDto notificationDto = new NotificationDto("PROJECT_FULL",projectUserDao.findProjectCreator(project).getUser().getId(), project.getName(), false, LocalDateTime.now());
+                if(notificationBean.createNotification(notificationDto)){
+                    notificationBean.sendNotification(notificationDto);
+                }
+        }
+    }
 
     }
 }
