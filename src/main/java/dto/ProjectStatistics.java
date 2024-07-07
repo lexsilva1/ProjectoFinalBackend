@@ -11,9 +11,7 @@ public class ProjectStatistics {
     private HashMap<String,Integer> totalInProgressProjects;
     private HashMap<String,Integer> totalReadyProjects;
     private HashMap<String,Integer> projectsByLab;
-    private HashMap<String,String> mostCommonResourcesByLab;
-    private HashMap<String,HashMap<String,Integer>> allResourcesByLab;
-    private HashMap<String,Integer> resourceQuantityPerProject;
+
     private double averageMembersPerProject;
     private double averageExecutionTime;
     private String mostUsedResource;
@@ -28,14 +26,6 @@ public class ProjectStatistics {
 
 
     public ProjectStatistics() {
-    }
-
-    public HashMap<String, Integer> getResourceQuantityPerProject() {
-        return resourceQuantityPerProject;
-    }
-
-    public void setResourceQuantityPerProject(HashMap<String, Integer> resourceQuantityPerProject) {
-        this.resourceQuantityPerProject = resourceQuantityPerProject;
     }
 
     public int getTotalProjects() {
@@ -166,19 +156,5 @@ public class ProjectStatistics {
         this.mostUsedInterest = mostUsedInterest;
     }
 
-    public HashMap<String, String> getMostCommonResourcesByLab() {
-        return mostCommonResourcesByLab;
-    }
 
-    public void setMostCommonResourcesByLab(HashMap<String, String> mostCommonResourcesByLab) {
-        this.mostCommonResourcesByLab = mostCommonResourcesByLab;
-    }
-
-    public HashMap<String, HashMap<String, Integer>> getAllResourcesByLab() {
-        return allResourcesByLab;
-    }
-
-    public void setAllResourcesByLab(HashMap<String, HashMap<String, Integer>> allResourcesByLab) {
-        this.allResourcesByLab = allResourcesByLab;
-    }
 }

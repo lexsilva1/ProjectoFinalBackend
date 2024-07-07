@@ -49,4 +49,14 @@ public class ResourceService {
         resourceBean.createResource(resourceDto);
         return Response.status(200).entity("resource created").build();
     }
+    @GET
+    @Path("/statistics")
+    @Produces("application/json")
+    public Response getResourceStatistics(@HeaderParam("token") String token) {
+        if (userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        return Response.status(200).entity(resourceBean.getResourceStatistics()).build();
+    }
 }

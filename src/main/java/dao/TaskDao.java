@@ -97,6 +97,15 @@ public class TaskDao extends AbstractDao<TaskEntity>{
             return null;
         }
     }
+    public List<TaskEntity> findTasksDependingOnTask(TaskEntity task) {
+        try {
+            return em.createNamedQuery("TaskEntity.findTasksDependingOnTask").setParameter("task", task)
+                    .getResultList();
+
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
 
 

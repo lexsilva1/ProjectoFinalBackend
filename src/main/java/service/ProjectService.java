@@ -328,7 +328,13 @@ public class ProjectService {
         if(taskBean.updateTask(token,projectName,taskDto)) {
             TaskDto taskDto1 = taskBean.getTaskById(taskDto.getId());
             ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectName), "Task updated: " + taskDto.getTitle());
-            projectLogDto.setType("UPDATE_TASK");
+            if(taskDto1.getStatus().equals("COMPLETED"))
+                projectLogDto.setType("COMPLETE_TASK");
+            else if(taskDto1.getStatus().equals(("CANCELLED")))
+                projectLogDto.setType("DELETE_TASK");
+            else {
+                projectLogDto.setType("UPDATE_TASK");
+            }
             projectLogBean.createProjectLog(projectLogDto);
             return Response.status(200).entity(taskDto1).build();
         }else {

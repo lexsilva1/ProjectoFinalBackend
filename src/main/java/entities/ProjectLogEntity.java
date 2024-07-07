@@ -39,6 +39,7 @@ public class ProjectLogEntity implements Serializable {
         CREATE_TASK,
         UPDATE_TASK,
         DELETE_TASK,
+        COMPLETE_TASK,
         ACCEPT_USER,
         REJECT_USER,
         APPLY_USER,

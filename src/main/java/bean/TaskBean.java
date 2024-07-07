@@ -163,14 +163,28 @@ public class TaskBean {
         task.setStatus(TaskEntity.Status.valueOf(taskDto.getStatus()));
         task.setStartDate(taskDto.getStart());
         task.setEndDate(taskDto.getEnd());
-        Set dependencies = new HashSet();
-        for(Integer i : taskDto.getDependencies()) {
-            TaskEntity dep = taskDao.find(i);
-            if(dep != null) {
-                dependencies.add(dep);
+        if(taskDto.getStatus().equals("CANCELLED")) {
+            Set<TaskEntity> dependencies = projectBean.findProjectByName(projectName).getTasks();
+            System.out.println("dependencies: " + dependencies);
+            if(dependencies != null) { // Null check before iteration
+                for(TaskEntity t : dependencies) {
+                    t.getDependencies().remove(task);
+                    taskDao.merge(t);
+                }
+            }
+            task.getDependencies().clear();
+        } else {
+            if (taskDto.getDependencies() != null) {
+                Set dependencies = new HashSet();
+                for (Integer i : taskDto.getDependencies()) {
+                    TaskEntity dep = taskDao.find(i);
+                    if (dep != null) {
+                        dependencies.add(dep);
+                    }
+                }
+                task.setDependencies(dependencies);
             }
         }
-        task.setDependencies(dependencies);
         Set users = new HashSet();
         for(Integer i : taskDto.getUsers()) {
             UserEntity u = userBean.findUserById(i);
@@ -182,6 +196,7 @@ public class TaskBean {
         taskDao.merge(task);
         return true;
     }
+
     public TaskEntity findTaskById(int id) {
         return taskDao.find(id);
     }
