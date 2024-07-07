@@ -415,19 +415,21 @@ public class ProjectBean {
                 }
             }
 
-
-
-
         Set resourceSet = new LinkedHashSet<>();
         for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
             ResourceEntity resource = resourceDao.findResourceByIdentifier(resourceDto.getIdentifier());
-            ProjectResourceEntity projectResource = new ProjectResourceEntity();
-            projectResource.setProject_id(project.getId());
-            projectResource.setResource_id(resource.getId());
-            projectResource.setQuantity(resourceDto.getQuantity());
-            projectResourceDao.persist(projectResource);
+            // Check if a ProjectResourceEntity already exists
+            ProjectResourceEntity existingProjectResource = projectResourceDao.findByProjectAndResource(project.getId(), resource.getId());
+            if (existingProjectResource == null) {
+                existingProjectResource = new ProjectResourceEntity();
+                existingProjectResource.setProject_id(project.getId());
+                existingProjectResource.setResource_id(resource.getId());
+                projectResourceDao.persist(existingProjectResource);
+            }
+            existingProjectResource.setQuantity(resourceDto.getQuantity());
             resourceSet.add(resource);
         }
+
         project.setResources(resourceSet);
         ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), project, "Project created");
         projectLogDto.setType("PROJECT_CREATED");
@@ -674,7 +676,7 @@ public class ProjectBean {
         if (user == null || project == null || resource == null) {
             return false;
         }
-        ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(), resource.getId());
+        ProjectResourceEntity projectResource = projectResourceDao.findByProjectAndResource(project.getId(), resource.getId());
         projectResourceDao.remove(projectResource);
         return true;
     }
@@ -685,7 +687,7 @@ public class ProjectBean {
         if (user == null || project == null || resource == null || quantity <= 0) {
             return false;
         }
-        ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(), resource.getId());
+        ProjectResourceEntity projectResource = projectResourceDao.findByProjectAndResource(project.getId(), resource.getId());
         projectResource.setQuantity(quantity);
         projectResourceDao.persist(projectResource);
         return true;
@@ -750,7 +752,7 @@ public class ProjectBean {
             for(ProjectEntity project : projects){
                 if(project.getLab().equals(lab)){
                     for(ResourceEntity resource : project.getResources()){
-                        ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(),resource.getId());
+                        ProjectResourceEntity projectResource = projectResourceDao.findByProjectAndResource(project.getId(),resource.getId());
                         if(resourceQuantities.containsKey(resource.getName())){
                             resourceQuantities.put(resource.getName(),resourceQuantities.get(resource.getName()) + projectResource.getQuantity());
                         }else{
@@ -763,16 +765,16 @@ public class ProjectBean {
         }
         return resources;
     }
-    public HashMap<String,Integer> resourceQuantitiesByProject(){
+    public HashMap<String,HashMap<String,Integer>> resourceQuantitiesByProject(){
         List<ProjectEntity> projects = projectDao.findAllProjects();
-        HashMap<String,Integer> resourcesPerProject = new HashMap<>();
+        HashMap<String,HashMap<String,Integer>> resourcesPerProject = new HashMap<>();
         for(ProjectEntity project : projects){
-            int totalResources = 0;
+            HashMap<String,Integer> resourceQuantities = new HashMap<>();
             for(ResourceEntity resource : project.getResources()){
-                ProjectResourceEntity projectResource = projectResourceDao.findProjectResourceByProjectAndResource(project.getId(),resource.getId());
-                totalResources += projectResource.getQuantity();
+                ProjectResourceEntity projectResource = projectResourceDao.findByProjectAndResource(project.getId(),resource.getId());
+                resourceQuantities.put(resource.getName(),projectResource.getQuantity());
             }
-            resourcesPerProject.put(project.getName(),totalResources);
+            resourcesPerProject.put(project.getName(),resourceQuantities);
         }
         return resourcesPerProject;
     }
@@ -796,9 +798,6 @@ public class ProjectBean {
         projectStatistics.setMostUsedInterest(projectDao.findMostUsedInterest().getName());
         projectStatistics.setMostUsedSkill(projectDao.findMostUsedSkill().getName());
         projectStatistics.setMostUsedInterest(projectDao.findMostUsedInterest().getName());
-        projectStatistics.setMostCommonResourcesByLab(projectDao.findMostCommonResourcesPerLab());
-        projectStatistics.setAllResourcesByLab(getResourceQuantitiesByLab());
-        projectStatistics.setResourceQuantityPerProject(resourceQuantitiesByProject());
         return projectStatistics;
     }
     public ProjectTasksDto findProjectTasks(String projectName) {

@@ -29,7 +29,7 @@ public class ProjectResourceDao extends AbstractDao<ProjectResourceEntity> {
         return em.createNamedQuery("ProjectResourceEntity.findMostUsedResource", ProjectResourceEntity.class)
                 .getSingleResult();
     }
-    public ProjectResourceEntity findProjectResourceByProjectAndResource(int projectId, int resourceId) {
+    public ProjectResourceEntity findByProjectAndResource(int projectId, int resourceId) {
         return em.createQuery("SELECT pr FROM ProjectResourceEntity pr WHERE pr.project_id = :projectId AND pr.resource_id = :resourceId", ProjectResourceEntity.class)
                 .setParameter("projectId", projectId)
                 .setParameter("resourceId", resourceId)
