@@ -3,6 +3,7 @@ package service;
 import bean.*;
 import dto.*;
 import entities.ProjectEntity;
+import entities.ProjectUserEntity;
 import entities.TaskEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
@@ -276,17 +277,24 @@ public class ProjectService {
         return Response.status(200).entity("left").build();
     }
     @PUT
-    @Path("/")
+    @Path("/{projectName}")
     @Produces("application/json")
-    public Response updateProject(@HeaderParam("token") String token, CreateProjectDto projectDto){
+    public Response updateProject(@HeaderParam("token") String token,@PathParam("projectName") String projectName, UpdateProjectDto projectDto){
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
+        ProjectUserEntity projectUser = projectBean.findUserByTokenAndProject(token,projectName);
+        if(projectUser == null || !projectUser.isProjectManager()) {
+            return Response.status(403).entity("not allowed").build();
+        }
         userBean.setLastActivity(token);
-        projectBean.createProject(projectDto,token);
-        ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token),projectBean.findProjectByName(projectDto.getName()), "Project updated");
-        projectLogDto.setType("UPDATE_PROJECT_DETAILS");
-        return Response.status(200).entity("project updated").build();
+        if(projectBean.updateProject(projectDto,projectName,token)) {
+            ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), projectBean.findProjectByName(projectName), "Project updated");
+            projectLogDto.setType("UPDATE_PROJECT_DETAILS");
+            return Response.status(200).entity("project updated").build();
+        }else {
+            return Response.status(400).entity("something went wrong").build();
+        }
     }
     @GET
     @Path("statistics")

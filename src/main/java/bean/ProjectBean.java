@@ -436,6 +436,19 @@ public class ProjectBean {
         }
         return true;
     }
+    public boolean updateProject(UpdateProjectDto projectDto,String projectName, String token){
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if(project == null){
+            return false;
+        }
+        if(projectDto.getLab()!= null){
+            project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
+        }
+        if(projectDto.getDescription() != null){
+            project.setDescription(projectDto.getDescription());
+        }
+        return true;
+    }
 
     public List<String> findAllStatus() {
         List<String> status = new ArrayList<>();
@@ -443,6 +456,11 @@ public class ProjectBean {
             status.add(s.name());
         }
         return status;
+    }
+    public ProjectUserEntity findUserByTokenAndProject(String projectName, String token) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        return projectUserDao.findProjectUserByProjectAndUser(project, user);
     }
 
     public boolean applyToProject(String token, String projectName) {
