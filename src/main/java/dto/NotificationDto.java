@@ -14,6 +14,7 @@ public class NotificationDto {
     private int taskId;
     private String taskName;
     private String status;
+    private boolean isSeen;
 
     public NotificationDto() {
     }
@@ -24,6 +25,7 @@ public class NotificationDto {
         this.projectName = projectName;
         this.isRead = isRead;
         this.time = time;
+        this.isSeen = false;
     }
 
 
@@ -106,5 +108,13 @@ public class NotificationDto {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public boolean isSeen() {
+        return isSeen;
+    }
+
+    public void setSeen(boolean seen) {
+        isSeen = seen;
     }
 }

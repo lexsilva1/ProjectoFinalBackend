@@ -297,18 +297,13 @@ public class ProjectBean {
         }
         projectDto.setTeamMembers(teamMembers);
         List<ProjectResourceEntity> resources = getProjectResources(project.getName());
-        Set<ResourceEntity> resourceSet = project.getResources();
-        List<ResourceDto> resourceDtos = new ArrayList<>();
-        for (ResourceEntity resource : resourceSet) {
-            ResourceDto resourceDto = resourceBean.convertToDto(resource);
+        List<ResourceDto> billOfMaterials = new ArrayList<>();
             for (ProjectResourceEntity projectResource : resources) {
-                if (projectResource.getResource() == resource) {
-                    resourceDto.setQuantity(projectResource.getQuantity());
-                }
+                ResourceDto resourceDto = resourceBean.convertToDto(projectResource.getResource());
+                resourceDto.setQuantity(projectResource.getQuantity());
+                billOfMaterials.add(resourceDto);
             }
-            resourceDtos.add(resourceDto);
-        }
-        projectDto.setBillOfMaterials(resourceDtos);
+        projectDto.setBillOfMaterials(billOfMaterials);
         projectDto.setMaxTeamMembers(project.getMaxMembers());
         projectDto.setStartDate(project.getStartDate());
         projectDto.setEndDate(project.getEndDate());
@@ -369,10 +364,20 @@ public class ProjectBean {
         }
 
         ProjectEntity project = new ProjectEntity();
+        if(projectDto.getName() == null || projectDto.getName().equals("")){
+            return false;
+        }
         project.setName(projectDto.getName());
+        if(projectDto.getDescription() == null || projectDto.getDescription().equals("")){
+            return false;
+        }
         project.setDescription(projectDto.getDescription());
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.Planning);
+        if(projectDto.getLab() == null || projectDto.getLab().equals("")){
+            UserEntity user = userBean.findUserByToken(token);
+            projectDto.setLab(user.getLocation().toString());
+        }
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
         TaskEntity lastTask = taskBean.createLastTask(token, projectDto, userBean.findUserByToken(token), List.of(userBean.findUserByToken(token).getId()));
         project.setTasks(new LinkedHashSet<>(List.of(lastTask)));
@@ -381,19 +386,20 @@ public class ProjectBean {
         }
         project.setMaxMembers(projectDto.getSlots());
         project.setCreatedAt(LocalDateTime.now());
-        if (projectDto.getStartDate() == null || projectDto.getEndDate() == null) {
+        if (projectDto.getStartDate() == null ) {
             project.setStartDate(LocalDateTime.now());
-            project.setEndDate(LocalDateTime.now().plusDays(30));
+        }else {
+            project.setStartDate(projectDto.getStartDate());
         }
-        project.setStartDate(projectDto.getStartDate());
-        project.setEndDate(projectDto.getEndDate());
+        if(projectDto.getEndDate() == null || projectDto.getEndDate().isBefore(LocalDateTime.now())) { // Correct usage
+            project.setEndDate(project.getStartDate().plusDays(30));
+        }else{
+            project.setEndDate(projectDto.getEndDate());
+        }
         project.setSkills(skillBean.listDtoToEntity(new HashSet<>((projectDto.getSkills()))));
         project.setInterests(interestBean.listDtoToEntity(new HashSet<>(projectDto.getInterests())));
-
         projectDao.persist(project);
-        if(projectDto.getTeamMembers().size() > project.getMaxMembers()){
-            return false;
-        }
+        if(projectDto.getTeamMembers() != null){
             for (ProjectUserDto projectUserDto : projectDto.getTeamMembers()) {
                 ProjectUserEntity projectUser = new ProjectUserEntity();
                 projectUser.setProject(project);
@@ -401,16 +407,16 @@ public class ProjectBean {
                 projectUser.setProjectManager(projectUserDto.getIsProjectManager());
                 projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.valueOf(projectUserDto.getApprovalStatus()));
                 projectUserDao.persist(projectUser);
-                if(projectUserDto.getApprovalStatus().equals("INVITED")){
-                   NotificationDto notificationDto = new NotificationDto();
-                     notificationDto.setProjectName(project.getName());
-                        notificationDto.setUserId(projectUserDto.getUserId());
-                        notificationDto.setType("INVITE");
-                        notificationDto.setRead(false);
-                        if(notificationBean.createNotification(notificationDto)){
-                            notificationBean.sendNotification(notificationDto);
-                        }
-
+                if(projectUserDto.getApprovalStatus().equals("INVITED")) {
+                    NotificationDto notificationDto = new NotificationDto();
+                    notificationDto.setProjectName(project.getName());
+                    notificationDto.setUserId(projectUserDto.getUserId());
+                    notificationDto.setType("INVITE");
+                    notificationDto.setRead(false);
+                    if (notificationBean.createNotification(notificationDto)) {
+                        notificationBean.sendNotification(notificationDto);
+                    }
+                }
 
                 }
             }
@@ -587,7 +593,15 @@ public class ProjectBean {
         projectLogBean.createProjectLog(projectLogDto);
         return true;
     }
-
+public boolean userBelongsToProject(String token, String projectName) {
+        UserEntity user = userBean.findUserByToken(token);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
+        if (user == null || project == null) {
+            return false;
+        }
+        ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
+        return projectUser != null;
+    }
     public boolean leaveProject(String token, String projectName) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);

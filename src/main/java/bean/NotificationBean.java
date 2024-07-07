@@ -51,6 +51,7 @@ public class NotificationBean {
         }
         dto.setType(entity.getType().name());
         dto.setStatus(convertTypeTpStatus(entity.getType()));
+        dto.setSeen(entity.isSeen());
         return dto;
     }
     public boolean createNotification(NotificationDto dto) {
@@ -58,6 +59,7 @@ public class NotificationBean {
         NotificationEntity entity = new NotificationEntity();
         entity.setType(NotificationEntity.NotificationType.valueOf(dto.getType()));
         entity.setRead(dto.isRead());
+        entity.setSeen(dto.isSeen());
         entity.setTime(LocalDateTime.now());
         entity.setUser(userDao.findUserById(dto.getUserId()));
         entity.setProject(projectDao.findProjectByName(dto.getProjectName()));
@@ -102,6 +104,7 @@ public class NotificationBean {
         NotificationEntity entity = notificationDao.findNotificationById(id);
         entity.setType(NotificationEntity.NotificationType.valueOf(message));
         entity.setRead(true);
+        entity.setSeen(true);
         notificationDao.merge(entity);
         return convertToDto (entity);
     }
@@ -135,5 +138,11 @@ public class NotificationBean {
                         break;
     }
     return status;
+    }
+    public boolean markAsRead(int notificationId) {
+        NotificationEntity entity = notificationDao.findNotificationById(notificationId);
+        entity.setRead(true);
+        notificationDao.merge(entity);
+        return true;
     }
 }

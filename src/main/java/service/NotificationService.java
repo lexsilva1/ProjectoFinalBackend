@@ -21,4 +21,14 @@ public class NotificationService {
         return Response.status(200).entity(notificationBean.findNotifications(projectName, token,isRead)).build();
 
     }
+    @PUT
+    @Path("/read")
+    @Produces("application/json")
+    public Response markAsRead(@HeaderParam("token") String token, @QueryParam("notificationId") int notificationId){
+        if(token == null) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        return Response.status(200).entity(notificationBean.markAsRead(notificationId)).build();
+    }
+
 }

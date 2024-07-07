@@ -27,6 +27,8 @@ public class NotificationEntity implements Serializable {
     private NotificationType type;
     @Column (name = "is_read", nullable = false, unique = false)
     private boolean isRead;
+    @Column (name = "is_seen", nullable = false, unique = false)
+    private boolean isSeen;
     @Column (name = "time", nullable = false, unique = false)
     private LocalDateTime time;
     @ManyToOne
@@ -130,5 +132,13 @@ public class NotificationEntity implements Serializable {
 
     public void setTask(TaskEntity task) {
         this.task = task;
+    }
+
+    public boolean isSeen() {
+        return isSeen;
+    }
+
+    public void setSeen(boolean seen) {
+        isSeen = seen;
     }
 }

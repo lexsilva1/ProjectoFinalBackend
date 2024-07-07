@@ -5,6 +5,7 @@ import dto.*;
 import entities.ProjectEntity;
 import entities.ProjectUserEntity;
 import entities.TaskEntity;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -14,6 +15,10 @@ import jakarta.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Path("/projects")
 public class ProjectService {
@@ -82,6 +87,8 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null ||  !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
+        userBean.setLastActivity(token);
+
         boolean created = projectBean.createProject(projectDto,token);
         if(!created) {
             return Response.status(404).entity("project not created").build();
@@ -104,6 +111,14 @@ public class ProjectService {
         }
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
+        if(taskDto.getResponsibleId() == 0) {
+            taskDto.setResponsibleId(userBean.findUserByToken(token).getId());
+        }
+        if(taskDto.getUsers() == null) {
+            Set<Integer> users = new HashSet<>();
+            users.add(userBean.findUserByToken(token).getId());
+            taskDto.setUsers(users);
+        }
         if(taskBean.createTask(token,projectName,taskDto)) {
             TaskDto taskDto1 = taskBean.getTaskById(taskDto.getId());
             return Response.status(201).entity(taskDto1).build();
@@ -433,7 +448,7 @@ public class ProjectService {
     @Path("/{projectName}/resources")
     @Produces("application/json")
     public Response addResourceToProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("resourceId") int resourceId, @QueryParam("quantity") int quantity){
-        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -450,7 +465,7 @@ public class ProjectService {
     @Path("/{projectName}/resources")
     @Produces("application/json")
     public Response removeResourceFromProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("resourceId") int resourceId, @QueryParam("quantity") int quantity){
-        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
@@ -468,7 +483,7 @@ public class ProjectService {
     @Path("/{projectName}/resources")
     @Produces("application/json")
     public Response updateResourceInProject(@HeaderParam("token") String token, @PathParam("projectName") String projectName, @QueryParam("resourceId") int resourceId, @QueryParam("quantity") int quantity){
-        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) || !projectBean.isProjectManager(token,projectName)) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token) ) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);

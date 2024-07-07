@@ -106,6 +106,7 @@ public class ResourceBean {
     public ResourceEntity findResourceByName(String name) {
         return resourceDao.findResourceByName(name);
     }
+
     public void createResource(ResourceDto resourceDto) {
         ResourceEntity resource = new ResourceEntity();
         resource.setName(resourceDto.getName());
