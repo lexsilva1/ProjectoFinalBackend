@@ -12,8 +12,8 @@ public class ProjectResourceDto {
     public ProjectResourceDto() {
     }
     public ProjectResourceDto(ProjectResourceEntity projectResourceEntity) {
-        this.projectId = projectResourceEntity.getProject_id();
-        this.resourceId = projectResourceEntity.getResource_id();
+        this.projectId = projectResourceEntity.getProject().getId();
+        this.resourceId = projectResourceEntity.getResource().getId();
         this.quantity = projectResourceEntity.getQuantity();
     }
 
