@@ -28,9 +28,9 @@ public class NotificationService {
 
     }
     @PUT
-    @Path("/read")
+    @Path("/read/{notificationId}")
     @Produces("application/json")
-    public Response markAsRead(@HeaderParam("token") String token, @QueryParam("notificationId") int notificationId){
+    public Response markAsRead(@HeaderParam("token") String token, @PathParam("notificationId") int notificationId){
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }

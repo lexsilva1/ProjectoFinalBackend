@@ -421,11 +421,9 @@ public class ProjectBean {
                     notificationDto.setUserId(projectUserDto.getUserId());
                     notificationDto.setType("INVITE");
                     notificationDto.setRead(false);
-                    if (notificationBean.createNotification(notificationDto)) {
-                        notificationBean.sendNotification(notificationDto);
-                    }
-                }
+                    notificationBean.sendNotification(notificationDto);
 
+                    }
                 }
             }
         for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
