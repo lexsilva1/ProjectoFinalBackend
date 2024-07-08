@@ -14,8 +14,8 @@ public class UserDto {
     private String labLocation;
     private String userPhoto;
     private UserEntity.Role role;
-    private List<String> skills;
-    private List<String> interests;
+    private List<SkillDto> skills;
+    private List<InterestDto> interests;
     private List<String> projects;
     private boolean privacy;
 
@@ -86,20 +86,20 @@ public class UserDto {
         this.userId = userId;
     }
 
-    public List<String> getSkills() {
-        return skills;
-    }
-
-    public void setSkills(List<String> skills) {
-        this.skills = skills;
-    }
-
-    public List<String> getInterests() {
+    public List<InterestDto> getInterests() {
         return interests;
     }
 
-    public void setInterests(List<String> interests) {
+    public void setInterests(List<InterestDto> interests) {
         this.interests = interests;
+    }
+
+    public List<SkillDto> getSkills() {
+        return skills;
+    }
+
+    public void setSkills(List<SkillDto> skills) {
+        this.skills = skills;
     }
 
     public List<String> getProjects() {
@@ -108,6 +108,10 @@ public class UserDto {
 
     public void setProjects(List<String> projects) {
         this.projects = projects;
+    }
+
+    public boolean isPrivacy() {
+        return privacy;
     }
 
     public boolean getPrivacy() {

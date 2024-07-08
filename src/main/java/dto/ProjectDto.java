@@ -12,8 +12,8 @@ public class ProjectDto {
     private String image;
     private String status;
     private String lab;
-    private Set<String> skills;
-    private Set<String> interests;
+    private Set<SkillDto> skills;
+    private Set<InterestDto> interests;
     private List<ProjectUserDto> teamMembers;
     private List<ResourceDto> billOfMaterials;
     private int maxTeamMembers;
@@ -68,19 +68,19 @@ public class ProjectDto {
         this.lab = lab;
     }
 
-    public Set<String> getSkills() {
+    public Set<SkillDto> getSkills() {
         return skills;
     }
 
-    public void setSkills(Set<String> skills) {
+    public void setSkills(Set<SkillDto> skills) {
         this.skills = skills;
     }
 
-    public Set<String> getInterests() {
+    public Set<InterestDto> getInterests() {
         return interests;
     }
 
-    public void setInterests(Set<String> interests) {
+    public void setInterests(Set<InterestDto> interests) {
         this.interests = interests;
     }
 

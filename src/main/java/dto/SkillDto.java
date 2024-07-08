@@ -4,7 +4,7 @@ public class SkillDto {
     private int id;
     private String name;
     private String skillType;
-    private int projetcId;
+    private String projectName;
 
     public SkillDto() {
     }
@@ -33,12 +33,11 @@ public class SkillDto {
         this.skillType = skillType;
     }
 
-
-    public int getProjetcId() {
-        return projetcId;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setProjetcId(int projetcId) {
-        this.projetcId = projetcId;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

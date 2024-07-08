@@ -32,7 +32,7 @@ public class InterestService {
     public Response createInterest(@HeaderParam("token") String token, InterestDto interestDto) {
         userBean.setLastActivity(token);
         if(interestBean.findInterestByName(interestDto.getName()) != null) {
-            if(interestDto.getProjectId() == 0) {
+            if(interestDto.getProjectName() == null || interestDto.getProjectName().isEmpty()) {
                 InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
                 if(interestBean.addInterestToUser(token, interestDto.getName())) {
                     return Response.status(200).entity(interest).build();
@@ -41,7 +41,7 @@ public class InterestService {
                 }
             } else {
                 InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
-                if(interestBean.addInterestToProject(token, interestDto.getProjectId(), interestDto.getName())) {
+                if(interestBean.addInterestToProject(token, interestDto.getProjectName(), interestDto.getName())) {
                     return Response.status(200).entity(interest).build();
                 } else {
                     return Response.status(404).entity("interest not added").build();
@@ -49,7 +49,7 @@ public class InterestService {
             }
         }
 
-        if(interestDto.getProjectId() == 0) {
+        if(interestDto.getProjectName() == null || interestDto.getProjectName().isEmpty()) {
             interestBean.createInterest(interestDto);
             InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
            if( interestBean.addInterestToUser(token, interestDto.getName())) {
@@ -62,7 +62,7 @@ public class InterestService {
         } else {
             interestBean.createInterest(interestDto);
             InterestDto interest = interestBean.toInterestDto(interestBean.findInterestByName(interestDto.getName()));
-            if(interestBean.addInterestToProject(token, interestDto.getProjectId(), interestDto.getName())) {
+            if(interestBean.addInterestToProject(token, interestDto.getProjectName(), interestDto.getName())) {
                 return Response.status(200).entity(interest).build();
             } else {
                 return Response.status(404).entity("keyword not added").build();
@@ -80,14 +80,14 @@ public class InterestService {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
-        if(interestDto.getProjectId() == 0) {
+        if(interestDto.getProjectName() == null || interestDto.getProjectName().isEmpty()) {
             if(interestBean.removeInterestFromUser(token, interestDto.getName())) {
                 return Response.status(200).entity("interest removed from your list").build();
             } else {
                 return Response.status(404).entity("interest not removed").build();
             }
         } else {
-            if(interestBean.removeInterestFromProject(token, interestDto.getProjectId(), interestDto.getName())) {
+            if(interestBean.removeInterestFromProject(token, interestDto.getProjectName(), interestDto.getName())) {
                 return Response.status(200).entity("interest removed from project").build();
             } else {
                 return Response.status(404).entity("interest not removed").build();

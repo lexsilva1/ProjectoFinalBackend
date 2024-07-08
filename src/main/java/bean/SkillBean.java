@@ -268,13 +268,7 @@ public Set<String> entityToString(Set<SkillEntity> skills){
     public Set<SkillEntity> convertStringToSkillEntities(Set<String> skills){
         return skillDao.findSkillsByName(skills);
     }
-    public Set<String> convertSkillEntitiestoString(Set<SkillEntity> skills){
-        Set<String> skillEntities = new HashSet<>();
-        for(SkillEntity skill : skills){
-            skillEntities.add(skill.getName());
-        }
-        return skillEntities;
-    }
+
     public boolean addSkillToUser(String token, String skillName){
         SkillEntity skill = skillDao.findSkillByName(skillName);
         if(skill == null){
@@ -289,19 +283,19 @@ public Set<String> entityToString(Set<SkillEntity> skills){
         }
         return userBean.removeSkillFromUser(token, skill);
     }
-    public boolean addSkilltoProject(String token, int projectId, String skillName){
+    public boolean addSkilltoProject(String token, String projectName, String skillName){
         SkillEntity skill = skillDao.findSkillByName(skillName);
         if(skill == null){
             return false;
         }
-        return projectBean.addSkillToProject(token,projectId, skill);
+        return projectBean.addSkillToProject(token,projectName, skill);
     }
-    public boolean removeSkillFromProject(String token, int projectId, String skillName){
+    public boolean removeSkillFromProject(String token, String projectName, String skillName){
         SkillEntity skill = skillDao.findSkillByName(skillName);
         if(skill == null){
             return false;
         }
-        return projectBean.removeSkillFromProject(token, projectId, skill);
+        return projectBean.removeSkillFromProject(token, projectName, skill);
     }
     public SkillEntity findSkillByName(String token, String skillName){
         return skillDao.findSkillByName(skillName);

@@ -145,4 +145,13 @@ public class NotificationBean {
         notificationDao.merge(entity);
         return true;
     }
+    public boolean markAllAsSeen( String token) {
+        UserEntity user = userDao.findUserByToken(token);
+        List<NotificationEntity> entities = notificationDao.findNotificationByUser(user);
+        for (NotificationEntity entity : entities) {
+            entity.setSeen(true);
+            notificationDao.merge(entity);
+        }
+        return true;
+    }
 }

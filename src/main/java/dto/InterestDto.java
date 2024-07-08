@@ -4,8 +4,8 @@ public class InterestDto {
     private int id;
     private String name;
     private String interestType;
+    private String projectName;
 
-    private int projectId;
 
     public InterestDto() {
     }
@@ -34,11 +34,11 @@ public class InterestDto {
         this.interestType = interestType;
     }
 
-    public int getProjectId() {
-        return projectId;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setProjectId(int projectId) {
-        this.projectId = projectId;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 }

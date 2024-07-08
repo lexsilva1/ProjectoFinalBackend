@@ -83,6 +83,7 @@ public class ProjectEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "task_id")
     )
     private Set<TaskEntity> tasks;
+    
 
     public Set<TaskEntity> getTasks() {
         return tasks;

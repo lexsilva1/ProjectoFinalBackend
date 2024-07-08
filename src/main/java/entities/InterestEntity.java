@@ -21,6 +21,8 @@ public class InterestEntity implements Serializable {
     private String name;
     @ManyToMany(mappedBy = "interests")
     private Set<UserEntity> users;
+    @ManyToMany(mappedBy = "interests")
+    private Set<ProjectEntity> projects;
     @Column (name = "interest_type", nullable = false, unique = false)
     private InterestType interestType;
     public enum InterestType {
@@ -61,5 +63,13 @@ public class InterestEntity implements Serializable {
 
     public void setInterestType(InterestType interestType) {
         this.interestType = interestType;
+    }
+
+    public Set<ProjectEntity> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectEntity> projects) {
+        this.projects = projects;
     }
 }

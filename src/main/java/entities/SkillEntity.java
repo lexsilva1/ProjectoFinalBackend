@@ -24,6 +24,8 @@ public class SkillEntity implements Serializable {
     private SkillType skillType;
     @ManyToMany(mappedBy = "skills")
     private Set<UserEntity> users;
+    @ManyToMany(mappedBy = "skills", fetch = FetchType.EAGER)
+    private Set<ProjectEntity> projects;
 
 
     public enum SkillType {
@@ -64,5 +66,13 @@ public class SkillEntity implements Serializable {
 
     public void setUsers(Set<UserEntity> users) {
         this.users = users;
+    }
+
+    public Set<ProjectEntity> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Set<ProjectEntity> projects) {
+        this.projects = projects;
     }
 }

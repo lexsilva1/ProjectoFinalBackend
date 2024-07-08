@@ -51,4 +51,5 @@ public class MessageService {
         }
         return Response.status(200).entity(messageBean.findLastMessages(token)).build();
     }
+
 }

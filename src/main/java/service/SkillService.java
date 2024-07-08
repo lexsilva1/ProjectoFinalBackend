@@ -44,7 +44,7 @@ public class SkillService {
 
         userBean.setLastActivity(token);
         if(skillBean.findSkillByName(skillDto.getName()) != null) {
-            if (skillDto.getProjetcId() == 0) {
+            if (skillDto.getProjectName() == null || skillDto.getProjectName().isEmpty()) {
                 boolean added = skillBean.addSkillToUser(token, skillDto.getName());
                 if (added) {
                     return Response.status(200).entity("skill added to your profile").build();
@@ -52,7 +52,7 @@ public class SkillService {
                     return Response.status(404).entity("skill not added").build();
                 }
             } else {
-                boolean added = skillBean.addSkilltoProject(token, skillDto.getProjetcId(), skillDto.getName());
+                boolean added = skillBean.addSkilltoProject(token, skillDto.getProjectName(), skillDto.getName());
                 if (!added) {
                     return Response.status(404).entity("skill not added").build();
                 } else {
@@ -60,7 +60,7 @@ public class SkillService {
                 }
             }
         }
-        if(skillDto.getProjetcId() == 0) {
+        if(skillDto.getProjectName() == null || skillDto.getProjectName().isEmpty()){
              skillBean.createSkill(skillDto);
              SkillDto skill = skillBean.toSkillDtos(skillBean.findSkillByName(skillDto.getName()));
             boolean added = skillBean.addSkillToUser(token, skillDto.getName());
@@ -72,7 +72,7 @@ public class SkillService {
         } else {
             skillBean.createSkill(skillDto);
             SkillDto skill = skillBean.toSkillDtos(skillBean.findSkillByName(skillDto.getName()));
-            boolean added = skillBean.addSkilltoProject(token, skillDto.getProjetcId(), skillDto.getName());
+            boolean added = skillBean.addSkilltoProject(token, skillDto.getProjectName(), skillDto.getName());
             if(!added) {
                 return Response.status(404).entity("skill not added").build();
             } else {
@@ -87,19 +87,22 @@ public class SkillService {
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
-        System.out.println(skillDto.getName()+" "+skillDto.getProjetcId()+" "+skillDto.getSkillType());
+
         userBean.setLastActivity(token);
         SkillEntity skill = skillBean.findSkillByName(skillDto.getName());
         if(skill == null) {
             return Response.status(404).entity("skill not found").build();
         }
-        if(skillDto.getProjetcId() == 0) {
+        if(skillDto.getProjectName() == null || skillDto.getProjectName().isEmpty()) {
 
             userBean.removeSkillFromUser(token, skill);
             return Response.status(200).entity("skill removed from your profile").build();
         } else {
-            projectBean.removeSkillFromProject(token, skillDto.getProjetcId(), skill);
-            return Response.status(200).entity("skill removed from project").build();
+            if(skillBean.removeSkillFromProject(token, skillDto.getProjectName(), skill.getName())){
+                return Response.status(200).entity("skill removed from project").build();
+            } else {
+                return Response.status(404).entity("skill not removed").build();
+            }
         }
 
     }

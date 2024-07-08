@@ -299,16 +299,16 @@ public List<UserEntity> getAllUsers() {
             projects.add(projectUser.getProject().getName());
         }
         userDto.setProjects(projects);
-        List<String> skills = new ArrayList<>();
+        List<SkillDto> skills = new ArrayList<>();
         Set<SkillEntity> userSkills = user.getSkills();
         for (SkillEntity skill : userSkills) {
-            skills.add(skill.getName());
+            skills.add(skillBean.toSkillDtos(skill));
         }
         userDto.setSkills(skills);
-        List<String> interests = new ArrayList<>();
+        List<InterestDto> interests = new ArrayList<>();
         Set<InterestEntity> userInterests = user.getInterests();
         for (InterestEntity interest : userInterests) {
-            interests.add(interest.getName());
+            interests.add(interestBean.toInterestDto(interest));
         }
         userDto.setInterests(interests);
         return userDto;

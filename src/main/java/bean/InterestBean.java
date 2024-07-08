@@ -150,20 +150,20 @@ public class InterestBean {
         }
         return interestNames;
     }
-    public boolean addInterestToProject(String token, int projectId, String interestName){
+    public boolean addInterestToProject(String token, String projectName, String interestName){
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
             return false;
         }
-        projectBean.addInterestToProject(token, projectId, interest);
+        projectBean.addInterestToProject(token, projectName, interest);
         return true;
     }
-    public boolean removeInterestFromProject(String token ,int projectId, String interestName){
+    public boolean removeInterestFromProject(String token ,String projectName, String interestName){
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
             return false;
         }
-        projectBean.removeInterestFromProject(token,projectId, interest);
+        projectBean.removeInterestFromProject(token, projectName, interest);
         return true;
     }
     public boolean addInterestToUser(String token, String interestName){

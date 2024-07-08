@@ -288,9 +288,17 @@ public class ProjectBean {
         projectDto.setStatus(project.getStatus().name());
         projectDto.setLab(project.getLab().getLocation().name());
         projectDto.setCreationDate(project.getCreatedAt());
-        projectDto.setSkills(skillBean.entityToString(project.getSkills()));
+        Set<SkillDto> skill = new HashSet<>();
+        for (SkillEntity s : project.getSkills()) {
+            skill.add(skillBean.toSkillDtos(s));
+        }
+        projectDto.setSkills(skill);
 
-        projectDto.setInterests(interestBean.entityToName(project.getInterests()));
+        Set<InterestDto> interest = new HashSet<>();
+        for (InterestEntity i : project.getInterests()) {
+            interest.add(interestBean.toInterestDto(i));
+        }
+        projectDto.setInterests(interest);
         List<ProjectUserDto> teamMembers = new ArrayList<>();
         for (ProjectUserEntity projectUser : project.getProjectUsers()) {
             teamMembers.add(userBean.convertToProjectUserDto(projectUser));
@@ -726,45 +734,55 @@ public boolean userBelongsToProject(String token, String projectName) {
         }
     }
 
-    public boolean addSkillToProject(String token, int projectid, SkillEntity skill) {
+    public boolean addSkillToProject(String token, String projectName, SkillEntity skill) {
         UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectById(projectid);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
         if (user == null || project == null || skill == null) {
             return false;
         }
+
         project.getSkills().add(skill);
-        projectDao.persist(project);
+        skill.getProjects().add(project);
+        skillDao.merge(skill);
+        projectDao.merge(project);
         return true;
     }
 
-    public boolean removeSkillFromProject(String token, int projectid, SkillEntity skill) {
+    public boolean removeSkillFromProject(String token, String projectName, SkillEntity skill) {
         UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectById(projectid);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
         if (user == null || project == null || skill == null) {
             return false;
         }
+        skill.getProjects().remove(project);
         project.getSkills().remove(skill);
-        projectDao.persist(project);
+        skillDao.merge(skill);
+        projectDao.merge(project);
         return true;
-    }
-    public boolean addInterestToProject(String token, int projectid, InterestEntity interest) {
+        }
+
+    public boolean addInterestToProject(String token, String projectName, InterestEntity interest) {
         UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectById(projectid);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
         if (user == null || project == null || interest == null) {
             return false;
         }
         project.getInterests().add(interest);
-        projectDao.persist(project);
+        interest.getProjects().add(project);
+        interestDao.merge(interest);
+        projectDao.merge(project);
         return true;
     }
-    public boolean removeInterestFromProject(String token, int projectid, InterestEntity interest) {
+    public boolean removeInterestFromProject(String token, String projectName, InterestEntity interest) {
         UserEntity user = userBean.findUserByToken(token);
-        ProjectEntity project = projectDao.findProjectById(projectid);
+        ProjectEntity project = projectDao.findProjectByName(projectName);
         if (user == null || project == null || interest == null) {
             return false;
         }
         project.getInterests().remove(interest);
-        projectDao.persist(project);
+        interest.getProjects().remove(project);
+        interestDao.merge(interest);
+        projectDao.merge(project);
         return true;
     }
     public HashMap<String,HashMap<String,Integer>> getResourceQuantitiesByLab(){
