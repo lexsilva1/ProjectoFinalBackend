@@ -148,6 +148,7 @@ public class ResourceBean {
     ResourceStatisticsDto resourceStatisticsDto = new ResourceStatisticsDto();
     resourceStatisticsDto.setResourceQuantityPerLab(projectBean.getResourceQuantitiesByLab());
     resourceStatisticsDto.setResourceQuantityPerProject(projectBean.resourceQuantitiesByProject());
+    resourceStatisticsDto.setAllresources(projectBean.findResourceQuantities());
     return resourceStatisticsDto;
     }
 }

@@ -818,7 +818,18 @@ public boolean userBelongsToProject(String token, String projectName) {
         }
         return resourcesPerProject;
     }
-
+    public HashMap<String,Integer> findResourceQuantities(){
+        List<ProjectResourceEntity> projectResources = projectResourceDao.findAllProjectResources();
+        HashMap<String,Integer> resourceQuantities = new HashMap<>();
+        for(ProjectResourceEntity projectResource : projectResources){
+            if(resourceQuantities.containsKey(projectResource.getResource().getName())){
+                resourceQuantities.put(projectResource.getResource().getName(),resourceQuantities.get(projectResource.getResource().getName()) + projectResource.getQuantity());
+            }else{
+                resourceQuantities.put(projectResource.getResource().getName(),projectResource.getQuantity());
+            }
+        }
+        return resourceQuantities;
+    }
 
     public ProjectStatistics getProjectStatistics() {
         ProjectStatistics projectStatistics = new ProjectStatistics();

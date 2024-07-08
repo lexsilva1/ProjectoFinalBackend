@@ -5,6 +5,7 @@ import java.util.HashMap;
 public class ResourceStatisticsDto {
     private HashMap<String,HashMap<String,Integer>> resourceQuantityPerLab;
     private HashMap<String,HashMap<String,Integer>>  resourceQuantityPerProject;
+    private HashMap<String,Integer> allresources;
 
 
     public ResourceStatisticsDto() {
@@ -29,5 +30,13 @@ public class ResourceStatisticsDto {
 
     public void setResourceQuantityPerLab(HashMap<String, HashMap<String, Integer>> resourceQuantityPerLab) {
         this.resourceQuantityPerLab = resourceQuantityPerLab;
+    }
+
+    public HashMap<String, Integer> getAllresources() {
+        return allresources;
+    }
+
+    public void setAllresources(HashMap<String, Integer> allresources) {
+        this.allresources = allresources;
     }
 }

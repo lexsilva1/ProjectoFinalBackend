@@ -40,14 +40,9 @@ public class ProjectResourceDao extends AbstractDao<ProjectResourceEntity> {
 
         }
     }
-    public List<ProjectResourceEntity> findProjectResourceByResource(int resourceId) {
-        return em.createQuery("SELECT pr FROM ProjectResourceEntity pr WHERE pr.resource_id = :resourceId order by quantity", ProjectResourceEntity.class)
-                .setParameter("resourceId", resourceId)
-                .getResultList();
-    }
-    public List<ProjectResourceEntity> findProjectResourceByProject(int projectId) {
-        return em.createQuery("SELECT pr FROM ProjectResourceEntity pr WHERE pr.project_id = :projectId order by  quantity", ProjectResourceEntity.class)
-                .setParameter("projectId", projectId)
+
+    public List<ProjectResourceEntity> findAllProjectResources() {
+        return em.createQuery("SELECT pr FROM ProjectResourceEntity pr", ProjectResourceEntity.class)
                 .getResultList();
     }
 
