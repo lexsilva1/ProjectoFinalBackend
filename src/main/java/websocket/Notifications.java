@@ -106,6 +106,7 @@ public class Notifications {
             System.out.println("Error in processing JSON: " + e.getMessage());
         }
         if (notificationDto != null) {
+
         notificationBean.createNotification(notificationDto);
         }
         UserEntity user = userBean.findUserById(notificationDto.getUserId());

@@ -236,10 +236,11 @@ public List<UserEntity> getAllUsers() {
         user.setPwdHash(encryptHelper.encryptPassword(password));
         user.setCreationDate(LocalDateTime.now());
         user.setActive(true);
+        userDao.persist(user);
         tokenBean.createRegisterToken(encryptHelper.generateToken(),user);
 
         if (emailBean.sendConfirmationEmail(user)) {
-            userDao.persist(user);
+
             registered = true;
         }
         return registered;

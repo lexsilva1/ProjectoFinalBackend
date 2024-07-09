@@ -298,12 +298,12 @@ public class ProjectService {
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(403).entity("not allowed").build();
         }
-        ProjectUserEntity projectUser = projectBean.findUserByTokenAndProject(token,projectName);
+        ProjectUserEntity projectUser = projectBean.findUserByTokenAndProject(projectName,token);
         if(projectUser == null || !projectUser.isProjectManager()) {
-            return Response.status(403).entity("not allowed").build();
+            return Response.status(403).entity("not a manager").build();
         }
         userBean.setLastActivity(token);
-        if(projectBean.updateProject(projectDto,projectName,token)) {
+        if(projectBean.updateProject(projectDto,projectName)) {
             ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), projectBean.findProjectByName(projectName), "Project updated");
             projectLogDto.setType("UPDATE_PROJECT_DETAILS");
             return Response.status(200).entity("project updated").build();

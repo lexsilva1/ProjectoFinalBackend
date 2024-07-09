@@ -53,7 +53,7 @@ public class ProjectEntity implements Serializable {
     @Column( name = "status", nullable = false, unique = false, updatable = true)
     Status status;
     @ManyToOne (fetch = FetchType.EAGER)
-    @JoinColumn (name = "lab_id", nullable = false, unique = false, updatable = false)
+    @JoinColumn (name = "lab_id", nullable = false, unique = false, updatable = true)
     private LabEntity lab;
     @Column (name="maxMembers", nullable = false, unique = false, updatable = true )
     int maxMembers;

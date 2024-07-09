@@ -448,7 +448,7 @@ public class ProjectBean {
         }
         return true;
     }
-    public boolean updateProject(UpdateProjectDto projectDto,String projectName, String token){
+    public boolean updateProject(UpdateProjectDto projectDto,String projectName){
         ProjectEntity project = projectDao.findProjectByName(projectName);
         if(project == null){
             return false;
@@ -459,6 +459,7 @@ public class ProjectBean {
         if(projectDto.getDescription() != null){
             project.setDescription(projectDto.getDescription());
         }
+        projectDao.persist(project);
         return true;
     }
 
