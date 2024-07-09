@@ -41,11 +41,11 @@ public class StartupBean {
     public void init() {
         systemVariablesBean.createDefaultSystemVariables();
         labBean.createDefaultLocations();
+        skillBean.createDefaultSkills();
+        interestBean.createDefaultInterests();
         userBean.createDefaultUsers();
         messageBean.createDefaultMessage();
         resourceBean.createDefaultResources();
-        skillBean.createDefaultSkills();
-        interestBean.createDefaultInterests();
         projectBean.createDefaultProjects();
         projectLogBean.createDefaultLogs();
 

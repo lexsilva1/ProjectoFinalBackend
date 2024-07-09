@@ -51,6 +51,34 @@ public class ProjectLogBean {
             log3.setDate(LocalDateTime.now());
             projectLogDao.persist(log3);
         }
+        if(projectLogDao.findProjectLogByProjectId(4) == null) {
+            ProjectLogEntity log4 = new ProjectLogEntity();
+            log4.setProject_id(4);
+            log4.setLog("Project created");
+            log4.setUser_id(1);
+            log4.setType(ProjectLogEntity.LogType.PROJECT_CREATED);
+            log4.setDate(LocalDateTime.now());
+            projectLogDao.persist(log4);
+        }
+        if(projectLogDao.findProjectLogByProjectId(5) == null) {
+            ProjectLogEntity log5 = new ProjectLogEntity();
+            log5.setProject_id(5);
+            log5.setLog("Project created");
+            log5.setUser_id(1);
+            log5.setType(ProjectLogEntity.LogType.PROJECT_CREATED);
+            log5.setDate(LocalDateTime.now());
+            projectLogDao.persist(log5);
+        }
+        if(projectLogDao.findProjectLogByProjectId(6) == null) {
+            ProjectLogEntity log6 = new ProjectLogEntity();
+            log6.setProject_id(6);
+            log6.setLog("Project created");
+            log6.setUser_id(1);
+            log6.setType(ProjectLogEntity.LogType.PROJECT_CREATED);
+            log6.setDate(LocalDateTime.now());
+            projectLogDao.persist(log6);
+        }
+
     }
 
     public List<ProjectLogDto> getProjectLogs(int projectId) {

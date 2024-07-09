@@ -344,7 +344,7 @@ public class ProjectBean {
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
-            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setStatus((ProjectEntity.Status.Approved));
             defaultProject.setDescription("Yavin 4 is a project that aims to create a new and fully operational Battlestation.");
             defaultProject.setMaxMembers(4);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
@@ -429,9 +429,9 @@ public class ProjectBean {
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
-            defaultProject.setStatus((ProjectEntity.Status.Planning));
-            defaultProject.setDescription("Kessel Run is a spice smuggling job that will take you to the edge of the galaxy.");
-            defaultProject.setMaxMembers(4);
+            defaultProject.setStatus((ProjectEntity.Status.Finished));
+            defaultProject.setDescription("Kessel Run is a spice smuggling job that will take you to the edge of the galaxy. Fastest ship in the galaxy required.");
+            defaultProject.setMaxMembers(3);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
@@ -465,7 +465,7 @@ public class ProjectBean {
             task.setTitle("Smuggle the spice");
             task.setDescription("Smuggle the spice from Kessel to Tatooine");
             task.setResponsibleUser(userBean.findUserByEmail("lando@gamil.com"));
-            task.setStatus(TaskEntity.Status.IN_PROGRESS);
+            task.setStatus(TaskEntity.Status.COMPLETED);
             task.setStartDate(LocalDateTime.now().minusDays(3));
             task.setEndDate(LocalDateTime.now().plusDays(9));
             task.setCreationDate(LocalDateTime.now());
@@ -474,7 +474,7 @@ public class ProjectBean {
             finaltask.setTitle("Final Presentation");
             finaltask.setDescription("Final presentation of the finalized project");
             finaltask.setResponsibleUser(userBean.findUserById(defaultProjectUser.getUser().getId()));
-            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStatus(TaskEntity.Status.COMPLETED);
             finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
             finaltask.setEndDate(defaultProject.getEndDate());
             finaltask.setCreationDate(LocalDateTime.now());
@@ -484,7 +484,7 @@ public class ProjectBean {
             task2.setTitle("Avoid the Empire");
             task2.setDescription("Avoid the Empire while smuggling the spice");
             task2.setResponsibleUser(userBean.findUserByEmail("chewbacca@gmail.com"));
-            task2.setStatus(TaskEntity.Status.NOT_STARTED);
+            task2.setStatus(TaskEntity.Status.COMPLETED);
             task2.setStartDate(LocalDateTime.now().plusDays(5));
             task2.setEndDate(LocalDateTime.now().plusDays(10));
             task2.setCreationDate(LocalDateTime.now());

@@ -10,9 +10,7 @@ import utilities.EncryptHelper;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Stateless
 public class UserBean {
@@ -55,6 +53,20 @@ public class UserBean {
             admin.setIsConfirmed(LocalDate.now());
             admin.setActive(true);
             admin.setRole(UserEntity.Role.Admin);
+            List<SkillEntity> skills = skillDao.findAll();
+            Collections.shuffle(skills);
+            Set<SkillEntity> userSkills = new HashSet<>();
+            for(int i = 0; i < Math.min(skills.size(), 5); i++) {
+                userSkills.add(skills.get(i));
+            }
+            admin.setSkills(userSkills);
+            List<InterestEntity> interests = intererestDao.findAll();
+            Collections.shuffle(interests);
+            Set<InterestEntity> userInterests = new HashSet<>();
+            for(int i = 0; i < Math.min(interests.size(), 5); i++) {
+                userInterests.add(interests.get(i));
+            }
+            admin.setInterests(userInterests);
             userDao.persist(admin);
         }
         if (userDao.findUserByEmail("tozemarreco@gmail.com") == null) {
@@ -70,7 +82,22 @@ public class UserBean {
             toze.setRole(UserEntity.Role.User);
             toze.setPrivacy(true);
             toze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/2.jpg?t=" + System.currentTimeMillis());
+            List<SkillEntity> skills = skillDao.findAll();
+            Collections.shuffle(skills);
+            Set<SkillEntity> userSkills = new HashSet<>();
+            for(int i = 0; i < Math.min(skills.size(), 5); i++) {
+                userSkills.add(skills.get(i));
+            }
+            toze.setSkills(userSkills);
+            List<InterestEntity> interests = intererestDao.findAll();
+            Collections.shuffle(interests);
+            Set<InterestEntity> userInterests = new HashSet<>();
+            for(int i = 0; i < Math.min(interests.size(), 5); i++) {
+                userInterests.add(interests.get(i));
+            }
+            toze.setInterests(userInterests);
             userDao.persist(toze);
+
         }
         if (userDao.findUserByEmail("mariamacaca@gmail.com") == null) {
             UserEntity maria = new UserEntity();
@@ -85,6 +112,20 @@ public class UserBean {
             maria.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
             maria.setRole(UserEntity.Role.User);
             maria.setUserPhoto("http://localhost:8080/ProjectoFinalImages/3.jpg?t=" + System.currentTimeMillis());
+            List<SkillEntity> skills = skillDao.findAll();
+            Collections.shuffle(skills);
+            Set<SkillEntity> userSkills = new HashSet<>();
+            for(int i = 0; i < Math.min(skills.size(), 5); i++) {
+                userSkills.add(skills.get(i));
+            }
+            maria.setSkills(userSkills);
+            List<InterestEntity> interests = intererestDao.findAll();
+            Collections.shuffle(interests);
+            Set<InterestEntity> userInterests = new HashSet<>();
+            for(int i = 0; i < Math.min(interests.size(), 5); i++) {
+                userInterests.add(interests.get(i));
+            }
+            maria.setInterests(userInterests);
             userDao.persist(maria);
         }
         if (userDao.findUserByEmail("zetamplario@gmail.com") == null) {
@@ -100,6 +141,20 @@ public class UserBean {
             ze.setLocation(labDao.findLabByLocation(LabEntity.Lab.Tomar));
             ze.setRole(UserEntity.Role.User);
             ze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/4.jpg?t=" + System.currentTimeMillis());
+            List<SkillEntity> skills = skillDao.findAll();
+            Collections.shuffle(skills);
+            Set<SkillEntity> userSkills = new HashSet<>();
+            for(int i = 0; i < Math.min(skills.size(), 5); i++) {
+                userSkills.add(skills.get(i));
+            }
+            ze.setSkills(userSkills);
+            List<InterestEntity> interests = intererestDao.findAll();
+            Collections.shuffle(interests);
+            Set<InterestEntity> userInterests = new HashSet<>();
+            for(int i = 0; i < Math.min(interests.size(), 5); i++) {
+                userInterests.add(interests.get(i));
+            }
+            ze.setInterests(userInterests);
             userDao.persist(ze);
         }
         if (userDao.findUserByEmail("darthvader@gmail.com") == null) {
@@ -115,6 +170,20 @@ public class UserBean {
             vader.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
             vader.setRole(UserEntity.Role.User);
             vader.setUserPhoto("http://localhost:8080/ProjectoFinalImages/5.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Lightsaber Combat"));
+            skills.add(skillDao.findSkillByName("Telekinesis"));
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Droid Repair"));
+            skills.add(skillDao.findSkillByName("Tatooine Survival"));
+            vader.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("The Dark Side"));
+            interests.add(intererestDao.findInterestByName("The Empire"));
+            interests.add(intererestDao.findInterestByName("War"));
+            interests.add(intererestDao.findInterestByName("Droid Rights"));
+            interests.add(intererestDao.findInterestByName("Health"));
+            vader.setInterests(interests);
             userDao.persist(vader);
         }
         if (userDao.findUserByEmail("luke@gmail.com") == null) {
@@ -130,6 +199,20 @@ public class UserBean {
             luke.setLocation(labDao.findLabByLocation(LabEntity.Lab.Vila_Real));
             luke.setRole(UserEntity.Role.User);
             luke.setUserPhoto("http://localhost:8080/ProjectoFinalImages/6.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Lightsaber Combat"));
+            skills.add(skillDao.findSkillByName("Telekinesis"));
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Droid Repair"));
+            skills.add(skillDao.findSkillByName("Tatooine Survival"));
+            skills.add(skillDao.findSkillByName("Moisture Farming"));
+            luke.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("The Light Side"));
+            interests.add(intererestDao.findInterestByName("Mandalore"));
+            interests.add(intererestDao.findInterestByName("Peace"));
+            interests.add(intererestDao.findInterestByName("Programming"));
+            luke.setInterests(interests);
             userDao.persist(luke);
         }
         if(userDao.findUserByEmail("princessleia@gmail.com") == null) {
@@ -145,6 +228,18 @@ public class UserBean {
             leia.setLocation(labDao.findLabByLocation(LabEntity.Lab.Vila_Real));
             leia.setRole(UserEntity.Role.User);
             leia.setUserPhoto("http://localhost:8080/ProjectoFinalImages/7.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Power Tools"));
+            skills.add(skillDao.findSkillByName("Robotics"));
+            skills.add(skillDao.findSkillByName("Leadership"));
+            skills.add(skillDao.findSkillByName("Negotiation"));
+            leia.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("The Rebellion"));
+            interests.add(intererestDao.findInterestByName("Peace"));
+            interests.add(intererestDao.findInterestByName("Human Rights"));
+            interests.add(intererestDao.findInterestByName("Droid Rights"));
+            leia.setInterests(interests);
             userDao.persist(leia);
         }
         if(userDao.findUserByEmail("hansolo@gmail.com") == null) {
@@ -160,6 +255,20 @@ public class UserBean {
             han.setLocation(labDao.findLabByLocation(LabEntity.Lab.Tomar));
             han.setRole(UserEntity.Role.User);
             han.setUserPhoto("http://localhost:8080/ProjectoFinalImages/8.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Negotiation"));
+            skills.add(skillDao.findSkillByName("Blaster Combat"));
+            skills.add(skillDao.findSkillByName("Smuggling"));
+            skills.add(skillDao.findSkillByName("Leadership"));
+            skills.add(skillDao.findSkillByName("Wookiee Speak"));
+            han.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("Bounty Hunting"));
+            interests.add(intererestDao.findInterestByName("The Empire"));
+            interests.add(intererestDao.findInterestByName("Peace"));
+            interests.add(intererestDao.findInterestByName("Droid Rights"));
+            han.setInterests(interests);
             userDao.persist(han);
         }
         if(userDao.findUserByEmail("chewbacca@gmail.com") == null) {
@@ -175,6 +284,19 @@ public class UserBean {
             chewie.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             chewie.setRole(UserEntity.Role.User);
             chewie.setUserPhoto("http://localhost:8080/ProjectoFinalImages/9.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Smuggling"));
+            skills.add(skillDao.findSkillByName("Blaster Combat"));
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Robotics"));
+            skills.add(skillDao.findSkillByName("Soldering"));
+            skills.add(skillDao.findSkillByName("Wookiee Speak"));
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("The Light Side"));
+            interests.add(intererestDao.findInterestByName("Peace"));
+            interests.add(intererestDao.findInterestByName("Rebellion"));
+            interests.add(intererestDao.findInterestByName("Programming"));
+            chewie.setInterests(interests);
             userDao.persist(chewie);
         }
         if(userDao.findUserByEmail("obiwan@gmail.com") == null) {
@@ -190,6 +312,20 @@ public class UserBean {
             obiwan.setLocation(labDao.findLabByLocation(LabEntity.Lab.Porto));
             obiwan.setRole(UserEntity.Role.User);
             obiwan.setUserPhoto("http://localhost:8080/ProjectoFinalImages/10.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Lightsaber Combat"));
+            skills.add(skillDao.findSkillByName("Telekinesis"));
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Droid Repair"));
+            skills.add(skillDao.findSkillByName("Tatooine Survival"));
+            skills.add(skillDao.findSkillByName("Negotiation"));
+            skills.add(skillDao.findSkillByName("The Force"));
+            obiwan.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("The Light Side"));
+            interests.add(intererestDao.findInterestByName("Mandalore"));
+            interests.add(intererestDao.findInterestByName("Peace"));
+            obiwan.setInterests(interests);
             userDao.persist(obiwan);
         }
         if(userDao.findUserByEmail("palpatine@gmail.com") == null) {
@@ -205,6 +341,20 @@ public class UserBean {
             palpatine.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
             palpatine.setRole(UserEntity.Role.User);
             palpatine.setUserPhoto("http://localhost:8080/ProjectoFinalImages/11.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Lightsaber Combat"));
+            skills.add(skillDao.findSkillByName("Telekinesis"));
+            skills.add(skillDao.findSkillByName("Lightsaber Construction"));
+            skills.add(skillDao.findSkillByName("Mind Reading"));
+            skills.add(skillDao.findSkillByName("Tatooine Survival"));
+            skills.add(skillDao.findSkillByName("Negotiation"));
+            skills.add(skillDao.findSkillByName("Levitation"));
+            palpatine.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("War"));
+            interests.add(intererestDao.findInterestByName("The Dark Side"));
+            interests.add(intererestDao.findInterestByName("The Empire"));
+            palpatine.setInterests(interests);
             userDao.persist(palpatine);
         }
         if(userDao.findUserByEmail("lando@gamil.com") == null) {
@@ -220,6 +370,20 @@ public class UserBean {
             lando.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             lando.setRole(UserEntity.Role.User);
             lando.setUserPhoto("http://localhost:8080/ProjectoFinalImages/12.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Negotiation"));
+            skills.add(skillDao.findSkillByName("Blaster Combat"));
+            skills.add(skillDao.findSkillByName("Leadership"));
+            skills.add(skillDao.findSkillByName("Smuggling"));
+            skills.add(skillDao.findSkillByName("Wookiee Speak"));
+            lando.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("Bounty Hunting"));
+            interests.add(intererestDao.findInterestByName("Human Rights"));
+            interests.add(intererestDao.findInterestByName("Peace"));
+            interests.add(intererestDao.findInterestByName("Droid Rights"));
+            lando.setInterests(interests);
             userDao.persist(lando);
 
         }
@@ -236,6 +400,19 @@ public class UserBean {
             mando.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             mando.setRole(UserEntity.Role.User);
             mando.setUserPhoto("http://localhost:8080/ProjectoFinalImages/13.jpg?t=" + System.currentTimeMillis());
+            Set<SkillEntity> skills = new HashSet<>();
+            skills.add(skillDao.findSkillByName("Piloting"));
+            skills.add(skillDao.findSkillByName("Negotiation"));
+            skills.add(skillDao.findSkillByName("Blaster Combat"));
+            skills.add(skillDao.findSkillByName("Leadership"));
+            skills.add(skillDao.findSkillByName("Smuggling"));
+            skills.add(skillDao.findSkillByName("Wookiee Speak"));
+            mando.setSkills(skills);
+            Set<InterestEntity> interests = new HashSet<>();
+            interests.add(intererestDao.findInterestByName("Bounty Hunting"));
+            interests.add(intererestDao.findInterestByName("Mandalore"));
+            interests.add(intererestDao.findInterestByName("War"));
+            mando.setInterests(interests);
             userDao.persist(mando);
         }
     }

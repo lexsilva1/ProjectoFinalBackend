@@ -121,10 +121,6 @@ public class InterestBean {
             InterestEntity interest14 = new InterestEntity();
             interest14.setName("Droid Rights");
             interest14.setInterestType(InterestEntity.InterestType.CAUSES);
-            Set<UserEntity> users = new HashSet<>();
-            users.add(userBean.findUserByEmail("lando@gamil.com"));
-            users.add(userBean.findUserByEmail("darthvader@gmail.com"));
-            interest14.setUsers(users);
             interestDao.persist(interest14);
         }
         if(interestDao.findInterestByName("Programming") == null){
@@ -137,10 +133,6 @@ public class InterestBean {
             InterestEntity interest16 = new InterestEntity();
             interest16.setName("Rebellion");
             interest16.setInterestType(InterestEntity.InterestType.THEMES);
-            Set<UserEntity> users = new HashSet<>();
-            users.add(userBean.findUserByEmail("princessleia@gmail.com"));
-            users.add(userBean.findUserByEmail("hansolo@gmail.com"));
-            users.add(userBean.findUserByEmail("chewbacca@gmail.com"));
             interestDao.persist(interest16);
         }
         if(interestDao.findInterestByName("Revolution") == null){
@@ -156,34 +148,69 @@ public class InterestBean {
             InterestEntity interest18 = new InterestEntity();
             interest18.setName("Peace");
             interest18.setInterestType(InterestEntity.InterestType.CAUSES);
-            Set<UserEntity> users = new HashSet<>();
-            users.add(userBean.findUserByEmail("luke@gmail.com"));
-            users.add(userBean.findUserByEmail("princessleia@gmail.com"));
-            interest18.setUsers(users);
             interestDao.persist(interest18);
         }
         if(interestDao.findInterestByName("War") == null){
             InterestEntity interest19 = new InterestEntity();
             interest19.setName("War");
             interest19.setInterestType(InterestEntity.InterestType.THEMES);
-            Set<UserEntity> users = new HashSet<>();
-            users.add(userBean.findUserByEmail("mando@gmail.com"));
-            users.add(userBean.findUserByEmail("palpatine@gmail.com"));
-            interest19.setUsers(users);
             interestDao.persist(interest19);
         }
         if(interestDao.findInterestByName("The Force") == null){
             InterestEntity interest20 = new InterestEntity();
             interest20.setName("The Force");
             interest20.setInterestType(InterestEntity.InterestType.THEMES);
-            Set<UserEntity> users = new HashSet<>();
-            users.add(userBean.findUserByEmail("palpatine@gmail.com"));
-            users.add(userBean.findUserByEmail("obiwan@gmail.com"));
-            users.add(userBean.findUserByEmail("luke@gmail.com"));
-            interest20.setUsers(users);
             interestDao.persist(interest20);
         }
+        if(interestDao.findInterestByName("The Dark Side") == null){
+            InterestEntity interest21 = new InterestEntity();
+            interest21.setName("The Dark Side");
+            interest21.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest21);
+        }
+        if(interestDao.findInterestByName("The Light Side") == null){
+            InterestEntity interest22 = new InterestEntity();
+            interest22.setName("The Light Side");
+            interest22.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest22);
+        }
+        if(interestDao.findInterestByName("The Empire") == null){
+            InterestEntity interest23 = new InterestEntity();
+            interest23.setName("The Empire");
+            interest23.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest23);
+        }
+        if(interestDao.findInterestByName("The Rebellion") == null){
+            InterestEntity interest24 = new InterestEntity();
+            interest24.setName("The Rebellion");
+            interest24.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest24);
+        }
+        if(interestDao.findInterestByName("The Republic") == null){
+            InterestEntity interest25 = new InterestEntity();
+            interest25.setName("The Republic");
+            interest25.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest25);
+        }
+        if(interestDao.findInterestByName("The Jedi") == null){
+            InterestEntity interest26 = new InterestEntity();
+            interest26.setName("The Jedi");
+            interest26.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest26);
+        }
+        if(interestDao.findInterestByName("Mandalore") == null){
+            InterestEntity interest27 = new InterestEntity();
+            interest27.setName("Mandalore");
+            interest27.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest27);
 
+        }
+        if(interestDao.findInterestByName("Bounty Hunting") == null){
+            InterestEntity interest28 = new InterestEntity();
+            interest28.setName("Bounty Hunting");
+            interest28.setInterestType(InterestEntity.InterestType.THEMES);
+            interestDao.persist(interest28);
+        }
 
     }
 
