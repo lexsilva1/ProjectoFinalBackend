@@ -3,6 +3,7 @@ package bean;
 import dao.InterestDao;
 import dto.InterestDto;
 import entities.InterestEntity;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
@@ -54,18 +55,30 @@ public class InterestBean {
             InterestEntity interest5 = new InterestEntity();
             interest5.setName("Science");
             interest5.setInterestType(InterestEntity.InterestType.KNOWLEDGE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(1));
+            users.add(userBean.findUserById(4));
+            interest5.setUsers(users);
             interestDao.persist(interest5);
         }
         if (interestDao.findInterestByName("Arts") == null) {
             InterestEntity interest6 = new InterestEntity();
             interest6.setName("Arts");
             interest6.setInterestType(InterestEntity.InterestType.KNOWLEDGE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(1));
+            users.add(userBean.findUserById(4));
+            interest6.setUsers(users);
             interestDao.persist(interest6);
         }
         if (interestDao.findInterestByName("Sports") == null) {
             InterestEntity interest7 = new InterestEntity();
             interest7.setName("Sports");
             interest7.setInterestType(InterestEntity.InterestType.THEMES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(2));
+            users.add(userBean.findUserById(3));
+            interest7.setUsers(users);
             interestDao.persist(interest7);
         }
         if (interestDao.findInterestByName("Music") == null) {
@@ -86,6 +99,92 @@ public class InterestBean {
             interest10.setInterestType(InterestEntity.InterestType.OTHER);
             interestDao.persist(interest10);
         }
+        if(interestDao.findInterestByName("Environment") == null){
+            InterestEntity interest11 = new InterestEntity();
+            interest11.setName("Environment");
+            interest11.setInterestType(InterestEntity.InterestType.CAUSES);
+            interestDao.persist(interest11);
+        }
+        if(interestDao.findInterestByName("Human Rights") == null){
+            InterestEntity interest12 = new InterestEntity();
+            interest12.setName("Human Rights");
+            interest12.setInterestType(InterestEntity.InterestType.CAUSES);
+            interestDao.persist(interest12);
+        }
+        if(interestDao.findInterestByName("Animal Rights") == null){
+            InterestEntity interest13 = new InterestEntity();
+            interest13.setName("Animal Rights");
+            interest13.setInterestType(InterestEntity.InterestType.CAUSES);
+            interestDao.persist(interest13);
+        }
+        if(interestDao.findInterestByName("Droid Rights") == null){
+            InterestEntity interest14 = new InterestEntity();
+            interest14.setName("Droid Rights");
+            interest14.setInterestType(InterestEntity.InterestType.CAUSES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByEmail("lando@gamil.com"));
+            users.add(userBean.findUserByEmail("darthvader@gmail.com"));
+            interest14.setUsers(users);
+            interestDao.persist(interest14);
+        }
+        if(interestDao.findInterestByName("Programming") == null){
+            InterestEntity interest15 = new InterestEntity();
+            interest15.setName("Programming");
+            interest15.setInterestType(InterestEntity.InterestType.KNOWLEDGE);
+            interestDao.persist(interest15);
+        }
+        if(interestDao.findInterestByName("Rebellion") == null){
+            InterestEntity interest16 = new InterestEntity();
+            interest16.setName("Rebellion");
+            interest16.setInterestType(InterestEntity.InterestType.THEMES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByEmail("princessleia@gmail.com"));
+            users.add(userBean.findUserByEmail("hansolo@gmail.com"));
+            users.add(userBean.findUserByEmail("chewbacca@gmail.com"));
+            interestDao.persist(interest16);
+        }
+        if(interestDao.findInterestByName("Revolution") == null){
+            InterestEntity interest17 = new InterestEntity();
+            interest17.setName("Revolution");
+            interest17.setInterestType(InterestEntity.InterestType.THEMES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByEmail("princessleia@gmail.com"));
+            interest17.setUsers(users);
+            interestDao.persist(interest17);
+        }
+        if(interestDao.findInterestByName("Peace") == null){
+            InterestEntity interest18 = new InterestEntity();
+            interest18.setName("Peace");
+            interest18.setInterestType(InterestEntity.InterestType.CAUSES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByEmail("luke@gmail.com"));
+            users.add(userBean.findUserByEmail("princessleia@gmail.com"));
+            interest18.setUsers(users);
+            interestDao.persist(interest18);
+        }
+        if(interestDao.findInterestByName("War") == null){
+            InterestEntity interest19 = new InterestEntity();
+            interest19.setName("War");
+            interest19.setInterestType(InterestEntity.InterestType.THEMES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByEmail("mando@gmail.com"));
+            users.add(userBean.findUserByEmail("palpatine@gmail.com"));
+            interest19.setUsers(users);
+            interestDao.persist(interest19);
+        }
+        if(interestDao.findInterestByName("The Force") == null){
+            InterestEntity interest20 = new InterestEntity();
+            interest20.setName("The Force");
+            interest20.setInterestType(InterestEntity.InterestType.THEMES);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByEmail("palpatine@gmail.com"));
+            users.add(userBean.findUserByEmail("obiwan@gmail.com"));
+            users.add(userBean.findUserByEmail("luke@gmail.com"));
+            interest20.setUsers(users);
+            interestDao.persist(interest20);
+        }
+
+
     }
 
     public List<InterestDto> findAllInterests() {

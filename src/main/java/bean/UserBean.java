@@ -69,7 +69,7 @@ public class UserBean {
             toze.setActive(true);
             toze.setRole(UserEntity.Role.User);
             toze.setPrivacy(true);
-            toze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/2.jpg?t="+System.currentTimeMillis());
+            toze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/2.jpg?t=" + System.currentTimeMillis());
             userDao.persist(toze);
         }
         if (userDao.findUserByEmail("mariamacaca@gmail.com") == null) {
@@ -84,7 +84,7 @@ public class UserBean {
             maria.setPwdHash(encryptHelper.encryptPassword("Password1!"));
             maria.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
             maria.setRole(UserEntity.Role.User);
-            maria.setUserPhoto("http://localhost:8080/ProjectoFinalImages/3.jpg?t="+System.currentTimeMillis());
+            maria.setUserPhoto("http://localhost:8080/ProjectoFinalImages/3.jpg?t=" + System.currentTimeMillis());
             userDao.persist(maria);
         }
         if (userDao.findUserByEmail("zetamplario@gmail.com") == null) {
@@ -99,10 +99,147 @@ public class UserBean {
             ze.setPwdHash(encryptHelper.encryptPassword("Password1!"));
             ze.setLocation(labDao.findLabByLocation(LabEntity.Lab.Tomar));
             ze.setRole(UserEntity.Role.User);
-            ze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/4.jpg?t="+System.currentTimeMillis());
+            ze.setUserPhoto("http://localhost:8080/ProjectoFinalImages/4.jpg?t=" + System.currentTimeMillis());
             userDao.persist(ze);
         }
+        if (userDao.findUserByEmail("darthvader@gmail.com") == null) {
+            UserEntity vader = new UserEntity();
+            vader.setEmail("darthvader@gmail.com");
+            vader.setFirstName("Anakin");
+            vader.setLastName("Skywalker");
+            vader.setNickname("DarthVader");
+            vader.setCreationDate(LocalDateTime.now().minusDays(1));
+            vader.setIsConfirmed(LocalDate.now());
+            vader.setActive(true);
+            vader.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            vader.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
+            vader.setRole(UserEntity.Role.User);
+            vader.setUserPhoto("http://localhost:8080/ProjectoFinalImages/5.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(vader);
+        }
+        if (userDao.findUserByEmail("luke@gmail.com") == null) {
+            UserEntity luke = new UserEntity();
+            luke.setEmail("luke@gmail.com");
+            luke.setFirstName("Luke");
+            luke.setLastName("Skywalker");
+            luke.setNickname("JediKnight");
+            luke.setCreationDate(LocalDateTime.now());
+            luke.setIsConfirmed(LocalDate.now());
+            luke.setActive(true);
+            luke.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            luke.setLocation(labDao.findLabByLocation(LabEntity.Lab.Vila_Real));
+            luke.setRole(UserEntity.Role.User);
+            luke.setUserPhoto("http://localhost:8080/ProjectoFinalImages/6.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(luke);
+        }
+        if(userDao.findUserByEmail("princessleia@gmail.com") == null) {
+            UserEntity leia = new UserEntity();
+            leia.setEmail("princessleia@gmail.com");
+            leia.setFirstName("Leia");
+            leia.setLastName("Organa");
+            leia.setNickname("PrincessLeia");
+            leia.setCreationDate(LocalDateTime.now());
+            leia.setIsConfirmed(LocalDate.now());
+            leia.setActive(true);
+            leia.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            leia.setLocation(labDao.findLabByLocation(LabEntity.Lab.Vila_Real));
+            leia.setRole(UserEntity.Role.User);
+            leia.setUserPhoto("http://localhost:8080/ProjectoFinalImages/7.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(leia);
+        }
+        if(userDao.findUserByEmail("hansolo@gmail.com") == null) {
+            UserEntity han = new UserEntity();
+            han.setEmail("hansolo@gmail.com");
+            han.setFirstName("Han");
+            han.setLastName("Solo");
+            han.setNickname("Smuggler");
+            han.setCreationDate(LocalDateTime.now());
+            han.setIsConfirmed(LocalDate.now());
+            han.setActive(true);
+            han.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            han.setLocation(labDao.findLabByLocation(LabEntity.Lab.Tomar));
+            han.setRole(UserEntity.Role.User);
+            han.setUserPhoto("http://localhost:8080/ProjectoFinalImages/8.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(han);
+        }
+        if(userDao.findUserByEmail("chewbacca@gmail.com") == null) {
+            UserEntity chewie = new UserEntity();
+            chewie.setEmail("chewbacca@gmail.com");
+            chewie.setFirstName("Chewbacca");
+            chewie.setLastName("daSilva");
+            chewie.setNickname("Chewie");
+            chewie.setCreationDate(LocalDateTime.now());
+            chewie.setIsConfirmed(LocalDate.now());
+            chewie.setActive(true);
+            chewie.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            chewie.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            chewie.setRole(UserEntity.Role.User);
+            chewie.setUserPhoto("http://localhost:8080/ProjectoFinalImages/9.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(chewie);
+        }
+        if(userDao.findUserByEmail("obiwan@gmail.com") == null) {
+            UserEntity obiwan = new UserEntity();
+            obiwan.setEmail("obiwan@gmail.com");
+            obiwan.setFirstName("ObiWan");
+            obiwan.setLastName("Kenobi");
+            obiwan.setNickname("JediMaster");
+            obiwan.setCreationDate(LocalDateTime.now());
+            obiwan.setIsConfirmed(LocalDate.now());
+            obiwan.setActive(true);
+            obiwan.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            obiwan.setLocation(labDao.findLabByLocation(LabEntity.Lab.Porto));
+            obiwan.setRole(UserEntity.Role.User);
+            obiwan.setUserPhoto("http://localhost:8080/ProjectoFinalImages/10.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(obiwan);
+        }
+        if(userDao.findUserByEmail("palpatine@gmail.com") == null) {
+            UserEntity palpatine = new UserEntity();
+            palpatine.setEmail("palpatine@gmail.com");
+            palpatine.setFirstName("Sheev");
+            palpatine.setLastName("Palpatine");
+            palpatine.setNickname("Emperor");
+            palpatine.setCreationDate(LocalDateTime.now());
+            palpatine.setIsConfirmed(LocalDate.now());
+            palpatine.setActive(true);
+            palpatine.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            palpatine.setLocation(labDao.findLabByLocation(LabEntity.Lab.Lisboa));
+            palpatine.setRole(UserEntity.Role.User);
+            palpatine.setUserPhoto("http://localhost:8080/ProjectoFinalImages/11.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(palpatine);
+        }
+        if(userDao.findUserByEmail("lando@gamil.com") == null) {
+            UserEntity lando = new UserEntity();
+            lando.setEmail("lando@gmail.com");
+            lando.setFirstName("Lando");
+            lando.setLastName("Calrissian");
+            lando.setNickname("Administrator");
+            lando.setCreationDate(LocalDateTime.now());
+            lando.setIsConfirmed(LocalDate.now());
+            lando.setActive(true);
+            lando.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            lando.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            lando.setRole(UserEntity.Role.User);
+            lando.setUserPhoto("http://localhost:8080/ProjectoFinalImages/12.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(lando);
+
+        }
+        if(userDao.findUserByEmail("mando@gmail.com") == null) {
+            UserEntity mando = new UserEntity();
+            mando.setEmail("mando@gmail.com");
+            mando.setFirstName("Din");
+            mando.setLastName("Djarin");
+            mando.setNickname("Mando");
+            mando.setCreationDate(LocalDateTime.now());
+            mando.setIsConfirmed(LocalDate.now());
+            mando.setActive(true);
+            mando.setPwdHash(encryptHelper.encryptPassword("Password1!"));
+            mando.setLocation(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            mando.setRole(UserEntity.Role.User);
+            mando.setUserPhoto("http://localhost:8080/ProjectoFinalImages/13.jpg?t=" + System.currentTimeMillis());
+            userDao.persist(mando);
+        }
     }
+
 
     public void removeUser(String email) {
         UserEntity user = userDao.findUserByEmail(email);
