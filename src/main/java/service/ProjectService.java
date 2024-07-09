@@ -46,7 +46,9 @@ public class ProjectService {
     @Path("")
     @Produces("application/json")
     public Response findAllProjects(@HeaderParam("token") String token,@QueryParam("projectName") String projectName,@QueryParam("projectLab") String projectLab,@QueryParam("projectSkill") String projectSkill,@QueryParam("projectInterest") String projectInterest,@QueryParam("projectStatus") int projectStatus,@QueryParam("projectUser") int projectUser){
-
+            if(userBean.findUserByToken(token) != null && tokenBean.isTokenValid(token)) {
+                userBean.setLastActivity(token);
+            }
         return Response.status(200).entity(projectBean.findProjects( projectName,projectLab,projectSkill,projectInterest,projectStatus,projectUser,token)).build();
     }
     @GET

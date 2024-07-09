@@ -25,7 +25,7 @@ public class MessageService {
     @Path("")
     @Produces("application/json")
     public Response createMessage(@HeaderParam ("token") String token, MessageDto message) {
-        System.out.println("create message");
+        userBean.setLastActivity(token);
         if(userBean.findUserByToken(token) == null) {
             return Response.status(404).entity("user not found").build();
         }
@@ -39,6 +39,7 @@ public class MessageService {
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }
+        userBean.setLastActivity(token);
         return Response.status(200).entity(messageBean.findUserMessages(token,id)).build();
     }
 
@@ -46,6 +47,7 @@ public class MessageService {
     @Path("")
     @Produces("application/json")
     public Response findLastMessages(@HeaderParam("token") String token) {
+        userBean.setLastActivity(token);
         if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
             return Response.status(404).entity("user not found").build();
         }

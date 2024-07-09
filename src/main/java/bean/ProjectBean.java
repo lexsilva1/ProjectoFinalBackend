@@ -51,6 +51,7 @@ public class ProjectBean {
         if (projectDao.findProjectByName("Forge X") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Forge X");
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/Forge X.jpg?t=1720546993380");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.SOFTWARE);
             if (skills != null) {
@@ -68,7 +69,7 @@ public class ProjectBean {
             defaultProjectUser.setProject(defaultProject);
             defaultProjectUser.setUser(userBean.findUserByEmail("admin@admin.com"));
             defaultProjectUser.setProjectManager(true);
-            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
 
             defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser)));
             defaultProject.setStartDate(LocalDateTime.now().minusDays(5));
@@ -108,6 +109,7 @@ public class ProjectBean {
         if(projectDao.findProjectByName("UserInterface") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("UserInterface");
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/UserInterface.jpg?t=1720546993380");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Vila_Real));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.HARDWARE);
             if (skills != null) {
@@ -205,6 +207,7 @@ public class ProjectBean {
         if(projectDao.findProjectByName("Project X") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Project X");
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/Project X.jpg?t=1720546993380");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
             if (skills != null) {
@@ -274,13 +277,14 @@ public class ProjectBean {
         if(projectDao.findProjectByName("Build Deathstar") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Build Deathstar");
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/Build Deathstar.jpg?t=1720546993380");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
             defaultProject.setStatus((ProjectEntity.Status.Planning));
-            defaultProject.setDescription("Build Deathstar is a project that aims to create a new and fully operational Battlestation.");
+            defaultProject.setDescription("The Death Star, whose concept had been explored even before the Clone Wars, was the first in a long series of superweapons developed to execute the Tarkin Doctrine");
             defaultProject.setMaxMembers(4);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
             if (interests != null) {
@@ -297,6 +301,12 @@ public class ProjectBean {
             defaultProjectUser2.setUser(userBean.findUserByEmail("darthvader@gmail.com"));
             defaultProjectUser2.setProjectManager(false);
             defaultProjectUser2.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            ProjectUserEntity defaultProjectUser3 = new ProjectUserEntity();
+            defaultProjectUser3.setProject(defaultProject);
+            defaultProjectUser3.setUser(userBean.findUserByEmail("luke@gmail.com"));
+            defaultProjectUser3.setProjectManager(false);
+            defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
             defaultProject.setCreatedAt(LocalDateTime.now());
             defaultProject.setStartDate(LocalDateTime.now().minusDays(5));
             defaultProject.setEndDate(LocalDateTime.now().plusDays(30));
@@ -324,6 +334,7 @@ public class ProjectBean {
             projectDao.merge(defaultProject);
             projectUserDao.persist(defaultProjectUser);
             projectUserDao.persist(defaultProjectUser2);
+            projectUserDao.persist(defaultProjectUser3);
             ProjectResourceEntity projectResource = new ProjectResourceEntity();
             projectResource.setProject(defaultProject);
             projectResource.setResource(resourceDao.findResourceByIdentifier("L15-001"));
@@ -338,6 +349,7 @@ public class ProjectBean {
         }
         if(projectDao.findProjectByName("Yavin 4") == null){
             ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/Yavin 4.jpeg?t=1720546993380");
             defaultProject.setName("Yavin 4");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
@@ -345,7 +357,7 @@ public class ProjectBean {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
             defaultProject.setStatus((ProjectEntity.Status.Approved));
-            defaultProject.setDescription("Yavin 4 is a project that aims to create a new and fully operational Battlestation.");
+            defaultProject.setDescription("One of a number of moons orbiting the gas giant Yavin in the galaxy’s Outer Rim, Yavin 4 is a steamy world covered in jungle and forest. It was the location of the principal rebel base early in the Galactic Civil War.");
             defaultProject.setMaxMembers(4);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
             if (interests != null) {
@@ -367,7 +379,12 @@ public class ProjectBean {
             defaultProjectUser3.setUser(userBean.findUserByEmail("obiwan@gmail.com"));
             defaultProjectUser3.setProjectManager(false);
             defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
-            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
+            ProjectUserEntity defaultProjectUser4 = new ProjectUserEntity();
+            defaultProjectUser4.setProject(defaultProject);
+            defaultProjectUser4.setUser(userBean.findUserByEmail("hansolo@gmail.com"));
+            defaultProjectUser4.setProjectManager(false);
+            defaultProjectUser4.setApprovalStatus(ProjectUserEntity.ApprovalStatus.INVITED);
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3,defaultProjectUser4)));
             defaultProject.setCreatedAt(LocalDateTime.now());
             defaultProject.setStartDate(LocalDateTime.now().minusDays(1));
             defaultProject.setEndDate(LocalDateTime.now().plusDays(40));
@@ -375,6 +392,7 @@ public class ProjectBean {
             projectUserDao.persist(defaultProjectUser);
             projectUserDao.persist(defaultProjectUser2);
             projectUserDao.persist(defaultProjectUser3);
+            projectUserDao.persist(defaultProjectUser4);
             TaskEntity task = new TaskEntity();
             task.setTitle("Defend the base");
             task.setDescription("Defend the base from the Empire");
@@ -424,13 +442,14 @@ public class ProjectBean {
         if(projectDao.findProjectByName("Kessel Run") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Kessel Run");
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/Kessel Run.jpeg?t=1720546993380");
             defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
             List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
             if (skills != null) {
                 defaultProject.setSkills(new LinkedHashSet<>(skills));
             }
             defaultProject.setStatus((ProjectEntity.Status.Finished));
-            defaultProject.setDescription("Kessel Run is a spice smuggling job that will take you to the edge of the galaxy. Fastest ship in the galaxy required.");
+            defaultProject.setDescription("The Kessel Run was a 20-parsec hyperspace route within the Akkadese Maelstrom used by smugglers and unscrupulous freighter captains to move spice from the spice mines of Kessel at the behest of the Pyke Syndicate.");
             defaultProject.setMaxMembers(3);
             List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
             if (interests != null) {
@@ -500,6 +519,7 @@ public class ProjectBean {
             projectResource.setQuantity(1);
             projectResourceDao.persist(projectResource);
         }
+
 
     }
 
