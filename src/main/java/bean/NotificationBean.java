@@ -108,6 +108,12 @@ public class NotificationBean {
         notificationDao.merge(entity);
         return convertToDto (entity);
     }
+    public NotificationDto updateNotificationSeen( int id) {
+        NotificationEntity entity = notificationDao.findNotificationById(id);
+        entity.setSeen(true);
+        notificationDao.merge(entity);
+        return convertToDto (entity);
+    }
     public int findLastNotificationId() {
         return notificationDao.findLastNotificationId();
     }
@@ -149,8 +155,12 @@ public class NotificationBean {
         UserEntity user = userDao.findUserByToken(token);
         List<NotificationEntity> entities = notificationDao.findNotificationByUser(user);
         for (NotificationEntity entity : entities) {
-            entity.setSeen(true);
-            notificationDao.merge(entity);
+            if(!entity.isSeen()){
+                NotificationDto dto =updateNotificationSeen(entity.getId());
+                notifications.sendNotification(dto);
+
+            }
+
         }
         return true;
     }

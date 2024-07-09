@@ -271,10 +271,238 @@ public class ProjectBean {
             projectResourceDao.persist(projectResource);
             notificationBean.createNotification(new NotificationDto("INVITE",userBean.findUserByEmail("tozemarreco@gmail.com").getId(), "Project X",  false, LocalDateTime.now()));
         }
+        if(projectDao.findProjectByName("Build Deathstar") == null) {
+            ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setName("Build Deathstar");
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
+            if (skills != null) {
+                defaultProject.setSkills(new LinkedHashSet<>(skills));
+            }
+            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setDescription("Build Deathstar is a project that aims to create a new and fully operational Battlestation.");
+            defaultProject.setMaxMembers(4);
+            List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
+            if (interests != null) {
+                defaultProject.setInterests(new LinkedHashSet<>(interests));
+            }
 
+            ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
+            defaultProjectUser.setProject(defaultProject);
+            defaultProjectUser.setUser(userBean.findUserByEmail("palpatine@gmail.com"));
+            defaultProjectUser.setProjectManager(true);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
+            ProjectUserEntity defaultProjectUser2 = new ProjectUserEntity();
+            defaultProjectUser2.setProject(defaultProject);
+            defaultProjectUser2.setUser(userBean.findUserByEmail("darthvader@gmail.com"));
+            defaultProjectUser2.setProjectManager(false);
+            defaultProjectUser2.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            defaultProject.setCreatedAt(LocalDateTime.now());
+            defaultProject.setStartDate(LocalDateTime.now().minusDays(5));
+            defaultProject.setEndDate(LocalDateTime.now().plusDays(30));
+            projectDao.persist(defaultProject);
+            TaskEntity task = new TaskEntity();
+            task.setTitle("Create the Deathstar");
+            task.setDescription("Create the Deathstar for the project");
+            task.setResponsibleUser(userBean.findUserByEmail("palpatine@gmail.com"));
+            task.setStatus(TaskEntity.Status.IN_PROGRESS);
+            task.setStartDate(LocalDateTime.now().minusDays(5));
+            task.setEndDate(LocalDateTime.now().plusDays(30));
+            task.setCreationDate(LocalDateTime.now());
+            taskDao.persist(task);
+            TaskEntity finaltask = new TaskEntity();
+            finaltask.setTitle("Final Presentation");
+            finaltask.setDescription("Final presentation of the finalized project");
+            finaltask.setResponsibleUser(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
+            finaltask.setEndDate(defaultProject.getEndDate());
+            finaltask.setCreationDate(LocalDateTime.now());
+            finaltask.setCreatedBy(userBean.findUserById(5));
+            taskDao.persist(finaltask);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, finaltask)));
+            projectDao.merge(defaultProject);
+            projectUserDao.persist(defaultProjectUser);
+            projectUserDao.persist(defaultProjectUser2);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject(defaultProject);
+            projectResource.setResource(resourceDao.findResourceByIdentifier("L15-001"));
+            projectResource.setQuantity(2);
+            ProjectResourceEntity projectResource2 = new ProjectResourceEntity();
+            projectResource2.setProject(defaultProject);
+            projectResource2.setResource(resourceDao.findResourceByIdentifier("D17-001"));
+            projectResource2.setQuantity(1);
+            projectResourceDao.persist(projectResource2);
+            projectResourceDao.persist(projectResource);
+            notificationBean.createNotification(new NotificationDto("INVITE", userBean.findUserByEmail("luke@gmail.com").getId(), "Build Deathstar", false, LocalDateTime.now()));
+        }
+        if(projectDao.findProjectByName("Yavin 4") == null){
+            ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setName("Yavin 4");
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
+            if (skills != null) {
+                defaultProject.setSkills(new LinkedHashSet<>(skills));
+            }
+            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setDescription("Yavin 4 is a project that aims to create a new and fully operational Battlestation.");
+            defaultProject.setMaxMembers(4);
+            List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
+            if (interests != null) {
+                defaultProject.setInterests(new LinkedHashSet<>(interests));
+            }
 
+            ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
+            defaultProjectUser.setProject(defaultProject);
+            defaultProjectUser.setUser(userBean.findUserByEmail("princessleia@gmail.com"));
+            defaultProjectUser.setProjectManager(true);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
+            ProjectUserEntity defaultProjectUser2 = new ProjectUserEntity();
+            defaultProjectUser2.setProject(defaultProject);
+            defaultProjectUser2.setUser(userBean.findUserByEmail("luke@gmail.com"));
+            defaultProjectUser2.setProjectManager(false);
+            defaultProjectUser2.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            ProjectUserEntity defaultProjectUser3 = new ProjectUserEntity();
+            defaultProjectUser3.setProject(defaultProject);
+            defaultProjectUser3.setUser(userBean.findUserByEmail("obiwan@gmail.com"));
+            defaultProjectUser3.setProjectManager(false);
+            defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
+            defaultProject.setCreatedAt(LocalDateTime.now());
+            defaultProject.setStartDate(LocalDateTime.now().minusDays(1));
+            defaultProject.setEndDate(LocalDateTime.now().plusDays(40));
+            projectDao.persist(defaultProject);
+            projectUserDao.persist(defaultProjectUser);
+            projectUserDao.persist(defaultProjectUser2);
+            projectUserDao.persist(defaultProjectUser3);
+            TaskEntity task = new TaskEntity();
+            task.setTitle("Defend the base");
+            task.setDescription("Defend the base from the Empire");
+            task.setResponsibleUser(userBean.findUserByEmail("obiwan@gmail.com"));
+            task.setStatus(TaskEntity.Status.IN_PROGRESS);
+            task.setStartDate(LocalDateTime.now().minusDays(1));
+            task.setEndDate(LocalDateTime.now().plusDays(30));
+            task.setCreatedBy(userBean.findUserByEmail("obiwan@gmail.com"));
+            task.setCreationDate(LocalDateTime.now());
+            taskDao.persist(task);
+            TaskEntity task2 = new TaskEntity();
+            task2.setTitle("Destroy the Deathstar");
+            task2.setDescription("Destroy the Deathstar");
+            task2.setResponsibleUser(userBean.findUserByEmail("luke@gmail.com"));
+            task2.setStatus(TaskEntity.Status.NOT_STARTED);
+            task2.setStartDate(LocalDateTime.now().plusDays(31));
+            task2.setEndDate(LocalDateTime.now().plusDays(40));
+            task2.setCreationDate(LocalDateTime.now());
+            task2.setCreatedBy(userBean.findUserByEmail("princessleia@gmail.com"));
+            task2.setDependencies(new LinkedHashSet<>(List.of(task)));
+            taskDao.persist(task2);
+            TaskEntity finaltask = new TaskEntity();
+            finaltask.setTitle("Final Presentation");
+            finaltask.setDescription("Final presentation of the finalized project");
+            finaltask.setResponsibleUser(userBean.findUserByEmail("princessleia@gmail.com"));
+            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
+            finaltask.setEndDate(defaultProject.getEndDate());
+            finaltask.setCreationDate(LocalDateTime.now());
+            finaltask.setCreatedBy(userBean.findUserByEmail("luke@gmail.com"));
+            taskDao.persist(finaltask);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, task2, finaltask)));
+            projectDao.merge(defaultProject);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject(defaultProject);
+            projectResource.setResource(resourceDao.findResourceByIdentifier("L12-001"));
+            projectResource.setQuantity(2);
+            projectResourceDao.persist(projectResource);
+            ProjectResourceEntity projectResource2 = new ProjectResourceEntity();
+            projectResource2.setResource(resourceDao.findResourceByIdentifier("XW-001"));
+            projectResource2.setQuantity(1);
+            projectResource2.setProject(defaultProject);
+            projectResourceDao.persist(projectResource2);
+            notificationBean.createNotification(new NotificationDto("INVITE", userBean.findUserByEmail("hansolo@gmail.com").getId(), "Yavin 4", false, LocalDateTime.now()));
+
+        }
+        if(projectDao.findProjectByName("Kessel Run") == null) {
+            ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setName("Kessel Run");
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.TOOLS);
+            if (skills != null) {
+                defaultProject.setSkills(new LinkedHashSet<>(skills));
+            }
+            defaultProject.setStatus((ProjectEntity.Status.Planning));
+            defaultProject.setDescription("Kessel Run is a spice smuggling job that will take you to the edge of the galaxy.");
+            defaultProject.setMaxMembers(4);
+            List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.THEMES);
+            if (interests != null) {
+                defaultProject.setInterests(new LinkedHashSet<>(interests));
+            }
+
+            ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
+            defaultProjectUser.setProject(defaultProject);
+            defaultProjectUser.setUser(userBean.findUserByEmail("hansolo@gmail.com"));
+            defaultProjectUser.setProjectManager(true);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
+            ProjectUserEntity defaultProjectUser2 = new ProjectUserEntity();
+            defaultProjectUser2.setProject(defaultProject);
+            defaultProjectUser2.setUser(userBean.findUserByEmail("chewbacca@gmail.com"));
+            defaultProjectUser2.setProjectManager(false);
+            defaultProjectUser2.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+            ProjectUserEntity defaultProjectUser3 = new ProjectUserEntity();
+            defaultProjectUser3.setProject(defaultProject);
+            defaultProjectUser3.setUser(userBean.findUserByEmail("lando@gmail.com"));
+            defaultProjectUser3.setProjectManager(false);
+            defaultProjectUser3.setApprovalStatus(ProjectUserEntity.ApprovalStatus.MEMBER);
+
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser, defaultProjectUser2, defaultProjectUser3)));
+            defaultProject.setCreatedAt(LocalDateTime.now());
+            defaultProject.setStartDate(LocalDateTime.now().minusDays(3));
+            defaultProject.setEndDate(LocalDateTime.now().plusDays(10));
+            projectDao.persist(defaultProject);
+            projectUserDao.persist(defaultProjectUser);
+            projectUserDao.persist(defaultProjectUser2);
+            projectUserDao.persist(defaultProjectUser3);
+            TaskEntity task = new TaskEntity();
+            task.setTitle("Smuggle the spice");
+            task.setDescription("Smuggle the spice from Kessel to Tatooine");
+            task.setResponsibleUser(userBean.findUserByEmail("lando@gamil.com"));
+            task.setStatus(TaskEntity.Status.IN_PROGRESS);
+            task.setStartDate(LocalDateTime.now().minusDays(3));
+            task.setEndDate(LocalDateTime.now().plusDays(9));
+            task.setCreationDate(LocalDateTime.now());
+            taskDao.persist(task);
+            TaskEntity finaltask = new TaskEntity();
+            finaltask.setTitle("Final Presentation");
+            finaltask.setDescription("Final presentation of the finalized project");
+            finaltask.setResponsibleUser(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            finaltask.setStatus(TaskEntity.Status.NOT_STARTED);
+            finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
+            finaltask.setEndDate(defaultProject.getEndDate());
+            finaltask.setCreationDate(LocalDateTime.now());
+            finaltask.setCreatedBy(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            taskDao.persist(finaltask);
+            TaskEntity task2 = new TaskEntity();
+            task2.setTitle("Avoid the Empire");
+            task2.setDescription("Avoid the Empire while smuggling the spice");
+            task2.setResponsibleUser(userBean.findUserByEmail("chewbacca@gmail.com"));
+            task2.setStatus(TaskEntity.Status.NOT_STARTED);
+            task2.setStartDate(LocalDateTime.now().plusDays(5));
+            task2.setEndDate(LocalDateTime.now().plusDays(10));
+            task2.setCreationDate(LocalDateTime.now());
+            task2.setCreatedBy(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            task2.setDependencies(new LinkedHashSet<>(List.of(task)));
+            task2.setTaskUsers(new LinkedHashSet<>(List.of(userBean.findUserByEmail("lando@gmail.com"))));
+            taskDao.persist(task2);
+            defaultProject.setTasks(new LinkedHashSet<>(List.of(task, task2, finaltask)));
+            projectDao.merge(defaultProject);
+            ProjectResourceEntity projectResource = new ProjectResourceEntity();
+            projectResource.setProject(defaultProject);
+            projectResource.setResource(resourceDao.findResourceByIdentifier("YT-1700"));
+            projectResource.setQuantity(1);
+            projectResourceDao.persist(projectResource);
+        }
 
     }
+
 
     public ProjectEntity findProjectByName(String name) {
         return projectDao.findProjectByName(name);

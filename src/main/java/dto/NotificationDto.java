@@ -14,7 +14,7 @@ public class NotificationDto {
     private int taskId;
     private String taskName;
     private String status;
-    private boolean isSeen;
+    private boolean seen;
 
     public NotificationDto() {
     }
@@ -25,7 +25,7 @@ public class NotificationDto {
         this.projectName = projectName;
         this.isRead = isRead;
         this.time = time;
-        this.isSeen = false;
+        this.seen = false;
     }
 
 
@@ -111,10 +111,10 @@ public class NotificationDto {
     }
 
     public boolean isSeen() {
-        return isSeen;
+        return seen;
     }
 
     public void setSeen(boolean seen) {
-        isSeen = seen;
+        this.seen = seen;
     }
 }

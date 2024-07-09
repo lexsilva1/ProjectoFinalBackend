@@ -4,6 +4,7 @@ import dao.SkillDao;
 import dto.SkillDto;
 import entities.InterestEntity;
 import entities.SkillEntity;
+import entities.UserEntity;
 import jakarta.ejb.EJB;
 import jakarta.ejb.EJBs;
 import jakarta.ejb.Stateless;
@@ -184,6 +185,11 @@ public class SkillBean {
             SkillEntity defaultSkill = new SkillEntity();
             defaultSkill.setName("Git");
             defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(2));
+            users.add(userBean.findUserById(3));
+            users.add(userBean.findUserById(4));
+            defaultSkill.setUsers(users);
             skillDao.persist(defaultSkill);
         }
         if(skillDao.findSkillByName("Docker") == null) {
@@ -196,6 +202,10 @@ public class SkillBean {
             SkillEntity defaultSkill = new SkillEntity();
             defaultSkill.setName("Kubernetes");
             defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(2));
+            users.add(userBean.findUserById(3));
+            defaultSkill.setUsers(users);
             skillDao.persist(defaultSkill);
         }
         if(skillDao.findSkillByName("Jenkins") == null) {
@@ -208,12 +218,151 @@ public class SkillBean {
             SkillEntity defaultSkill = new SkillEntity();
             defaultSkill.setName("Jira");
             defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(2));
+            users.add(userBean.findUserById(3));
+            users.add(userBean.findUserById(4));
+            defaultSkill.setUsers(users);
             skillDao.persist(defaultSkill);
         }
         if(skillDao.findSkillByName("Confluence") == null) {
             SkillEntity defaultSkill = new SkillEntity();
             defaultSkill.setName("Confluence");
             defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Lightsaber Combat") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Lightsaber Combat");
+            defaultSkill.setSkillType(SkillEntity.SkillType.TOOLS);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(6));
+            users.add(userBean.findUserById(10));
+            users.add(userBean.findUserById(11));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("The Force") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("The Force");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(6));
+            users.add(userBean.findUserById(7));
+            users.add(userBean.findUserById(8));
+            users.add(userBean.findUserById(9));
+            users.add(userBean.findUserById(10));
+            users.add(userBean.findUserById(11));
+            users.add(userBean.findUserById(12));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Mind Trick") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Mind Trick");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(6));
+            users.add(userBean.findUserById(10));
+            users.add(userBean.findUserById(11));
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Telekinesis") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Telekinesis");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Levitation") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Levitation");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Mind Reading") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Mind Reading");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Piloting") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Piloting");
+            defaultSkill.setSkillType(SkillEntity.SkillType.HARDWARE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(6));
+            users.add(userBean.findUserById(8));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Lightsaber Construction") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Lightsaber Construction");
+            defaultSkill.setSkillType(SkillEntity.SkillType.HARDWARE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(6));
+            users.add(userBean.findUserById(11));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Droid Repair") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Droid Repair");
+            defaultSkill.setSkillType(SkillEntity.SkillType.HARDWARE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(6));
+            users.add(userBean.findUserById(12));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Wookiee Speak") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Wookiee Speak");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(8));
+            users.add(userBean.findUserById(9));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Ewokese") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Ewokese");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Huttese") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Huttese");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserById(5));
+            users.add(userBean.findUserById(8));
+            defaultSkill.setUsers(users);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Binary Loadlifter") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Binary Loadlifter");
+            defaultSkill.setSkillType(SkillEntity.SkillType.HARDWARE);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Moisture Farming") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Moisture Farming");
+            defaultSkill.setSkillType(SkillEntity.SkillType.HARDWARE);
+            skillDao.persist(defaultSkill);
+        }
+        if(skillDao.findSkillByName("Tatooine Survival") == null) {
+            SkillEntity defaultSkill = new SkillEntity();
+            defaultSkill.setName("Tatooine Survival");
+            defaultSkill.setSkillType(SkillEntity.SkillType.KNOWLEDGE);
             skillDao.persist(defaultSkill);
         }
     }
