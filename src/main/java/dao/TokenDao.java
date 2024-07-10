@@ -38,11 +38,16 @@ public class TokenDao {
             return null;
         }
     }
-    public List<TokenEntity> findTimedOutTokens(LocalDateTime time
-    ) {
+    public List<TokenEntity> findTimedOutTokens(LocalDateTime time) {
+        try{
+        System.out.println("Time of Last Activity: "+time);
         return em.createNamedQuery("TokenEntity.findTimedOutTokens", TokenEntity.class)
                 .setParameter("time", time)
                 .getResultList();
+    } catch (NoResultException e) {
+        System.out.println("No timed out tokens found: " + e.getMessage());
+        return null;
+    }
     }
     public void updateToken(TokenEntity tokenEntity) {
         em.merge(tokenEntity);

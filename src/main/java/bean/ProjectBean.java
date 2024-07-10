@@ -482,7 +482,7 @@ public class ProjectBean {
             TaskEntity task = new TaskEntity();
             task.setTitle("Smuggle the spice");
             task.setDescription("Smuggle the spice from Kessel to Tatooine");
-            task.setResponsibleUser(userBean.findUserByEmail("lando@gamil.com"));
+            task.setResponsibleUser(userBean.findUserByEmail("lando@gmail.com"));
             task.setStatus(TaskEntity.Status.COMPLETED);
             task.setStartDate(LocalDateTime.now().minusDays(3));
             task.setEndDate(LocalDateTime.now().plusDays(9));
@@ -491,7 +491,7 @@ public class ProjectBean {
             TaskEntity finaltask = new TaskEntity();
             finaltask.setTitle("Final Presentation");
             finaltask.setDescription("Final presentation of the finalized project");
-            finaltask.setResponsibleUser(userBean.findUserById(defaultProjectUser.getUser().getId()));
+            finaltask.setResponsibleUser(userBean.findUserByEmail("hansolo@gmail.com"));
             finaltask.setStatus(TaskEntity.Status.COMPLETED);
             finaltask.setStartDate(defaultProject.getEndDate().minusDays(1));
             finaltask.setEndDate(defaultProject.getEndDate());

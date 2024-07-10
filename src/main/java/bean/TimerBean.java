@@ -36,17 +36,18 @@ public class TimerBean {
     public void checkTimeouts() {
         //logger.info("Checking for timeouts...");
         System.out.println("Checking for timeouts...");
-        List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusSeconds(systemVariablesBean.getSessionTimeout()));
-        System.out.println("Time of Last Activity: "+LocalDateTime.now().minusMinutes(systemVariablesBean.getSessionTimeout()));
-        for (TokenEntity token : timedOutUsers) {
-            UserEntity user = token.getUser();
-            userBean.forcedLogout(token);
-            ForcedLogoutDto forcedLogoutDto = new ForcedLogoutDto();
-            notifier.send(token.getToken(), gson.toJson(forcedLogoutDto));
+        List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusMinutes(systemVariablesBean.getSessionTimeout()));
+        if(timedOutUsers != null && !timedOutUsers.isEmpty()) {
+            for (TokenEntity token : timedOutUsers) {
+                UserEntity user = token.getUser();
+                userBean.forcedLogout(token);
+                ForcedLogoutDto forcedLogoutDto = new ForcedLogoutDto();
+                notifier.send(token.getToken(), gson.toJson(forcedLogoutDto));
 
-            System.out.println("User " + user.getEmail() + " has been logged out due to inactivity." + " " + token.getLastActivity()+" at "+LocalDateTime.now());
-            user=null;  //nullify user to prevent memory leaks
+                System.out.println("User " + user.getEmail() + " has been logged out due to inactivity." + " " + token.getLastActivity() + " at " + LocalDateTime.now());
+                user = null;  //nullify user to prevent memory leaks
+            }
+            timedOutUsers.clear();
         }
-        timedOutUsers.clear();
     }
 }

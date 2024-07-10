@@ -3,6 +3,7 @@ package service;
 import bean.ProjectBean;
 import bean.SystemVariablesBean;
 import bean.UserBean;
+import dto.SystemVariablesDto;
 import jakarta.ejb.EJB;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -44,6 +45,24 @@ public class SystemVariablesService {
             return Response.status(200).entity("max users set").build();
         }
         return Response.status(405).entity("max users exceeded").build();
+    }
+    @POST
+    @Path("/")
+    @Produces("application/json")
+    public Response setSystemVariables(@HeaderParam("token") String token, SystemVariablesDto systemVariables) {
+        if (userBean.findUserByToken(token).getRole().getValue() > 1) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        if(systemVariables.getMaxUsers() > userBean.getAllUsers().size()) {
+            return Response.status(405).entity("max users exceeded").build();
+        }
+        if(systemVariables.getTimeout() < 1) {
+            return Response.status(405).entity("timeout must be greater than 0").build();
+        }
+        systemVariablesBean.setSessionTimeout(systemVariables.getTimeout());
+        systemVariablesBean.setMaxUsers(systemVariables.getMaxUsers());
+        return Response.status(200).entity("system variables set").build();
     }
     @GET
     @Path("")
