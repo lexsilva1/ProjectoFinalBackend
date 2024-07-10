@@ -44,6 +44,10 @@ public class Messages {
     public void send(String conversationToken, String msg) {
         Session session = sessions.get(conversationToken);
         if (session != null) {
+            if(msg.contains("xpto")){
+                System.out.println("mandou xpto");
+
+            }
             System.out.println("sending.......... " + msg);
             try {
                 session.getBasicRemote().sendText(msg);
@@ -79,7 +83,7 @@ public class Messages {
             List<TokenEntity> senderTokens = tokenBean.findActiveTokensByUser(sender);
             List<TokenEntity> receiverTokens = tokenBean.findActiveTokensByUser(receiver);
 
-            for (TokenEntity receiverToken : receiverTokens) {;
+            for (TokenEntity receiverToken : receiverTokens) {
                 if (notifications.getSession(receiverToken.getToken()) != null){
 
                     String conversationToken = receiverToken.getToken() + "/" + sender.getId();

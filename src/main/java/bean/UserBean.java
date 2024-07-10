@@ -578,6 +578,7 @@ public List<UserEntity> getAllUsers() {
             user.setLocation(labDao.findLabByLocation(LabEntity.Lab.valueOf(userConfirmation.getLabLocation())));
             user.setRole(UserEntity.Role.User);
             user.setIsConfirmed(LocalDate.now());
+            user.setPrivacy(false);
             tokenBean.removeToken(auxToken);
             userDao.merge(user);
             return user;
@@ -649,7 +650,26 @@ public List<UserEntity> getAllUsers() {
         UserEntity user = findUserById(id);
         return convertToDto(user);
     }
-
+    public boolean setAdminStatus(String token, int id) {
+        UserEntity user = findUserByToken(token);
+        if (user == null) {
+            return false;
+        }
+        UserEntity user2 = findUserById(id);
+        if (user2 == null) {
+            return false;
+        }
+        if ((user.getRole() == UserEntity.Role.Admin || user.getRole() == UserEntity.Role.Manager) && user2.getRole() == UserEntity.Role.User){
+            user2.setRole(UserEntity.Role.Manager);
+            userDao.merge(user2);
+            return true;
+        }else if(user.getRole() == UserEntity.Role.Admin && user2.getRole() == UserEntity.Role.Manager){
+            user2.setRole(UserEntity.Role.User);
+            userDao.merge(user2);
+            return true;
+        }
+        return false;
+    }
 
 
     public boolean updateUser(int id, UserDto userDto) {

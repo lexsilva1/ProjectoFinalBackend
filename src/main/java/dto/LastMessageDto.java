@@ -16,7 +16,6 @@ public class LastMessageDto {
         this.sender = sender;
         this.message = message;
         this.time = LocalDateTime.now();
-        this.isRead = false;
         this.type = "LAST_MESSAGE";
     }
 
