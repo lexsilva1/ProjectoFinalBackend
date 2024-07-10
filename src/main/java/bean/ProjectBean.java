@@ -455,7 +455,6 @@ public class ProjectBean {
             if (interests != null) {
                 defaultProject.setInterests(new LinkedHashSet<>(interests));
             }
-
             ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
             defaultProjectUser.setProject(defaultProject);
             defaultProjectUser.setUser(userBean.findUserByEmail("hansolo@gmail.com"));

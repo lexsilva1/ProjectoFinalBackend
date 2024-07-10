@@ -19,11 +19,11 @@ UserBean userBean;
 
 public void createDefaultSystemVariables() {
     if (systemVariablesDao.findSystemVariableById(1) == null) {
-        systemVariablesDao.create(30, 4);
+        systemVariablesDao.create(1, 4);
     }
 }
 public void setSessionTimeout(int timeout) {
-    SystemVariablesEntity timeoutVariable = systemVariablesDao.findSystemVariableById(1);
+    SystemVariablesEntity timeoutVariable = systemVariablesDao.findSystemVariableById(60);
     timeoutVariable.setTimeout(timeout);
     systemVariablesDao.merge(timeoutVariable);
 }
