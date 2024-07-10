@@ -50,7 +50,7 @@ public class SystemVariablesService {
     @Path("/")
     @Produces("application/json")
     public Response setSystemVariables(@HeaderParam("token") String token, SystemVariablesDto systemVariables) {
-        if (userBean.findUserByToken(token).getRole().getValue() > 1) {
+        if (userBean.findUserByToken(token).getRole().getValue() > 0) {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
