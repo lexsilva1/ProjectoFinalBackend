@@ -619,24 +619,27 @@ public class ProjectBean {
         }
 
         ProjectEntity project = new ProjectEntity();
-        if(projectDto.getName() == null || projectDto.getName().equals("")){
+        if(projectDto.getName() == null || projectDto.getName().isEmpty()){
             return false;
         }
         project.setName(projectDto.getName());
-        if(projectDto.getDescription() == null || projectDto.getDescription().equals("")){
+        if(projectDto.getDescription() == null || projectDto.getDescription().isEmpty()){
             return false;
         }
         project.setDescription(projectDto.getDescription());
         project.setImage(projectDto.getImage());
         project.setStatus(ProjectEntity.Status.Planning);
-        if(projectDto.getLab() == null || projectDto.getLab().equals("")){
+        if(projectDto.getLab() == null || projectDto.getLab().isEmpty()){
             UserEntity user = userBean.findUserByToken(token);
             projectDto.setLab(user.getLocation().toString());
         }
         project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
         TaskEntity lastTask = taskBean.createLastTask(token, projectDto, userBean.findUserByToken(token), List.of(userBean.findUserByToken(token).getId()));
+        if(lastTask == null){
+            return false;
+        }
         project.setTasks(new LinkedHashSet<>(List.of(lastTask)));
-        if(projectDto.getSlots() == 0){
+        if(projectDto.getSlots() <= 0){
             projectDto.setSlots(4);
         }
         project.setMaxMembers(projectDto.getSlots());
@@ -646,12 +649,17 @@ public class ProjectBean {
         }else {
             project.setStartDate(projectDto.getStartDate());
         }
-        if(projectDto.getEndDate() == null || projectDto.getEndDate().isBefore(LocalDateTime.now())) { // Correct usage
+        if(projectDto.getEndDate() == null ) { // Correct usage
             project.setEndDate(project.getStartDate().plusDays(30));
+        }else if(projectDto.getEndDate().isBefore(projectDto.getStartDate())){
+            return false;
         }else{
             project.setEndDate(projectDto.getEndDate());
         }
         project.setSkills(skillBean.listDtoToEntity(new HashSet<>((projectDto.getSkills()))));
+        if(projectDto.getInterests() == null){
+            return false;
+        }
         project.setInterests(interestBean.listDtoToEntity(new HashSet<>(projectDto.getInterests())));
         projectDao.persist(project);
         if(projectDto.getTeamMembers() != null){
@@ -672,14 +680,23 @@ public class ProjectBean {
 
                     }
                 }
+            }else{
+                ProjectUserEntity projectUser = new ProjectUserEntity();
+                projectUser.setProject(project);
+                projectUser.setUser(userBean.findUserByToken(token));
+                projectUser.setProjectManager(true);
+                projectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
+                projectUserDao.persist(projectUser);
+        }
+        if(projectDto.getBillOfMaterials() != null) {
+            for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
+                ResourceEntity resource = resourceDao.findResourceByIdentifier(resourceDto.getIdentifier());
+                ProjectResourceEntity projectResource = new ProjectResourceEntity();
+                projectResource.setProject(project);
+                projectResource.setResource(resource);
+                projectResource.setQuantity(resourceDto.getQuantity());
+                projectResourceDao.persist(projectResource);
             }
-        for (ResourceDto resourceDto : projectDto.getBillOfMaterials()) {
-            ResourceEntity resource = resourceDao.findResourceByIdentifier(resourceDto.getIdentifier());
-            ProjectResourceEntity projectResource = new ProjectResourceEntity();
-            projectResource.setProject(project);
-            projectResource.setResource(resource);
-            projectResource.setQuantity(resourceDto.getQuantity());
-            projectResourceDao.persist(projectResource);
         }
         projectDao.merge(project);
         ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), project, "Project created");

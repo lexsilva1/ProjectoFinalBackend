@@ -40,36 +40,63 @@ public class TaskBean {
 
     public boolean createTask(String token, String projectname, TaskDto taskDto) {
         TaskEntity task = new TaskEntity();
+        if(taskDto.getTitle() == null) {
+            return false;
+        }
         task.setTitle(taskDto.getTitle());
         task.setExternalExecutors(taskDto.getExternalExecutors());
+        if(taskDto.getDescription() == null) {
+            return false;
+        }
         task.setDescription(taskDto.getDescription());
         ProjectEntity project = projectBean.findProjectByName(projectname);
         if(project == null) {
             return false;
         }
-
-        task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
+        if(taskDto.getResponsibleId() <= 0) {
+            task.setResponsibleUser(userBean.findUserByToken(token));
+        }else {
+            task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
+        }
         task.setStatus(TaskEntity.Status.NOT_STARTED);
-        task.setStartDate(taskDto.getStart());
+        if(taskDto.getStart() == null) {
+            task.setStartDate(LocalDateTime.now());
+        } else {
+            task.setStartDate(taskDto.getStart());
+        }
+        if(taskDto.getEnd() == null) {
+            task.setEndDate(project.getEndDate().minusDays(1));
+        } else {
         task.setEndDate(taskDto.getEnd());
+        }
         task.setCreationDate(LocalDateTime.now());
-        Set dependencies = new HashSet();
-        for(Integer i : taskDto.getDependencies()) {
-            TaskEntity dep = taskDao.find(i);
-            if(dep != null) {
-                dependencies.add(dep);
+        if(taskDto.getDependencies() != null) {
+
+            Set dependencies = new HashSet();
+            for (Integer i : taskDto.getDependencies()) {
+                TaskEntity dep = taskDao.find(i);
+                if (dep != null) {
+                    dependencies.add(dep);
+                }
             }
+            task.setDependencies(dependencies);
         }
-        task.setDependencies(dependencies);
-        Set users = new HashSet();
-        for(Integer i : taskDto.getUsers()) {
-            UserEntity u = userBean.findUserById(i);
-            if(u != null) {
-                users.add(u);
-                notificationBean.sendNotification(new NotificationDto("TASK_EXECUTOR", i,projectname,false,LocalDateTime.now()));
+        if(taskDto.getUsers() == null) {
+            Set<UserEntity> users = new HashSet<>();
+            users.add(userBean.findUserByToken(token));
+            task.setTaskUsers(users);
+
+        }else {
+            Set users = new HashSet();
+            for (Integer i : taskDto.getUsers()) {
+                UserEntity u = userBean.findUserById(i);
+                if (u != null) {
+                    users.add(u);
+                    notificationBean.sendNotification(new NotificationDto("TASK_EXECUTOR", i, projectname, false, LocalDateTime.now()));
+                }
             }
+            task.setTaskUsers(users);
         }
-        task.setTaskUsers(users);
         task.setCreatedBy(userBean.findUserByToken(token));
         taskDao.persist(task);
         TaskEntity taskToAdd = taskDao.find(task.getId());
@@ -85,8 +112,11 @@ public class TaskBean {
         TaskEntity task = new TaskEntity();
         task.setTitle("Final Presentation");
         task.setDescription("Final presentation of the finalized project");
-
-        task.setResponsibleUser(user);
+        if(user == null) {
+            return null;
+        }else {
+            task.setResponsibleUser(user);
+        }
         task.setStatus(TaskEntity.Status.NOT_STARTED);
         task.setStartDate(project.getEndDate().minusDays(1));
         task.setEndDate(project.getEndDate());
@@ -129,21 +159,6 @@ public class TaskBean {
         taskDto.setUsers(usersIds);
         return taskDto;
     }
-    public ProjectTasksDto getProjectTasks(String projectName) {
-        ProjectEntity project = projectBean.findProjectByName(projectName);
-        if(project == null) {
-            return null;
-        }
-        ProjectTasksDto projectTasksDto = new ProjectTasksDto();
-        projectTasksDto.setProjectName(projectName);
-        Set<TaskEntity> tasks = project.getTasks();
-        Set<TaskDto> taskDtos = new HashSet<>();
-        for(TaskEntity t : tasks) {
-            taskDtos.add(toTasktoDto(t));
-        }
-        projectTasksDto.setTasks(taskDtos);
-        return projectTasksDto;
-    }
     public TaskDto getTaskById(int id) {
         TaskEntity task = taskDao.find(id);
         if(task == null) {
@@ -159,10 +174,16 @@ public class TaskBean {
         task.setTitle(taskDto.getTitle());
         task.setExternalExecutors(taskDto.getExternalExecutors());
         task.setDescription(taskDto.getDescription());
+        if(taskDto.getResponsibleId() > 0) {
         task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
+        }
         task.setStatus(TaskEntity.Status.valueOf(taskDto.getStatus()));
-        task.setStartDate(taskDto.getStart());
+        if(taskDto.getStart() != null) {
+            task.setStartDate(taskDto.getStart());
+        }
+        if(taskDto.getEnd() != null) {
         task.setEndDate(taskDto.getEnd());
+        }
         if(taskDto.getStatus().equals("CANCELLED")) {
             Set<TaskEntity> dependencies = projectBean.findProjectByName(projectName).getTasks();
             System.out.println("dependencies: " + dependencies);
