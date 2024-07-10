@@ -43,7 +43,6 @@ public class TimerBean {
                 userBean.forcedLogout(token);
                 ForcedLogoutDto forcedLogoutDto = new ForcedLogoutDto();
                 notifier.send(token.getToken(), gson.toJson(forcedLogoutDto));
-
                 System.out.println("User " + user.getEmail() + " has been logged out due to inactivity." + " " + token.getLastActivity() + " at " + LocalDateTime.now());
                 user = null;  //nullify user to prevent memory leaks
             }
