@@ -158,4 +158,21 @@ public class UserService {
             return Response.status(404).entity("user not found").build();
         }
     }
+    @PUT
+    @Path("/adminStatus")
+    @Produces("application/json")
+    public Response setAdminStatus(@HeaderParam("token") String token, @HeaderParam("userId") int id) {
+        if(userBean.findUserByToken(token) == null || !tokenBean.isTokenValid(token)) {
+            return Response.status(404).entity("user not found").build();
+        }
+        if(userBean.findUserByToken(token).getRole().getValue() > 2) {
+            return Response.status(403).entity("not allowed").build();
+        }
+        userBean.setLastActivity(token);
+        if(userBean.setAdminStatus(token,id)) {
+            return Response.status(200).entity("admin status set").build();
+        } else {
+            return Response.status(404).entity("user not found").build();
+        }
+    }
 }

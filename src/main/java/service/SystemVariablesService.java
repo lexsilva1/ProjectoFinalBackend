@@ -64,7 +64,7 @@ public class SystemVariablesService {
         }
         systemVariablesBean.setSessionTimeout(systemVariables.getTimeout());
         systemVariablesBean.setMaxUsers(systemVariables.getMaxUsers());
-        return Response.status(200).entity("system variables set").build();
+        return Response.status(200).entity("Systems variables updated.").build();
     }
     @GET
     @Path("")
