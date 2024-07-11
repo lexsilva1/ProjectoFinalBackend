@@ -44,10 +44,6 @@ public class Messages {
     public void send(String conversationToken, String msg) {
         Session session = sessions.get(conversationToken);
         if (session != null) {
-            if(msg.contains("xpto")){
-                System.out.println("mandou xpto");
-
-            }
             System.out.println("sending.......... " + msg);
             try {
                 session.getBasicRemote().sendText(msg);

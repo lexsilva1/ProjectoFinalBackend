@@ -424,4 +424,40 @@ public class ResourceBean {
     resourceStatisticsDto.setAllresources(projectBean.findResourceQuantities());
     return resourceStatisticsDto;
     }
+    public boolean updateResource(int resourceId, ResourceDto resourceDto) {
+        ResourceEntity resourceEntity = resourceDao.findResourceById(resourceId);
+        if(resourceEntity == null) {
+            return false;
+        }
+        if(resourceDto.getName() != null) {
+            resourceEntity.setName(resourceDto.getName());
+        }
+        if(resourceDto.getDescription() != null) {
+            resourceEntity.setDescription(resourceDto.getDescription());
+        }
+        if(resourceDto.getIdentifier() != null && resourceDao.findResourceByIdentifier(resourceDto.getIdentifier()) == null){
+            resourceEntity.setIdentifier(resourceDto.getIdentifier());
+        }
+        if(resourceDto.getSupplier() != null) {
+            resourceEntity.setSupplier(resourceDto.getSupplier());
+        }
+        if(resourceDto.getSupplierContact() != null) {
+            resourceEntity.setSupplierContact(resourceDto.getSupplierContact());
+        }
+        if(resourceDto.getBrand() != null) {
+            resourceEntity.setBrand(resourceDto.getBrand());
+        }
+        if(resourceDto.getStock() != 0) {
+            resourceEntity.setStock(resourceDto.getStock());
+        }
+        if(resourceDto.getObservations() != null) {
+            resourceEntity.setObservations(resourceDto.getObservations());
+        }
+        if(resourceDto.getType() != null) {
+            resourceEntity.setType(ResourceEntity.ResourceType.valueOf(resourceDto.getType()));
+        }
+
+        resourceDao.merge(resourceEntity);
+        return true;
+    }
 }
