@@ -20,6 +20,7 @@ UserBean userBean;
 public void createDefaultSystemVariables() {
     if (systemVariablesDao.findSystemVariableById(1) == null) {
         systemVariablesDao.create(30, 4);
+
     }
 }
 public void setSessionTimeout(int timeout) {
@@ -33,7 +34,7 @@ public int getSessionTimeout() {
 }
 
 public boolean setMaxUsers(int maxUsers) {
-    if (userBean.getAllUsers().size() > maxUsers) {
+    if (maxUsers > userBean.getAllUsers().size()) {
         return false;
     }
     SystemVariablesEntity maxUsersVariable = systemVariablesDao.findSystemVariableById(1);

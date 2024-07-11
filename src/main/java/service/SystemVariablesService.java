@@ -34,7 +34,9 @@ public class SystemVariablesService {
             return Response.status(403).entity("not allowed").build();
         }
         userBean.setLastActivity(token);
-
+        if(timeout < 1 ) {
+            return Response.status(405).entity("timeout must be greater than 0").build();
+        }
         systemVariablesBean.setSessionTimeout(timeout);
         logger.info("User with IP address {} set session timeout to {}", ipAddress, timeout);
         return Response.status(200).entity("timeout set").build();
