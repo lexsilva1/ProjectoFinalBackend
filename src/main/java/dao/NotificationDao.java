@@ -55,8 +55,8 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
         cq.orderBy(cb.desc(root.get("time"))); // Order by time in descending order
         return em.createQuery(cq).getResultList();
     }
-    public int findLastNotificationId() {
-        return em.createQuery("SELECT MAX(n.id) FROM NotificationEntity n", Integer.class).getSingleResult();
+    public int findLastNotificationIdByUser(UserEntity user) {
+        return em.createNamedQuery("NotificationEntity.findLastNotificationIdByUser", Integer.class).getSingleResult();
     }
 
 }
