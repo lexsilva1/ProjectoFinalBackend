@@ -19,9 +19,9 @@ public class ResourceEntity implements Serializable {
     @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, unique = true, updatable = false)
     private int id;
-    @Column(name = "name", nullable = false, unique = false, updatable = false)
+    @Column(name = "name", nullable = false, unique = false, updatable = true)
     private String name;
-    @Column(name = "description", nullable = false, unique = false, updatable = false)
+    @Column(name = "description", nullable = false, unique = false, updatable = true)
     private String description;
     @Column (name = "type", nullable = false, unique = false)
     private ResourceType type;

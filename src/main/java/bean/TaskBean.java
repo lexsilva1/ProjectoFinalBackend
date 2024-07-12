@@ -25,46 +25,45 @@ public class TaskBean {
     ProjectLogBean projectLogBean;
     @EJB
     NotificationBean notificationBean;
-
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(TaskBean.class);
     public TaskBean() {
     }
-    public TaskEntity findTaskByName(String title) {
-        return taskDao.findTaskByName(title);
-    }
-
-    public List<TaskEntity> findTasksByUser(UserEntity user) {
-        return taskDao.findTasksByUser(user);
-    }
-
 
 
     public boolean createTask(String token, String projectname, TaskDto taskDto) {
+        logger.info("Creating task {} for project {}", taskDto.getTitle(), projectname);
         TaskEntity task = new TaskEntity();
         if(taskDto.getTitle() == null) {
+            logger.error("Title is null");
             return false;
         }
         task.setTitle(taskDto.getTitle());
         task.setExternalExecutors(taskDto.getExternalExecutors());
         if(taskDto.getDescription() == null) {
+            logger.error("Description is null");
             return false;
         }
         task.setDescription(taskDto.getDescription());
         ProjectEntity project = projectBean.findProjectByName(projectname);
         if(project == null) {
+            logger.error("Project not found");
             return false;
         }
         if(taskDto.getResponsibleId() <= 0) {
             task.setResponsibleUser(userBean.findUserByToken(token));
+            logger.info("Responsible user set to creator");
         }else {
             task.setResponsibleUser(userBean.findUserById(taskDto.getResponsibleId()));
         }
         task.setStatus(TaskEntity.Status.NOT_STARTED);
         if(taskDto.getStart() == null) {
+            logger.info("Start date is null, setting to current date");
             task.setStartDate(LocalDateTime.now());
         } else {
             task.setStartDate(taskDto.getStart());
         }
         if(taskDto.getEnd() == null) {
+            logger.info("End date is null, setting to project end date");
             task.setEndDate(project.getEndDate().minusDays(1));
         } else {
         task.setEndDate(taskDto.getEnd());
@@ -85,7 +84,7 @@ public class TaskBean {
             Set<UserEntity> users = new HashSet<>();
             users.add(userBean.findUserByToken(token));
             task.setTaskUsers(users);
-
+            logger.info("Users not found, setting to creator");
         }else {
             Set users = new HashSet();
             for (Integer i : taskDto.getUsers()) {
@@ -105,14 +104,17 @@ public class TaskBean {
         projectLogDto.setType("CREATE_TASK");
         projectLogBean.createProjectLog(projectLogDto);
         notificationBean.sendNotification(new NotificationDto("TASK_ASSIGN", taskDto.getResponsibleId(),projectname,false,LocalDateTime.now()));
+        logger.info("Task created successfully");
         return true;
 
     }
     public TaskEntity createLastTask(String token, CreateProjectDto project, UserEntity user, List<Integer> users) {
+        logger.info("Creating last task for project {}", project.getName());
         TaskEntity task = new TaskEntity();
         task.setTitle("Final Presentation");
         task.setDescription("Final presentation of the finalized project");
         if(user == null) {
+            logger.error("User is null");
             return null;
         }else {
             task.setResponsibleUser(user);
@@ -130,11 +132,12 @@ public class TaskBean {
         }
 
         task.setCreatedBy(userBean.findUserByToken(token));
-
+        logger.info("Last task created successfully");
         taskDao.persist(task);
         return task;
     }
     public TaskDto toTasktoDto(TaskEntity task) {
+        logger.info("Converting task to dto");
         TaskDto taskDto = new TaskDto();
         taskDto.setId(task.getId());
         taskDto.setTitle(task.getTitle());
@@ -157,18 +160,24 @@ public class TaskBean {
         }
         taskDto.setExternalExecutors(task.getExternalExecutors());
         taskDto.setUsers(usersIds);
+        logger.info("Task converted to dto successfully");
         return taskDto;
     }
     public TaskDto getTaskById(int id) {
+        logger.info("Finding task by id {}", id);
         TaskEntity task = taskDao.find(id);
         if(task == null) {
+            logger.error("Task not found");
             return null;
         }
+        logger.info("Task found");
         return toTasktoDto(task);
     }
     public boolean updateTask(String token, String projectName, TaskDto taskDto) {
+        logger.info("User {} updating task {}", token,taskDto.getTitle());
         TaskEntity task = taskDao.find(taskDto.getId());
         if(task == null) {
+            logger.error("Task not found");
             return false;
         }
         task.setTitle(taskDto.getTitle());
@@ -179,12 +188,15 @@ public class TaskBean {
         }
         task.setStatus(TaskEntity.Status.valueOf(taskDto.getStatus()));
         if(taskDto.getStart() != null) {
+            logger.info("Start date set to {}", taskDto.getStart());
             task.setStartDate(taskDto.getStart());
         }
         if(taskDto.getEnd() != null) {
+            logger.info("End date set to {}", taskDto.getEnd());
         task.setEndDate(taskDto.getEnd());
         }
         if(taskDto.getStatus().equals("CANCELLED")) {
+            logger.info("Task cancelled, removing dependencies");
             Set<TaskEntity> dependencies = projectBean.findProjectByName(projectName).getTasks();
             System.out.println("dependencies: " + dependencies);
             if(dependencies != null) { // Null check before iteration
@@ -196,6 +208,7 @@ public class TaskBean {
             task.getDependencies().clear();
         } else {
             if (taskDto.getDependencies() != null) {
+                logger.info("Setting dependencies");
                 Set dependencies = new HashSet();
                 for (Integer i : taskDto.getDependencies()) {
                     TaskEntity dep = taskDao.find(i);
@@ -208,6 +221,7 @@ public class TaskBean {
         }
         Set users = new HashSet();
         for(Integer i : taskDto.getUsers()) {
+            logger.info("Setting users");
             UserEntity u = userBean.findUserById(i);
             if(u != null) {
                 users.add(u);
@@ -215,13 +229,13 @@ public class TaskBean {
         }
         task.setTaskUsers(users);
         taskDao.merge(task);
+        logger.info("Task updated successfully");
         return true;
     }
 
     public TaskEntity findTaskById(int id) {
+        logger.info("Finding task by id {}", id);
         return taskDao.find(id);
     }
-    public List<TaskEntity> findTasksByResponsibleUser(UserEntity user) {
-        return taskDao.findTasksByResponsibleUser(user);
-    }
+
 }

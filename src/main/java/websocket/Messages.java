@@ -66,31 +66,36 @@ public class Messages {
         sessions.values().removeIf(s -> s == session);
     }
 
+    /**
+     * This method is called when a message is received from the client
+     * @param token
+     * @param id
+     * @param message
+     */
     @OnMessage
     public void toDoOnMessage(@PathParam("token") String token, @PathParam("id") int id, String message) {
         System.out.println("Received message: " + message);
-        UserEntity sender = userBean.findUserByToken(token);
-        UserEntity receiver = userBean.findUserById(id);
-        if (sender != null && receiver != null) {
+        UserEntity sender = userBean.findUserByToken(token); // find the sender
+        UserEntity receiver = userBean.findUserById(id);// find the receiver
+        if (sender != null && receiver != null) { // if both sender and receiver are valid
             MessageUserDto senderDto = new MessageUserDto(sender);
             MessageUserDto receiverDto = new MessageUserDto(receiver);
             MessageDto messageDto = new MessageDto(message, senderDto, receiverDto);
             MessageEntity entity = messageBean.createMessage(messageDto);
-            List<TokenEntity> senderTokens = tokenBean.findActiveTokensByUser(sender);
-            List<TokenEntity> receiverTokens = tokenBean.findActiveTokensByUser(receiver);
+            List<TokenEntity> senderTokens = tokenBean.findActiveTokensByUser(sender);// find all active tokens of the sender
+            List<TokenEntity> receiverTokens = tokenBean.findActiveTokensByUser(receiver);// find all active tokens of the receiver
 
-            for (TokenEntity receiverToken : receiverTokens) {
+            for (TokenEntity receiverToken : receiverTokens) { // for each receiver token
                 if (notifications.getSession(receiverToken.getToken()) != null){
 
-                    String conversationToken = receiverToken.getToken() + "/" + sender.getId();
-                    if (sessions.containsKey(conversationToken)) {
+                    String conversationToken = receiverToken.getToken() + "/" + sender.getId(); // create a conversation token
+                    if (sessions.containsKey(conversationToken)) { // if the receiver has a conversation token
                         System.out.println("receiver is online with token: " + receiverToken.getToken());
                         messageDto.setIsRead(true);
-                        messageBean.markAsRead(entity);
+                        messageBean.markAsRead(entity); // mark the message as read
                         String messageJson = serializeToJson(messageDto);
                         send(conversationToken, messageJson);
                         LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
-                        lastMessageDto.setRead(true);
                         String lastMessageJson = serializeToJson(lastMessageDto);
                         notifications.send(receiverToken.getToken(), lastMessageJson);
                         System.out.println("sending message to sender");

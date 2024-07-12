@@ -20,10 +20,11 @@ public class ProjectLogBean {
     ResourceBean ResourceBean;
     @EJB
     ProjectBean projectBean;
-
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProjectLogBean.class);
     public ProjectLogBean() {
     }
     public void createDefaultLogs() {
+        logger.info("Creating default logs");
         if(projectLogDao.findProjectLogByProjectId(1) == null) {
             ProjectLogEntity log1 = new ProjectLogEntity();
             log1.setProject_id(1);
@@ -82,15 +83,18 @@ public class ProjectLogBean {
     }
 
     public List<ProjectLogDto> getProjectLogs(int projectId) {
+        logger.info("Finding project logs for project {}", projectId);
         List<ProjectLogEntity> logEntities = projectLogDao.findProjectLogsByProjectId(projectId);
         List<ProjectLogDto> logDtos = new ArrayList<>();
         for (ProjectLogEntity logEntity : logEntities) {
             logDtos.add(convertToDto(logEntity));
         }
+        logger.info("Project logs found successfully");
         return logDtos;
     }
 
     public ProjectLogDto convertToDto(ProjectLogEntity projectLogEntity) {
+        logger.info("Converting project log to dto");
         ProjectEntity project = projectBean.findProjectById(projectLogEntity.getProject_id());
         ProjectLogDto projectLogDto = new ProjectLogDto();
         projectLogDto.setId(projectLogEntity.getId());
@@ -103,9 +107,11 @@ public class ProjectLogBean {
         projectLogDto.setResourceId(projectLogEntity.getProject_resource_id());
         projectLogDto.setType(projectLogEntity.getType().name());
         projectLogDto.setStatus(projectLogEntity.getStatus());
+        logger.info("Project log converted to dto successfully");
         return projectLogDto;
     }
     public boolean createProjectLog(ProjectLogDto projectLogDto) {
+        logger.info("Creating project log");
         ProjectLogEntity projectLogEntity = new ProjectLogEntity();
         projectLogEntity.setProject_id(projectBean.findProjectByName(projectLogDto.getProject()).getId());
         projectLogEntity.setLog(projectLogDto.getLog());
@@ -116,6 +122,7 @@ public class ProjectLogBean {
         projectLogEntity.setDate(LocalDateTime.now());
         projectLogEntity.setType(ProjectLogEntity.LogType.valueOf(projectLogDto.getType()));
         projectLogEntity.setStatus(projectLogDto.getStatus());
+        logger.info("Project log created successfully");
         return projectLogDao.create(projectLogEntity);
 
     }

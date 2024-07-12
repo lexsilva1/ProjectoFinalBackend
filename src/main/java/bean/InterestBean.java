@@ -21,12 +21,14 @@ public class InterestBean {
     private UserBean userBean;
     @EJB
     private ProjectBean projectBean;
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(InterestBean.class);
 
     public InterestBean() {
     }
 
     public void createDefaultInterests() {
         // Create default interests
+        logger.info("Creating default interests");
         if (interestDao.findInterestByName("Sustainability") == null) {
             InterestEntity interest1 = new InterestEntity();
             interest1.setName("Sustainability");
@@ -215,6 +217,7 @@ public class InterestBean {
     }
 
     public List<InterestDto> findAllInterests() {
+        logger.info("Fetching all interests");
         List<InterestEntity> interests = interestDao.findAllInterests();
         List<InterestDto> interestDtos = new ArrayList<>();
         for (InterestEntity interest : interests) {
@@ -224,95 +227,103 @@ public class InterestBean {
             interestDto.setInterestType(interest.getInterestType().toString());
             interestDtos.add(interestDto);
         }
+        logger.info("All interests fetched successfully");
         return interestDtos;
     }
-    public Set<String> entityToName(Set<InterestEntity> interests){
-        Set<String> interestNames = new HashSet<>();
-        for(InterestEntity interest : interests){
-            interestNames.add(interest.getName());
-        }
-        return interestNames;
-    }
     public Set<InterestEntity> listDtoToEntity(Set<InterestDto> interests){
+        logger.info("Converting list of interests from dto to entity");
         Set<InterestEntity> interestEntities = new HashSet<>();
         for(InterestDto interest : interests){
             interestEntities.add(toInterestEntity(interest));
         }
+        logger.info("List of interests converted successfully");
         return interestEntities;
     }
 
     public InterestDto toInterestDto(InterestEntity interest) {
+        logger.info("Converting interest to dto");
         InterestDto interestDto = new InterestDto();
         interestDto.setId(interest.getId());
         interestDto.setName(interest.getName());
         interestDto.setInterestType(interest.getInterestType().toString());
+        logger.info("Interest converted to dto successfully");
         return interestDto;
     }
     public InterestEntity toInterestEntity(InterestDto interestDto){
+        logger.info("Converting interest to entity");
         InterestEntity interest = new InterestEntity();
         interest.setId(interestDto.getId());
         interest.setName(interestDto.getName());
         interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
+        logger.info("Interest converted to entity successfully");
         return interest;
     }
 
     public InterestEntity findInterestByName(String name) {
+        logger.info("Finding interest by name");
         return interestDao.findInterestByName(name);
     }
     public boolean createInterest(InterestDto interestDto){
+        logger.info("Creating interest");
         InterestEntity interest = new InterestEntity();
         interest.setName(interestDto.getName());
         interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
         interestDao.persist(interest);
+        logger.info("Interest created successfully");
         return true;
     }
-    public Set<InterestEntity> convertStringToInterestEntities(Set<String> interests){
-        return interestDao.findInterestsByName(interests);
-    }
-    public Set<String> convertInterestEntitiesToString(Set<InterestEntity> interests){
-        Set <String> interestNames = new HashSet<>();
-        for(InterestEntity interest : interests){
-            interestNames.add(interest.getName());
-        }
-        return interestNames;
-    }
+
     public boolean addInterestToProject(String token, String projectName, String interestName){
+        logger.info("Adding interest to project");
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
+            logger.error("Interest not found");
             return false;
         }
         projectBean.addInterestToProject(token, projectName, interest);
+        logger.info("Interest {} added to project {} successfully by user with token {}", interestName, projectName, token);
         return true;
     }
     public boolean removeInterestFromProject(String token ,String projectName, String interestName){
+        logger.info("Removing interest from project");
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
+            logger.error("Interest not found");
             return false;
         }
         projectBean.removeInterestFromProject(token, projectName, interest);
+        logger.info("Interest {} removed from project {} successfully by user with token {}", interestName, projectName, token);
         return true;
     }
     public boolean addInterestToUser(String token, String interestName){
+        logger.info("Adding interest to user");
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
+            logger.error("Interest not found");
             return false;
         }
         userBean.addInterestToUser(token, interest);
+        logger.info("Interest {} added to user with token {} successfully", interestName, token);
         return true;
     }
     public boolean removeInterestFromUser(String token, String interestName){
+        logger.info("Removing interest from user");
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
+            logger.error("Interest not found");
             return false;
         }
         userBean.removeInterestFromUser(token, interest);
+        logger.info("Interest {} removed from user with token {} successfully", interestName, token);
         return true;
     }
     public List<String> findAllInterestTypes(){
+        logger.info("Fetching all interest types");
         List<String> interestTypes = new ArrayList<>();
         for(InterestEntity.InterestType interestType : InterestEntity.InterestType.values()){
             interestTypes.add(interestType.toString());
         }
+        logger.info("All interest types fetched successfully");
         return interestTypes;
     }
 }

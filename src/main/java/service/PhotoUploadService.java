@@ -12,6 +12,8 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
@@ -31,14 +33,18 @@ public class PhotoUploadService {
     PhotoUploadBean photoBean;
     @EJB
     TokenBean tokenBean;
+    private static final Logger logger = LogManager.getLogger(PhotoUploadService.class);
 
     @POST
     @Path("/userPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadPhoto(@HeaderParam("token") String token, MultipartFormDataInput input) {
+    public Response uploadPhoto(@HeaderParam("token") String token, MultipartFormDataInput input, @Context HttpServletRequest request) {
+        String ipAddress = request.getRemoteAddr();
+        logger.info("User with IP address {} is trying to upload a photo", ipAddress);
         UserEntity user = photoBean.confirmUserByToken(token);
 
         if (user == null || !tokenBean.isTokenValid(token)) {
+            logger.error("User with IP address {} and token {} is not allowed to upload a photo", ipAddress, token);
             return Response.status(403).entity("not allowed").build();
         }
 
@@ -64,29 +70,34 @@ public class PhotoUploadService {
                 String photoPath = photoBean.uploadPhoto(filePath);
 
                 if (photoPath == null) {
+                    logger.error("User with IP address {} and token {} failed to upload a photo", ipAddress, token);
                     return Response.status(500).entity("Error uploading photo").build();
                 }
                 String uniqueTime = "?t=" + System.currentTimeMillis();
 
                 // Construct the URL to return to the client
                 String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/ProjectoFinalImages/" + fileName+uniqueTime;
-
+                logger.info("User with IP address {} and token {} uploaded a photo", ipAddress, token);
                 return Response.status(200).entity(photoUrl).build();
 
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.error("User with IP address {} and token {} failed to upload a photo", ipAddress, token);
                 return Response.status(500).entity("Error uploading photo").build();
             }
         }
-
+        logger.error("User with IP address {} and token {} failed to upload a photo", ipAddress, token);
         return Response.status(400).entity("No file found").build();
     }
 
     @POST
     @Path("/projectPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadProjectPhoto(@HeaderParam("token") String token,@HeaderParam("name") String name, MultipartFormDataInput input) {
+    public Response uploadProjectPhoto(@HeaderParam("token") String token,@HeaderParam("name") String name, MultipartFormDataInput input, @Context HttpServletRequest request) {
+        String ipAddress = request.getRemoteAddr();
+        logger.info("User with IP address {} is trying to upload a photo to project", ipAddress);
         if(!tokenBean.isTokenValid(token)){
+            logger.error("User with IP address {} and token {} is not allowed to upload a photo to project", ipAddress, token);
             return Response.status(403).entity("not allowed").build();
         }
         Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
@@ -111,6 +122,7 @@ public class PhotoUploadService {
                 String photoPath = photoBean.uploadPhoto(filePath);
 
                 if (photoPath == null) {
+                    logger.error("User with IP address {} and token {} failed to upload a photo to project", ipAddress, token);
                     return Response.status(500).entity("Error uploading photo").build();
                 }
                 String uniqueTime = "?t=" + System.currentTimeMillis();
@@ -118,15 +130,16 @@ public class PhotoUploadService {
                 String photoUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/ProjectoFinalImages/" +  fileName+uniqueTime;
 
 
-
+                logger.info("User with IP address {} and token {} uploaded a photo to project", ipAddress, token);
                 return Response.status(200).entity(photoUrl).build();
 
             } catch (Exception e) {
                 e.printStackTrace();
+                logger.error("User with IP address {} and token {} failed to upload a photo to project", ipAddress, token);
                 return Response.status(500).entity("Error uploading photo").build();
             }
         }
-
+        logger.error("User with IP address {} and token {} failed to upload a photo to project", ipAddress, token);
         return Response.status(400).entity("No file found").build();
     }
 }

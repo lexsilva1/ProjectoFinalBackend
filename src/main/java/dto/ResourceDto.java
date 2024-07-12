@@ -2,7 +2,7 @@ package dto;
 
 public class ResourceDto {
     private int id;
-    private String Name;
+    private String name;
     private String description;
     private String type;
     private String identifier;
@@ -25,11 +25,11 @@ public class ResourceDto {
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getDescription() {

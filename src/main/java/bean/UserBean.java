@@ -34,7 +34,7 @@ public class UserBean {
     InterestDao intererestDao;
     @Inject
     TokenBean tokenBean;
-
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(UserBean.class);
     public UserBean() {
     }
 
@@ -42,6 +42,7 @@ public class UserBean {
      * Creates a default admin user if it doesn't exist
      */
     public void createDefaultUsers() {
+        logger.info("Creating default users");
         if (userDao.findUserByEmail("admin@admin.com") == null) {
             UserEntity admin = new UserEntity();
             admin.setFirstName("admin");
@@ -419,25 +420,31 @@ public class UserBean {
 
 
     public void removeUser(String email) {
+        logger.info("Removing user with email {}", email);
         UserEntity user = userDao.findUserByEmail(email);
         if (user != null) {
+            logger.info("User found, removing user");
             userDao.remove(user);
         }
     }
 
     public List<UserDto> findAllUsers() {
+        logger.info("Finding all users");
         userDao.findAll();
         List<UserDto> userDtos = new ArrayList<>();
         for (UserEntity user : userDao.findAll()) {
             userDtos.add(convertToDto(user));
         }
+        logger.info("Users found successfully");
         return userDtos;
     }
 public List<UserEntity> getAllUsers() {
+        logger.info("Finding all users");
     return userDao.findAll();
 }
 
     public MyDto convertToMyDto(UserEntity user, String token) {
+        logger.info("Converting user to MyDto {}", user.getEmail());
         MyDto myDto = new MyDto();
         myDto.setFirstName(user.getFirstName());
         myDto.setLastName(user.getLastName());
@@ -446,6 +453,7 @@ public List<UserEntity> getAllUsers() {
         myDto.setToken(token);
         myDto.setId(user.getId());
         myDto.setRole(user.getRole().getValue());
+        logger.info("User converted to MyDto successfully");
         return myDto;
     }
 
@@ -458,14 +466,18 @@ public List<UserEntity> getAllUsers() {
      */
 
     public MyDto login(String email, String password) {
+        logger.info("Logging in user with email {}", email);
         UserEntity user = userDao.findUserByEmail(email);
         if (user != null && user.isActive() && encryptHelper.checkPassword(password, user.getPwdHash())) {
+            logger.info("User found, creating token");
             String token = generateToken();
             tokenBean.createLoginToken(token,user);
 
             MyDto userDto = convertToMyDto(user,token);
+            logger.info("User logged in successfully");
             return userDto;
         }
+        logger.error("User not found or password incorrect");
         return null;
     }
 
@@ -476,18 +488,22 @@ public List<UserEntity> getAllUsers() {
      * @return
      */
     public MyDto firstLogin(UserEntity user) {
+        logger.info("Logging in user with email {}", user.getEmail());
         String token = generateToken();
         tokenBean.createLoginToken(token, user);
-
+        logger.info("User logged in successfully");
         return convertToMyDto(user,token);
     }
 
     public boolean logout(String token) {
+        logger.info("Logging out user with token {}", token);
         UserEntity user = tokenBean.findUserByToken(token);
         if (user != null) {
+            logger.info("User found, removing token");
             tokenBean.removeToken(token);
             return true;
         }
+        logger.error("User not found");
         return false;
     }
 
@@ -497,17 +513,14 @@ public List<UserEntity> getAllUsers() {
      * @param token
      */
     public void forcedLogout(TokenEntity token) {
+        logger.info("Forced logout for user with token {}", token.getToken());
         tokenBean.removeToken(token.getToken());
     }
 
 
     public String generateToken() {
+        logger.info("Generating token");
         return encryptHelper.generateToken();
-    }
-
-
-    public UserEntity getUserByEmail(String email) {
-        return userDao.findUserByEmail(email);
     }
 
     /**
@@ -517,22 +530,30 @@ public List<UserEntity> getAllUsers() {
      * @return
      */
     public boolean isPasswordValid(String password) {
+        logger.info("Checking if password is valid");
         if (password.length() <= 8) {
+            logger.error("Password is too short");
             return false;
         } else if (!password.matches(".*[a-z].*")) {
+            logger.error("Password does not contain lowercase letters");
             return false;
         } else if (!password.matches(".*[A-Z].*")) {
+            logger.error("Password does not contain uppercase letters");
             return false;
         } else if (!password.matches(".*[0-9].*")) {
+            logger.error("Password does not contain numbers");
             return false;
+
         } else return password.matches(".*[!@#$%^&*].*");
     }
 
     public UserEntity findUserByToken(String token) {
+        logger.info("Finding user by token {}", token);
         return tokenBean.findUserByToken(token);
     }
 
     public UserEntity findUserByEmail(String email) {
+        logger.info("Finding user by email {}", email);
         return userDao.findUserByEmail(email);
     }
 
@@ -544,6 +565,7 @@ public List<UserEntity> getAllUsers() {
      * @return
      */
     public boolean register(String email, String password) {
+        logger.info("Registering user with email {}", email);
         boolean registered = false;
         UserEntity user = new UserEntity();
         user.setEmail(email);
@@ -554,9 +576,10 @@ public List<UserEntity> getAllUsers() {
         tokenBean.createRegisterToken(encryptHelper.generateToken(),user);
 
         if (emailBean.sendConfirmationEmail(user)) {
-
+            logger.info("Email sent successfully");
             registered = true;
         }
+        logger.info("User registered? {}", registered);
         return registered;
     }
 
@@ -568,8 +591,10 @@ public List<UserEntity> getAllUsers() {
      * @return
      */
     public UserEntity confirmUser(String auxToken, UserConfirmation userConfirmation) {
+        logger.info("Confirming user with token {}", auxToken);
         UserEntity user = tokenBean.findUserByToken(auxToken);
         if (user != null) {
+            logger.info("User found, confirming user");
             user.setUserPhoto(userConfirmation.getUserPhoto());
             user.setFirstName(userConfirmation.getFirstName());
             user.setLastName(userConfirmation.getLastName());
@@ -581,8 +606,10 @@ public List<UserEntity> getAllUsers() {
             user.setPrivacy(false);
             tokenBean.removeToken(auxToken);
             userDao.merge(user);
+            logger.info("User confirmed successfully");
             return user;
         }
+        logger.error("User not found");
         return null;
     }
 
@@ -593,6 +620,7 @@ public List<UserEntity> getAllUsers() {
      * @return
      */
     public boolean isEmailValid(String email) {
+        logger.info("Checking if email is valid");
         return email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$");
     }
 
@@ -600,6 +628,7 @@ public List<UserEntity> getAllUsers() {
 
 
     public UserDto convertToDto(UserEntity user) {
+        logger.info("Converting user to dto");
         UserDto userDto = new UserDto();
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
@@ -627,10 +656,12 @@ public List<UserEntity> getAllUsers() {
             interests.add(interestBean.toInterestDto(interest));
         }
         userDto.setInterests(interests);
+        logger.info("User converted to dto successfully");
         return userDto;
     }
 
     public ProjectUserDto convertToProjectUserDto(ProjectUserEntity projectUser) {
+        logger.info("Converting project user to dto");
         ProjectUserDto projectUserDto = new ProjectUserDto();
         projectUserDto.setFirstName(projectUser.getUser().getFirstName());
         projectUserDto.setLastName(projectUser.getUser().getLastName());
@@ -639,42 +670,54 @@ public List<UserEntity> getAllUsers() {
         projectUserDto.setProjectManager(projectUser.isProjectManager());
         projectUserDto.setUserId(projectUser.getUser().getId());
         projectUserDto.setApprovalStatus(projectUser.getApprovalStatus().name());
+        logger.info("Project user converted to dto successfully");
         return projectUserDto;
     }
 
     public UserEntity findUserById(int id) {
+        logger.info("Finding user by id {}", id);
         return userDao.findUserById(id);
     }
 
     public UserDto findUserDtoById(int id) {
+        logger.info("Finding user dto by id {}", id);
         UserEntity user = findUserById(id);
+        logger.info("User found");
         return convertToDto(user);
     }
     public boolean setAdminStatus(String token, int id) {
+        logger.info("Setting admin status for user with id {}", id);
         UserEntity user = findUserByToken(token);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         UserEntity user2 = findUserById(id);
         if (user2 == null) {
+            logger.error("User not found");
             return false;
         }
         if ((user.getRole() == UserEntity.Role.Admin || user.getRole() == UserEntity.Role.Manager) && user2.getRole() == UserEntity.Role.User){
             user2.setRole(UserEntity.Role.Manager);
             userDao.merge(user2);
+            logger.info("Admin status set successfully");
             return true;
         }else if(user.getRole() == UserEntity.Role.Admin && user2.getRole() == UserEntity.Role.Manager){
             user2.setRole(UserEntity.Role.User);
             userDao.merge(user2);
+            logger.info("Admin status removed successfully");
             return true;
         }
+        logger.error("User not allowed to set admin status");
         return false;
     }
 
 
     public boolean updateUser(int id, UserDto userDto) {
+        logger.info("Updating user with id {}", id);
         UserEntity user = findUserById(id);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         user.setFirstName(userDto.getFirstName());
@@ -684,27 +727,34 @@ public List<UserEntity> getAllUsers() {
         user.setLocation(labDao.findLabByLocation(LabEntity.Lab.valueOf(userDto.getLabLocation())));
         user.setUserPhoto(userDto.getUserPhoto());
         userDao.merge(user);
+        logger.info("User {} updated successfully", id);
         return true;
     }
 
     public void setLastActivity(String token) {
+        logger.info("Setting last activity for user with token {}", token);
         TokenEntity tokenEntity = tokenBean.findTokenByToken(token);
         tokenEntity.setLastActivity(LocalDateTime.now());
         tokenBean.updateToken(tokenEntity);
     }
 
     public boolean addSkillToUser(String token, SkillEntity skill) {
+        logger.info("Adding skill to user with token {}", token);
         UserEntity user = findUserByToken(token);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         user.getSkills().add(skill);
         userDao.merge(user);
+        logger.info("Skill added to user successfully");
         return true;
     }
     public boolean removeSkillFromUser(String token, SkillEntity skill) {
+        logger.info("Removing skill from user with token {}", token);
         UserEntity user = findUserByToken(token);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         SkillEntity skillEntity = skillDao.findSkillByName(skill.getName());
@@ -713,20 +763,26 @@ public List<UserEntity> getAllUsers() {
         skillEntity.getUsers().remove(user);
         userDao.merge(user); // Update the UserEntity in the database
         skillDao.merge(skillEntity); // Update the SkillEntity in the database
+        logger.info("Skill removed from user successfully");
         return true;
     }
     public boolean addInterestToUser(String token, InterestEntity interest) {
+        logger.info("Adding interest to user with token {}", token);
         UserEntity user = findUserByToken(token);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         user.getInterests().add(interest);
         userDao.merge(user);
+        logger.info("Interest added to user successfully");
         return true;
     }
     public boolean removeInterestFromUser(String token, InterestEntity interest) {
+        logger.info("Removing interest from user with token {}", token);
         UserEntity user = findUserByToken(token);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         InterestEntity interestEntity = interestBean.findInterestByName(interest.getName());
@@ -734,33 +790,42 @@ public List<UserEntity> getAllUsers() {
         user.getInterests().remove(interest);
         intererestDao.merge(interestEntity); // Update the InterestEntity in the database
         userDao.merge(user);
+        logger.info("Interest {} removed from user successfully from user with token {}", interest.getName(), token);
         return true;
     }
     public boolean resetPassword(UserEntity user) {
+        logger.info("Resetting password for user with email {}", user.getEmail());
         tokenBean.createPasswordToken(encryptHelper.generateToken(), user);
         user.setActive(false);
         userDao.merge(user);
         emailBean.sendPasswordResetEmail(user);
+        logger.info("Password reset successfully");
         return true;
     }
     public boolean confirmPasswordReset(String auxToken, PasswordDto password) {
+        logger.info("Confirming password reset for user with token {}", auxToken);
         UserEntity user = tokenBean.findUserByToken(auxToken);
         if (user == null) {
+            logger.error("User not found");
             return false;
         }
         user.setPwdHash(encryptHelper.encryptPassword(password.getPassword()));
         tokenBean.removeToken(auxToken);
         user.setActive(true);
         userDao.merge(user);
+        logger.info("Password reset confirmed successfully");
         return true;
     }
     public boolean setPrivate(String token){
+        logger.info("Setting privacy for user with token {}", token);
         UserEntity user = findUserByToken(token);
         if(user == null){
+            logger.error("User not found");
             return false;
         }
         user.setPrivacy(!user.getPrivacy());
         userDao.merge(user);
+        logger.info("Privacy set successfully");
         return true;
     }
 }

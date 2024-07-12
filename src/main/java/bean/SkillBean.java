@@ -23,8 +23,9 @@ public class SkillBean {
     private UserBean userBean;
     @EJB
     private ProjectBean projectBean;
-
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(SkillBean.class);
     public void createDefaultSkills(){
+        logger.info("Creating default skills");
         if(skillDao.findSkillByName("Java") == null){
             SkillEntity defaultSkill = new SkillEntity();
             defaultSkill.setName("Java");
@@ -354,96 +355,103 @@ public class SkillBean {
 
 
     public List<SkillDto> findAllSkills(){
+        logger.info("Finding all skills");
         List<SkillEntity> skills = skillDao.findAllSkills();
         List<SkillDto> skillDtos = new ArrayList<>();
         for(SkillEntity skill : skills){
             skillDtos.add(toSkillDtos(skill));
         }
+        logger.info("All skills found successfully");
         return skillDtos;
     }
 
     public SkillDto toSkillDtos(SkillEntity skill){
+        logger.info("Converting skill to dto");
         SkillDto skillDto = new SkillDto();
         skillDto.setId(skill.getId());
         skillDto.setName(skill.getName());
         skillDto.setSkillType(skill.getSkillType().toString());
+        logger.info("Skill converted to dto successfully");
         return skillDto;
     }
     public Set<SkillEntity> listDtoToEntity(Set<SkillDto> skillDtos){
+        logger.info("Converting list of skill dtos to entities");
         Set<SkillEntity> skills = new HashSet<>();
         for(SkillDto skillDto : skillDtos){
             skills.add(toSkillEntity(skillDto));
         }
+        logger.info("List of skill dtos converted to entities successfully");
         return skills;
     }
     public SkillEntity toSkillEntity(SkillDto skillDto){
+        logger.info("Converting skill dto to entity");
         SkillEntity skill = new SkillEntity();
         skill.setId(skillDto.getId());
         skill.setName(skillDto.getName());
         skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
+        logger.info("Skill dto converted to entity successfully");
         return skill;
     }
-public Set<String> entityToString(Set<SkillEntity> skills){
-        Set<String> skillNames = new HashSet<>();
-        for(SkillEntity skill : skills){
-            skillNames.add(skill.getName());
-        }
-        return skillNames;
-    }
+
     public SkillEntity findSkillByName(String name){
+        logger.info("Finding skill {} by name", name);
         return skillDao.findSkillByName(name);
     }
     public boolean createSkill(SkillDto skillDto){
+        logger.info("Creating skill {}", skillDto.getName());
         SkillEntity skill = new SkillEntity();
         skill.setName(skillDto.getName());
         skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
         skillDao.persist(skill);
+        logger.info("Skill {} created successfully", skillDto.getName());
         return true;
     }
-    public Set<SkillEntity> convertStringToSkillEntities(Set<String> skills){
-        return skillDao.findSkillsByName(skills);
-    }
+
 
     public boolean addSkillToUser(String token, String skillName){
+        logger.info("Adding skill {} to user", skillName);
         SkillEntity skill = skillDao.findSkillByName(skillName);
         if(skill == null){
+            logger.error("Skill {} not found", skillName);
             return false;
         }
+        logger.info("Skill {} found", skillName);
         return userBean.addSkillToUser(token, skill);
     }
-    public boolean removeSkillFromUser(String token, String skillName){
-        SkillEntity skill = skillDao.findSkillByName(skillName);
-        if(skill == null){
-            return false;
-        }
-        return userBean.removeSkillFromUser(token, skill);
-    }
+
     public boolean addSkilltoProject(String token, String projectName, String skillName){
+        logger.info("Adding skill {} to project {}", skillName, projectName);
         SkillEntity skill = skillDao.findSkillByName(skillName);
         if(skill == null){
+            logger.error("Skill {} not found", skillName);
             return false;
         }
+        logger.info("Skill {} found", skillName);
         return projectBean.addSkillToProject(token,projectName, skill);
     }
     public boolean removeSkillFromProject(String token, String projectName, String skillName){
+        logger.info("Removing skill {} from project {}", skillName, projectName);
         SkillEntity skill = skillDao.findSkillByName(skillName);
         if(skill == null){
+            logger.error("Skill {} not found", skillName);
             return false;
         }
+        logger.info("Skill {} found", skillName);
         return projectBean.removeSkillFromProject(token, projectName, skill);
     }
-    public SkillEntity findSkillByName(String token, String skillName){
-        return skillDao.findSkillByName(skillName);
-    }
     public List<String> findAllSkilltypes(){
+        logger.info("Finding all skill types");
         List<String> skillTypes = new ArrayList<>();
         for(SkillEntity.SkillType skillType : SkillEntity.SkillType.values()){
             skillTypes.add(skillType.toString());
         }
+        logger.info("All skill types found successfully");
         return skillTypes;
     }
     public Set<SkillEntity> findSkillsByName(List<String> names){
+        logger.info("Finding skills by names");
         Set<String> skillNames = new HashSet<>(names);
+        logger.info("Skills found by names successfully");
         return skillDao.findSkillsByName(skillNames);
     }
 }

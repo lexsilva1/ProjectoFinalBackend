@@ -23,11 +23,11 @@ public class MessageBean {
     private MessageDao messageDao;
     @Inject
     DatesGenerator datesGenerator;
-    @Inject
-
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(MessageBean.class);
     public MessageBean() {
     }
 public void createDefaultMessage() {
+        logger.info("Creating default messages");
         UserEntity sender = userBean.findUserById(1);
         UserEntity receiver = userBean.findUserById(2);
         UserEntity receiver2 = userBean.findUserById(3);
@@ -92,13 +92,16 @@ public void createDefaultMessage() {
 
     }
     public MessageEntity createMessage(MessageDto message) {
+        logger.info("Creating message");
         UserEntity sender = userBean.findUserById(message.getSender().getId());
         UserEntity receiver = userBean.findUserById(message.getReceiver().getId());
         MessageEntity messageEntity = new MessageEntity(message, sender, receiver);
         messageDao.createMessage(messageEntity);
+        logger.info("Message created successfully from {} to {}", sender.getFirstName(), receiver.getFirstName());
         return messageEntity;
     }
     public List <MessageDto> findUserMessages(String token, int id) {
+        logger.info("Finding messages");
         UserEntity user = userBean.findUserByToken(token);
         UserEntity user2 = userBean.findUserById(id);
         List <MessageEntity> messages = messageDao.findMessagesByUser(user.getId(), user2.getId());
@@ -109,9 +112,11 @@ public void createDefaultMessage() {
             }
             messageDtos.add(convertToDto(message));
         }
+        logger.info("Messages found successfully");
         return messageDtos;
     }
     public MessageDto convertToDto(MessageEntity message) {
+        logger.info("Converting message to dto");
         MessageDto messageDto = new MessageDto();
         UserEntity sender = message.getSender();
         UserEntity receiver = message.getReceiver();
@@ -130,10 +135,12 @@ public void createDefaultMessage() {
         messageDto.setReceiver(receiverDto);
         messageDto.setTime(message.getTime());
         messageDto.setIsRead(message.isRead());
+        logger.info("Message converted to dto successfully");
         return messageDto;
     }
     public List <LastMessageDto> findLastMessages(String token) {
         UserEntity user = userBean.findUserByToken(token);
+        logger.info("Finding last messages from user {} with token {}", user.getFirstName(), token);
         List <MessageEntity> messages = messageDao.findLastMessagesByUser(user.getId());
         List <LastMessageDto> messageDtos = new ArrayList<>();
         for (MessageEntity message : messages) {
@@ -161,9 +168,11 @@ public void createDefaultMessage() {
 
             messageDtos.add(lastMessageDto);
         }
+        logger.info("Last messages found successfully");
         return messageDtos;
     }
     public void markAsRead(MessageEntity message) {
+        logger.info("Marking message as read");
         message.setRead(true);
         messageDao.merge(message);
     }

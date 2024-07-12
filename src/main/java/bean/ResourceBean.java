@@ -20,11 +20,12 @@ public class ResourceBean {
     ProjectResourceDao projectResourcedao;
     @EJB
     ProjectBean projectBean;
-
+    private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(ResourceBean.class);
     public ResourceBean() {
     }
 
     public void createDefaultResources() {
+        logger.info("Creating default resources");
         if(resourceDao.findResourceByIdentifier("CPU-001") == null) {
             ResourceEntity resource1 = new ResourceEntity();
             resource1.setName("CPU");
@@ -352,6 +353,7 @@ public class ResourceBean {
 
     }
     public ResourceDto convertToDto(ResourceEntity resourceEntity) {
+        logger.info("Converting resource to dto");
         ResourceDto resourceDto = new ResourceDto();
         resourceDto.setId(resourceEntity.getId());
         resourceDto.setName(resourceEntity.getName());
@@ -363,24 +365,25 @@ public class ResourceBean {
         resourceDto.setBrand(resourceEntity.getBrand());
         resourceDto.setStock(resourceEntity.getStock());
         resourceDto.setObservations(resourceEntity.getObservations());
+        logger.info("Resource converted to dto successfully");
         return resourceDto;
     }
 
 
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
-
+        logger.info("Finding all resources");
         List<ResourceEntity> entities = resourceDao.findAllResources(name, identifier, supplier, type);
         List <ResourceDto> dtos = new ArrayList<>();
         for(ResourceEntity entity: entities) {
             dtos.add(convertToDto(entity));
         }
+        logger.info("All resources found successfully");
         return dtos;
     }
-    public ResourceEntity findResourceByName(String name) {
-        return resourceDao.findResourceByName(name);
-    }
+
 
     public void createResource(ResourceDto resourceDto) {
+        logger.info("Creating resource");
         ResourceEntity resource = new ResourceEntity();
         resource.setName(resourceDto.getName());
         resource.setDescription(resourceDto.getDescription());
@@ -391,72 +394,109 @@ public class ResourceBean {
         resource.setStock(resourceDto.getStock());
         resource.setObservations(resourceDto.getObservations());
         resource.setType(ResourceEntity.ResourceType.valueOf(resourceDto.getType()));
+        logger.info("Resource created successfully");
         resourceDao.persist(resource);
     }
+    public ResourceDto convertCreatedResourceToDto(ResourceEntity resourceEntity) {
+        logger.info("Converting created resource to dto");
+        ResourceDto resourceDto = new ResourceDto();
+        resourceDto.setId(resourceEntity.getId());
+        resourceDto.setName(resourceEntity.getName());
+        resourceDto.setDescription(resourceEntity.getDescription());
+        resourceDto.setType(resourceEntity.getType().toString());
+        resourceDto.setIdentifier(resourceEntity.getIdentifier());
+        resourceDto.setSupplier(resourceEntity.getSupplier());
+        resourceDto.setSupplierContact(resourceEntity.getSupplierContact());
+        resourceDto.setBrand(resourceEntity.getBrand());
+        resourceDto.setStock(resourceEntity.getStock());
+        resourceDto.setObservations(resourceEntity.getObservations());
+        logger.info("Resource converted to dto successfully");
+        return resourceDto;
+    }
     public String generateResourceIdentifier(ResourceDto resourceDto) {
+        logger.info("Generating resource identifier");
         if (resourceDto.getIdentifier() == null || resourceDto.getIdentifier().isEmpty()) {
+            logger.info("Resource identifier is null or empty");
             String identifier = resourceDto.getName().substring(0, 3).toUpperCase() + "-";
             if (resourceDto.getType().equals("COMPONENT")) {
+                logger.info("Resource type is component");
                 identifier += "C";
             } else if (resourceDto.getType().equals("RESOURCE")) {
+                logger.info("Resource type is resource");
                 identifier += "R";
             }
             identifier += "-" + resourceDao.countResources();
+            logger.info("Resource identifier generated successfully");
             return identifier;
         }
-
+        logger.info("Resource identifier is not null or empty");
         return resourceDto.getIdentifier();
     }
-    public ResourceEntity findResourcebyIdentifier(String identifier) {
-        return resourceDao.findResourceByIdentifier(identifier);
-    }
+
     public ResourceEntity findResourceByNameAndSupplier(String name, String supplier) {
+        logger.info("Finding resource by name and supplier");
         return resourceDao.findResourceByNameAndSupplier(name, supplier);
+
     }
 
     public ResourceDto findResourceById(int id) {
+        logger.info("Finding resource by id");
         return convertToDto(resourceDao.findResourceById(id));
     }
     public ResourceStatisticsDto getResourceStatistics() {
+        logger.info("Getting resource statistics");
     ResourceStatisticsDto resourceStatisticsDto = new ResourceStatisticsDto();
     resourceStatisticsDto.setResourceQuantityPerLab(projectBean.getResourceQuantitiesByLab());
     resourceStatisticsDto.setResourceQuantityPerProject(projectBean.resourceQuantitiesByProject());
     resourceStatisticsDto.setAllresources(projectBean.findResourceQuantities());
+    logger.info("Resource statistics retrieved successfully");
     return resourceStatisticsDto;
     }
     public boolean updateResource(int resourceId, ResourceDto resourceDto) {
+        logger.info("Updating resource");
         ResourceEntity resourceEntity = resourceDao.findResourceById(resourceId);
+
         if(resourceEntity == null) {
+            logger.error("Resource not found");
             return false;
         }
         if(resourceDto.getName() != null) {
+            logger.info("Updating resource {} to {} name", resourceEntity.getName(), resourceDto.getName());
             resourceEntity.setName(resourceDto.getName());
         }
         if(resourceDto.getDescription() != null) {
+            logger.info("Updating resource {} to {} description", resourceEntity.getName(), resourceDto.getDescription());
             resourceEntity.setDescription(resourceDto.getDescription());
         }
         if(resourceDto.getIdentifier() != null && resourceDao.findResourceByIdentifier(resourceDto.getIdentifier()) == null){
+            logger.info("Updating resource {} to {} identifier", resourceEntity.getName(), resourceDto.getIdentifier());
             resourceEntity.setIdentifier(resourceDto.getIdentifier());
         }
         if(resourceDto.getSupplier() != null) {
+            logger.info("Updating resource {} to {} supplier", resourceEntity.getName(), resourceDto.getSupplier());
             resourceEntity.setSupplier(resourceDto.getSupplier());
         }
         if(resourceDto.getSupplierContact() != null) {
+            logger.info("Updating resource {} to {} supplier contact", resourceEntity.getName(), resourceDto.getSupplierContact());
             resourceEntity.setSupplierContact(resourceDto.getSupplierContact());
         }
         if(resourceDto.getBrand() != null) {
+            logger.info("Updating resource {} to {} brand", resourceEntity.getName(), resourceDto.getBrand());
             resourceEntity.setBrand(resourceDto.getBrand());
         }
         if(resourceDto.getStock() != 0) {
+            logger.info("Updating resource {} to {} stock", resourceEntity.getName(), resourceDto.getStock());
             resourceEntity.setStock(resourceDto.getStock());
         }
         if(resourceDto.getObservations() != null) {
+            logger.info("Updating resource {} to {} observations", resourceEntity.getName(), resourceDto.getObservations());
             resourceEntity.setObservations(resourceDto.getObservations());
         }
         if(resourceDto.getType() != null) {
+            logger.info("Updating resource {} to {} type", resourceEntity.getName(), resourceDto.getType());
             resourceEntity.setType(ResourceEntity.ResourceType.valueOf(resourceDto.getType()));
         }
-
+        logger.info("Resource updated successfully");
         resourceDao.merge(resourceEntity);
         return true;
     }

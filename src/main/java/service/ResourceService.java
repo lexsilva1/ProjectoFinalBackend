@@ -5,6 +5,7 @@ import bean.ResourceBean;
 import bean.TokenBean;
 import bean.UserBean;
 import dto.ResourceDto;
+import entities.ResourceEntity;
 import jakarta.inject.Inject;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.ws.rs.*;
@@ -44,7 +45,7 @@ public class ResourceService {
     }
     @POST
     @Path("")
-    @Consumes("application/json")
+    @Produces("application/json")
     public Response createResource(@HeaderParam("token") String token, ResourceDto resourceDto,@Context HttpServletRequest request) {
         String ipAddress = request.getRemoteAddr();
         logger.info("User with IP address {} is trying to create a resource", ipAddress);
@@ -58,8 +59,11 @@ public class ResourceService {
             return Response.status(404).entity("resource already exists").build();
         }
         resourceBean.createResource(resourceDto);
+        ResourceEntity resourceEntity = resourceBean.findResourceByNameAndSupplier(resourceDto.getName(),resourceDto.getSupplier());
+        ResourceDto resourceDtoToSend = resourceBean.convertCreatedResourceToDto(resourceEntity);
+        resourceDtoToSend.setQuantity(resourceDto.getQuantity());
         logger.info("User with IP address {} and token {} created a resource", ipAddress, token);
-        return Response.status(200).entity("resource created").build();
+        return Response.status(200).entity(resourceDtoToSend).build();
     }
     @GET
     @Path("/statistics")

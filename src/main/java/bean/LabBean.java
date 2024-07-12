@@ -13,11 +13,13 @@ import java.util.List;
 public class LabBean {
 @Inject
 private LabDao labDao;
+private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(LabBean.class);
     public LabBean() {
     }
 
     public void createDefaultLocations() {
         // Create default locations
+        logger.info("Creating default locations");
         if(labDao.findLabByLocation(LabEntity.Lab.Lisboa) == null) {
             LabEntity lab1 = new LabEntity();
             lab1.setLocation(LabEntity.Lab.Lisboa);
@@ -52,16 +54,20 @@ private LabDao labDao;
 
     }
     public List<LabDto> findAllLabs() {
+        logger.info("Finding all labs");
         List<LabEntity> labEntities = labDao.findAllLabs();
         List<LabDto> labDtos = new ArrayList<>();
         for(LabEntity lab : labEntities) {
             labDtos.add(convertToDto(lab.getLocation()));
         }
+        logger.info("All labs found successfully");
         return labDtos;
     }
     public LabDto convertToDto(LabEntity.Lab labEntity) {
+        logger.info("Converting lab to dto");
         LabDto labDto = new LabDto();
         labDto.setLocation(labEntity.name());
+        logger.info("Lab converted to dto successfully");
         return labDto;
     }
 }

@@ -30,15 +30,16 @@ public class TimerBean {
     SystemVariablesBean systemVariablesBean;
 
     private Gson gson = new Gson();
-    //private static final Logger logger = LogManager.getLogger(TimerBean.class);
+    private static final Logger logger = LogManager.getLogger(TimerBean.class);
     @Schedule(hour = "*", minute = "*", second = "*/30", persistent = false)
 
     public void checkTimeouts() {
-        //logger.info("Checking for timeouts...");
+        logger.info("Checking for timeouts...");
         System.out.println("Checking for timeouts...");
         List<TokenEntity> timedOutUsers = tokenBean.findTimedOutTokens(LocalDateTime.now().minusMinutes(systemVariablesBean.getSessionTimeout()));
         if(timedOutUsers != null && !timedOutUsers.isEmpty()) {
             for (TokenEntity token : timedOutUsers) {
+                logger.info("User " + token.getUser().getEmail() + " has been logged out due to inactivity." + " " + token.getLastActivity() + " at " + LocalDateTime.now());
                 UserEntity user = token.getUser();
                 userBean.forcedLogout(token);
                 ForcedLogoutDto forcedLogoutDto = new ForcedLogoutDto();
@@ -47,6 +48,7 @@ public class TimerBean {
                 user = null;  //nullify user to prevent memory leaks
             }
             timedOutUsers.clear();
+            logger.info("Timeouts checked");
         }
     }
 }

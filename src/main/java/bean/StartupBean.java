@@ -35,10 +35,11 @@ public class StartupBean {
     ProjectLogBean projectLogBean;
     @Inject
     SystemVariablesBean systemVariablesBean;
-
+    private static final Logger logger = LogManager.getLogger(StartupBean.class);
 
     @PostConstruct
     public void init() {
+        logger.info("Creating default data");
         systemVariablesBean.createDefaultSystemVariables();
         labBean.createDefaultLocations();
         skillBean.createDefaultSkills();
