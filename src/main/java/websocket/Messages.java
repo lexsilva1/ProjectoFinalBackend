@@ -96,6 +96,7 @@ public class Messages {
                         String messageJson = serializeToJson(messageDto);
                         send(conversationToken, messageJson);
                         LastMessageDto lastMessageDto = new LastMessageDto(senderDto, message);
+                        lastMessageDto.setRead(true);
                         String lastMessageJson = serializeToJson(lastMessageDto);
                         notifications.send(receiverToken.getToken(), lastMessageJson);
                         System.out.println("sending message to sender");

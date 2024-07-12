@@ -7,6 +7,7 @@ import jakarta.ejb.EJB;
 import jakarta.ejb.Stateless;
 import jakarta.inject.Inject;
 import utilities.EncryptHelper;
+import websocket.Notifications;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -34,6 +35,8 @@ public class UserBean {
     InterestDao intererestDao;
     @Inject
     TokenBean tokenBean;
+    @EJB
+    NotificationBean notificationBean;
     private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(UserBean.class);
     public UserBean() {
     }
@@ -701,11 +704,27 @@ public List<UserEntity> getAllUsers() {
             user2.setRole(UserEntity.Role.Manager);
             userDao.merge(user2);
             logger.info("Admin status set successfully");
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setUserId(user2.getId());
+            notificationDto.setOtherUserId(user.getId());
+            notificationDto.setType("PROMOTED_ADMIN");
+            notificationDto.setSeen(false);
+            notificationDto.setTime(LocalDateTime.now());
+            notificationDto.setRead(false);
+            notificationBean.sendNotification(notificationDto);
             return true;
         }else if(user.getRole() == UserEntity.Role.Admin && user2.getRole() == UserEntity.Role.Manager){
             user2.setRole(UserEntity.Role.User);
             userDao.merge(user2);
             logger.info("Admin status removed successfully");
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setUserId(user2.getId());
+            notificationDto.setOtherUserId(user.getId());
+            notificationDto.setType("DEMOTED_ADMIN");
+            notificationDto.setSeen(false);
+            notificationDto.setTime(LocalDateTime.now());
+            notificationDto.setRead(false);
+            notificationBean.sendNotification(notificationDto);
             return true;
         }
         logger.error("User not allowed to set admin status");

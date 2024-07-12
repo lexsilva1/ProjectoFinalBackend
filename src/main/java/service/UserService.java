@@ -1,5 +1,6 @@
 package service;
 
+import bean.NotificationBean;
 import bean.TokenBean;
 import bean.UserBean;
 import dto.MyDto;
@@ -26,6 +27,7 @@ public class UserService {
     UserBean userBean;
     @EJB
     TokenBean tokenBean;
+
     private static final Logger logger = LogManager.getLogger(UserService.class);
     
     @POST

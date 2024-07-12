@@ -63,7 +63,9 @@ public class NotificationEntity implements Serializable {
         PROJECT_INFO,
         PROJECT_FULL,
         PROJECT_USERS_EXCEEDED,
-        CHAT
+        CHAT,
+        DEMOTED_ADMIN,
+        PROMOTED_ADMIN,
 
     }
 
