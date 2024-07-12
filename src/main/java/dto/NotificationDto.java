@@ -27,6 +27,15 @@ public class NotificationDto {
         this.time = time;
         this.seen = false;
     }
+    public NotificationDto(String type,int userId, String projectName, boolean isRead, String status){
+        this.type = type;
+        this.userId = userId;
+        this.projectName = projectName;
+        this.isRead = isRead;
+        this.status = status;
+        this.seen = false;
+        this.time = LocalDateTime.now();
+    }
 
 
     public String getType() {

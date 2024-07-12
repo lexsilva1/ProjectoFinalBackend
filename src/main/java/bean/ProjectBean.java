@@ -1328,6 +1328,58 @@ public boolean userBelongsToProject(String token, String projectName) {
 
       return newStatus;
     }
+    public String convertStatusToString(int status){
+        String newStatus;
+        switch (status){
+            case 100:
+                newStatus = "Planning";
+                break;
+            case 200:
+                newStatus = "Ready";
+                break;
+            case 300:
+                newStatus = "Approved";
+                break;
+            case 400:
+                newStatus = "In_Progress";
+                break;
+            case 500:
+                newStatus = "Finished";
+                break;
+            case 0:
+                newStatus = "Cancelled";
+                break;
+            default:
+                newStatus = "Invalid";
+        }
+        return newStatus;
+    }
+    public String convertStatusToEntityStatus(int status){
+        String newStatus;
+        switch (status){
+            case 100:
+                newStatus = "PROJECT_REJECTED";
+                break;
+            case 200:
+                newStatus = "PROJECT_READY";
+                break;
+            case 300:
+                newStatus = "PROJECT_APPROVED";
+                break;
+            case 400:
+                newStatus = "PROJECT_DOING";
+                break;
+            case 500:
+                newStatus = "PROJECT_COMPLETE";
+                break;
+            case 0:
+                newStatus = "PROJECT_CANCEL";
+                break;
+            default:
+                newStatus = null;
+        }
+        return newStatus;
+    }
     public boolean updateProjectStatus(String token, String projectName, String status) {
         logger.info("Updating project {} status to {}", projectName, status);
         UserEntity user = userBean.findUserByToken(token);
@@ -1372,6 +1424,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         projectLogDto.setStatus(status);
         projectLogBean.createProjectLog(projectLogDto);
         projectDao.persist(project);
+        NotificationDto notificationDto = new NotificationDto(convertStatusToEntityStatus(newStatus), projectUserDao.findProjectCreator(project).getUser().getId(), project.getName(), false, project.getStatus().toString());
+        project.getProjectUsers().forEach(projectUserEntity -> {
+            notificationDto.setUserId(projectUserEntity.getUser().getId());
+            notificationBean.sendNotification(notificationDto);
+        });
         logger.info("Project status updated");
         return true;
     }

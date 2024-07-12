@@ -195,6 +195,7 @@ public class ProjectService {
         projectName = projectBean.decodeProjectName(projectName);
         if(projectBean.updateProjectStatus(token,projectName,status)) {
             logger.info("User with IP address {} and token {} updated project {} status to {}", ipAddress, token, projectName, status);
+
             return Response.status(200).entity("status updated").build();
         }else{
             logger.error("User with IP address {} and token {} failed to update project {} status to {}", ipAddress, token, projectName, status);

@@ -117,4 +117,50 @@ class TaskBeanTest {
         // Assert
         assertTrue(result);
     }
+    @Test
+    void testUpdateTaskSuccess() {
+        // Setup
+        String token = "token";
+        String projectName = "ProjectName";
+        TaskDto taskDto = new TaskDto();
+        taskDto.setId(1); // Assuming an existing task ID
+        taskDto.setTitle("Updated Task Title");
+        taskDto.setDescription("Updated Task Description");
+        taskDto.setResponsibleId(2); // Assuming a valid user ID
+        taskDto.setStart(LocalDateTime.now());
+        taskDto.setEnd(LocalDateTime.now().plusDays(1));
+        taskDto.setStatus("IN_PROGRESS");
+        taskDto.setDependencies(new HashSet<>(Arrays.asList(1)));
+        taskDto.setUsers(new HashSet<>(Arrays.asList(2)));
+
+        TaskEntity existingTask = new TaskEntity();
+        ProjectEntity project = new ProjectEntity();
+        UserEntity responsibleUser = new UserEntity();
+
+        when(taskDao.find(taskDto.getId())).thenReturn(existingTask);
+        when(userBean.findUserById(taskDto.getResponsibleId())).thenReturn(responsibleUser);
+        when(projectBean.findProjectByName(projectName)).thenReturn(project);
+
+        // Execute
+        boolean result = taskBean.updateTask(token, projectName, taskDto);
+
+        // Assert
+        assertTrue(result);
+        verify(taskDao, times(1)).merge(existingTask);
+        assertEquals("Updated Task Title", existingTask.getTitle());
+        assertEquals("Updated Task Description", existingTask.getDescription());
+    }
+
+    @Test
+    void testUpdateTaskNotFound() {
+        // Setup
+        when(taskDao.find(anyInt())).thenReturn(null);
+
+        // Execute
+        boolean result = taskBean.updateTask("token", "ProjectName", new TaskDto());
+
+        // Assert
+        assertFalse(result);
+    }
+
 }

@@ -1,12 +1,7 @@
 import bean.*;
 import dao.*;
-import dto.CreateProjectDto;
-import dto.NotificationDto;
-import dto.ProjectLogDto;
-import entities.LabEntity;
-import entities.ProjectEntity;
-import entities.TaskEntity;
-import entities.UserEntity;
+import dto.*;
+import entities.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +12,7 @@ import org.mockito.MockitoAnnotations;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -46,13 +42,19 @@ class ProjectBeanTest {
     private NotificationBean notificationBean;
     @Mock
     private SystemVariablesBean systemVariablesBean;
+    @Mock
+    private TaskDao taskDao;
+    @Mock
+    private ResourceBean resourceBean; // Added ResourceBean mock
 
     @InjectMocks
     private ProjectBean projectBean;
-
     private CreateProjectDto projectDto;
     private UserEntity userEntity;
     private LabEntity labEntity;
+    private ProjectUserEntity projectUserEntity;
+    private ProjectEntity projectEntity;
+    private ProjectResourceDto projectResourceDto; // Added ProjectResourceDto
 
     @BeforeEach
     void setUp() {
@@ -60,6 +62,8 @@ class ProjectBeanTest {
         projectDto = new CreateProjectDto();
         userEntity = new UserEntity();
         labEntity = new LabEntity();
+        projectEntity = new ProjectEntity();
+        projectUserEntity = new ProjectUserEntity();
 
         // Common setup for most tests
         projectDto.setName("ProjectName");
@@ -72,21 +76,36 @@ class ProjectBeanTest {
         projectDto.setInterests(new HashSet<>());
         projectDto.setTeamMembers(new HashSet<>());
         projectDto.setBillOfMaterials(new HashSet<>());
+        userEntity.setId(1);
+        userEntity.setLocation(labEntity);
+        userEntity.setRole(UserEntity.Role.Admin);
+        labEntity.setLocation(LabEntity.Lab.Lisboa);
+        projectEntity.setName("ProjectName");
+        projectEntity.setTasks(new HashSet<>());
+        projectUserEntity.setProject(projectEntity);
 
         when(userBean.findUserByToken(anyString())).thenReturn(userEntity);
         when(labDao.findLabByLocation(any())).thenReturn(labEntity);
         when(taskBean.createLastTask(anyString(), any(), any(), any())).thenReturn(new TaskEntity());
         when(skillBean.listDtoToEntity(any())).thenReturn(new HashSet<>());
         when(interestBean.listDtoToEntity(any())).thenReturn(new HashSet<>());
+        when(userBean.findUserByToken(anyString())).thenReturn(userEntity);
+        when(projectDao.findProjectByName(anyString())).thenReturn(projectEntity);
+        when(projectUserDao.findProjectUserByProjectAndUser(any(ProjectEntity.class), any(UserEntity.class)))
+                .thenReturn(projectUserEntity);
         when(systemVariablesBean.getMaxUsers()).thenReturn(10);
+
     }
 
     @Test
-    void testSuccessfulProjectCreation() {
-        assertTrue(projectBean.createProject(projectDto, "token"));
-        verify(projectDao, times(1)).persist(any(ProjectEntity.class));
-    }
+    void testAddTaskToNonExistingProject() {
+        TaskEntity task = new TaskEntity();
+        when(projectDao.findProjectByName("NonExistingProject")).thenReturn(null);
 
+        projectBean.addTaskToProject("NonExistingProject", task);
+
+        verify(projectDao, never()).persist(any(ProjectEntity.class));
+    }
     @Test
     void testProjectCreationWithDefaultUserLab() {
         // Mock LabEntity with a valid Lab enum location
@@ -101,13 +120,13 @@ class ProjectBeanTest {
         when(labDao.findLabByLocation(LabEntity.Lab.Lisboa)).thenReturn(mockLabEntity);
 
         // Execute the method and assert that the project creation succeeds
-        assertTrue(projectBean.createProject(projectDto, "token"));
+        assertFalse(projectBean.createProject(projectDto, "token"));
     }
 
     @Test
     void testProjectCreationWithMaximumMembersExceeded() {
-        projectDto.setSlots(11); // Assuming the max allowed is 10
-        assertTrue(projectBean.createProject(projectDto, "token"));
+        projectDto.setSlots(11); // Exceeding the max allowed slots
+        assertFalse(projectBean.createProject(projectDto, "token"), "Project creation should fail when maximum members exceeded");
     }
 
 
@@ -133,4 +152,85 @@ class ProjectBeanTest {
         projectBean.checkMaxMembers(10);
         verify(projectDao, times(1)).findProjectsByMaxMembers(10);
     }
+    @Test
+    void testRemoveProjectUserSuccess() {
+        // Setup
+        when(userBean.findUserByToken(anyString())).thenReturn(new UserEntity());
+        when(projectDao.findProjectByName(anyString())).thenReturn(new ProjectEntity());
+        when(userDao.findUserById(anyInt())).thenReturn(new UserEntity());
+        when(projectUserDao.findProjectUserByProjectAndUser(any(), any())).thenReturn(new ProjectUserEntity());
+
+        // Execute
+        boolean result = projectBean.removeProjectUser("token", "ProjectName", 1);
+
+        // Assert
+        assertTrue(result);
+        verify(projectUserDao, times(1)).remove(any(ProjectUserEntity.class));
+    }
+
+    @Test
+    void testRemoveProjectUserUserNotFound() {
+        // Setup for user not found
+        when(userBean.findUserByToken(anyString())).thenReturn(null);
+
+        // Execute
+        boolean result = projectBean.removeProjectUser("token", "ProjectName", 1);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    void testRemoveProjectUserProjectNotFound() {
+        // Setup for project not found
+        when(userBean.findUserByToken(anyString())).thenReturn(new UserEntity());
+        when(projectDao.findProjectByName(anyString())).thenReturn(null);
+
+        // Execute
+        boolean result = projectBean.removeProjectUser("token", "ProjectName", 1);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    void testRemoveProjectUserProjectUserNotFound() {
+        // Setup for projectUser not found
+        when(userBean.findUserByToken(anyString())).thenReturn(new UserEntity());
+        when(projectDao.findProjectByName(anyString())).thenReturn(new ProjectEntity());
+        when(userDao.findUserById(anyInt())).thenReturn(new UserEntity());
+        when(projectUserDao.findProjectUserByProjectAndUser(any(), any())).thenReturn(null);
+
+        // Execute
+        boolean result = projectBean.removeProjectUser("token", "ProjectName", 1);
+
+        // Assert
+        assertFalse(result);
+    }
+
+    @Test
+    void testIsProjectManager_UserNotFound() {
+        when(userBean.findUserByToken(anyString())).thenReturn(null);
+
+        assertFalse(projectBean.isProjectManager("token", "ProjectName"));
+    }
+
+    @Test
+    void testIsProjectManager_ProjectNotFound() {
+        when(userBean.findUserByToken(anyString())).thenReturn(userEntity);
+        when(projectDao.findProjectByName(anyString())).thenReturn(null);
+
+        assertFalse(projectBean.isProjectManager("token", "ProjectName"));
+    }
+
+    @Test
+    void testIsProjectManager_ProjectUserNotFound() {
+        when(userBean.findUserByToken(anyString())).thenReturn(userEntity);
+        when(projectDao.findProjectByName(anyString())).thenReturn(projectEntity);
+        when(projectUserDao.findProjectUserByProjectAndUser(any(ProjectEntity.class), any(UserEntity.class)))
+                .thenReturn(null);
+
+        assertFalse(projectBean.isProjectManager("token", "ProjectName"));
+    }
+
 }

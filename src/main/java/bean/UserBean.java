@@ -570,6 +570,10 @@ public List<UserEntity> getAllUsers() {
     public boolean register(String email, String password) {
         logger.info("Registering user with email {}", email);
         boolean registered = false;
+        if(email.isEmpty() || password.isEmpty()){
+            logger.error("Email or password is empty");
+            return false;
+        }
         UserEntity user = new UserEntity();
         user.setEmail(email);
         user.setPwdHash(encryptHelper.encryptPassword(password));
