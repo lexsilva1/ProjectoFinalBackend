@@ -432,22 +432,23 @@ public class UserBean {
     }
 
     public List<UserDto> findAllUsers() {
-        logger.info("Finding all users");
+
         userDao.findAll();
         List<UserDto> userDtos = new ArrayList<>();
         for (UserEntity user : userDao.findAll()) {
-            userDtos.add(convertToDto(user));
+            if(user.getId() != 1) {
+                userDtos.add(convertToDto(user));
+            }
         }
-        logger.info("Users found successfully");
         return userDtos;
     }
 public List<UserEntity> getAllUsers() {
-        logger.info("Finding all users");
+
     return userDao.findAll();
 }
 
     public MyDto convertToMyDto(UserEntity user, String token) {
-        logger.info("Converting user to MyDto {}", user.getEmail());
+
         MyDto myDto = new MyDto();
         myDto.setFirstName(user.getFirstName());
         myDto.setLastName(user.getLastName());
@@ -456,7 +457,7 @@ public List<UserEntity> getAllUsers() {
         myDto.setToken(token);
         myDto.setId(user.getId());
         myDto.setRole(user.getRole().getValue());
-        logger.info("User converted to MyDto successfully");
+
         return myDto;
     }
 
@@ -522,7 +523,6 @@ public List<UserEntity> getAllUsers() {
 
 
     public String generateToken() {
-        logger.info("Generating token");
         return encryptHelper.generateToken();
     }
 
@@ -551,12 +551,12 @@ public List<UserEntity> getAllUsers() {
     }
 
     public UserEntity findUserByToken(String token) {
-        logger.info("Finding user by token {}", token);
+
         return tokenBean.findUserByToken(token);
     }
 
     public UserEntity findUserByEmail(String email) {
-        logger.info("Finding user by email {}", email);
+
         return userDao.findUserByEmail(email);
     }
 
@@ -631,7 +631,7 @@ public List<UserEntity> getAllUsers() {
 
 
     public UserDto convertToDto(UserEntity user) {
-        logger.info("Converting user to dto");
+
         UserDto userDto = new UserDto();
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
@@ -659,12 +659,12 @@ public List<UserEntity> getAllUsers() {
             interests.add(interestBean.toInterestDto(interest));
         }
         userDto.setInterests(interests);
-        logger.info("User converted to dto successfully");
+
         return userDto;
     }
 
     public ProjectUserDto convertToProjectUserDto(ProjectUserEntity projectUser) {
-        logger.info("Converting project user to dto");
+
         ProjectUserDto projectUserDto = new ProjectUserDto();
         projectUserDto.setFirstName(projectUser.getUser().getFirstName());
         projectUserDto.setLastName(projectUser.getUser().getLastName());
@@ -673,19 +673,20 @@ public List<UserEntity> getAllUsers() {
         projectUserDto.setProjectManager(projectUser.isProjectManager());
         projectUserDto.setUserId(projectUser.getUser().getId());
         projectUserDto.setApprovalStatus(projectUser.getApprovalStatus().name());
-        logger.info("Project user converted to dto successfully");
+
         return projectUserDto;
     }
 
     public UserEntity findUserById(int id) {
-        logger.info("Finding user by id {}", id);
+
         return userDao.findUserById(id);
     }
 
     public UserDto findUserDtoById(int id) {
-        logger.info("Finding user dto by id {}", id);
+
         UserEntity user = findUserById(id);
-        logger.info("User found");
+
+
         return convertToDto(user);
     }
     public boolean setAdminStatus(String token, int id) {
@@ -711,6 +712,7 @@ public List<UserEntity> getAllUsers() {
             notificationDto.setSeen(false);
             notificationDto.setTime(LocalDateTime.now());
             notificationDto.setRead(false);
+            notificationDto.setProjectName("System");
             notificationBean.sendNotification(notificationDto);
             return true;
         }else if(user.getRole() == UserEntity.Role.Admin && user2.getRole() == UserEntity.Role.Manager){
@@ -724,6 +726,7 @@ public List<UserEntity> getAllUsers() {
             notificationDto.setSeen(false);
             notificationDto.setTime(LocalDateTime.now());
             notificationDto.setRead(false);
+            notificationDto.setProjectName("System");
             notificationBean.sendNotification(notificationDto);
             return true;
         }

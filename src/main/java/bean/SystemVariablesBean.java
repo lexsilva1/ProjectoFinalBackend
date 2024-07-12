@@ -49,15 +49,15 @@ public boolean setMaxUsers(int maxUsers) {
     return true;
 }
 public int getMaxUsers() {
-    logger.info("Accessing MaxUsers"); return systemVariablesDao.findSystemVariableById(1).getMaxUsers();
+     return systemVariablesDao.findSystemVariableById(1).getMaxUsers();
 }
 public SystemVariablesDto getSystemVariables() {
-    logger.info("Getting system variables");
+
     SystemVariablesEntity systemVariablesEntity = systemVariablesDao.findSystemVariableById(1);
     SystemVariablesDto systemVariablesDto = new SystemVariablesDto();
     systemVariablesDto.setTimeout(systemVariablesEntity.getTimeout());
     systemVariablesDto.setMaxUsers(systemVariablesEntity.getMaxUsers());
-    logger.info("System variables retrieved");
+
     return systemVariablesDto;
 }
 }

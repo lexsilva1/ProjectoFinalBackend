@@ -109,12 +109,12 @@ public class TaskBean {
 
     }
     public TaskEntity createLastTask(String token, CreateProjectDto project, UserEntity user, List<Integer> users) {
-        logger.info("Creating last task for project {}", project.getName());
+        logger.info("Creating final task for project {}", project.getName());
         TaskEntity task = new TaskEntity();
         task.setTitle("Final Presentation");
         task.setDescription("Final presentation of the finalized project");
         if(user == null) {
-            logger.error("User is null");
+
             return null;
         }else {
             task.setResponsibleUser(user);
@@ -132,12 +132,13 @@ public class TaskBean {
         }
 
         task.setCreatedBy(userBean.findUserByToken(token));
-        logger.info("Last task created successfully");
+
         taskDao.persist(task);
+        logger.info("Final task created successfully");
         return task;
     }
     public TaskDto toTasktoDto(TaskEntity task) {
-        logger.info("Converting task to dto");
+
         TaskDto taskDto = new TaskDto();
         taskDto.setId(task.getId());
         taskDto.setTitle(task.getTitle());
@@ -160,17 +161,17 @@ public class TaskBean {
         }
         taskDto.setExternalExecutors(task.getExternalExecutors());
         taskDto.setUsers(usersIds);
-        logger.info("Task converted to dto successfully");
+
         return taskDto;
     }
     public TaskDto getTaskById(int id) {
-        logger.info("Finding task by id {}", id);
+
         TaskEntity task = taskDao.find(id);
         if(task == null) {
-            logger.error("Task not found");
+
             return null;
         }
-        logger.info("Task found");
+
         return toTasktoDto(task);
     }
     public boolean updateTask(String token, String projectName, TaskDto taskDto) {
@@ -234,7 +235,7 @@ public class TaskBean {
     }
 
     public TaskEntity findTaskById(int id) {
-        logger.info("Finding task by id {}", id);
+
         return taskDao.find(id);
     }
 

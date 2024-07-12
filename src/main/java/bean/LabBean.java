@@ -54,20 +54,20 @@ private static final org.apache.logging.log4j.Logger logger = org.apache.logging
 
     }
     public List<LabDto> findAllLabs() {
-        logger.info("Finding all labs");
+
         List<LabEntity> labEntities = labDao.findAllLabs();
         List<LabDto> labDtos = new ArrayList<>();
         for(LabEntity lab : labEntities) {
             labDtos.add(convertToDto(lab.getLocation()));
         }
-        logger.info("All labs found successfully");
+
         return labDtos;
     }
     public LabDto convertToDto(LabEntity.Lab labEntity) {
-        logger.info("Converting lab to dto");
+
         LabDto labDto = new LabDto();
         labDto.setLocation(labEntity.name());
-        logger.info("Lab converted to dto successfully");
+
         return labDto;
     }
 }

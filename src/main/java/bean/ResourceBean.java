@@ -353,7 +353,7 @@ public class ResourceBean {
 
     }
     public ResourceDto convertToDto(ResourceEntity resourceEntity) {
-        logger.info("Converting resource to dto");
+
         ResourceDto resourceDto = new ResourceDto();
         resourceDto.setId(resourceEntity.getId());
         resourceDto.setName(resourceEntity.getName());
@@ -365,25 +365,25 @@ public class ResourceBean {
         resourceDto.setBrand(resourceEntity.getBrand());
         resourceDto.setStock(resourceEntity.getStock());
         resourceDto.setObservations(resourceEntity.getObservations());
-        logger.info("Resource converted to dto successfully");
+
         return resourceDto;
     }
 
 
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
-        logger.info("Finding all resources");
+
         List<ResourceEntity> entities = resourceDao.findAllResources(name, identifier, supplier, type);
         List <ResourceDto> dtos = new ArrayList<>();
         for(ResourceEntity entity: entities) {
             dtos.add(convertToDto(entity));
         }
-        logger.info("All resources found successfully");
+
         return dtos;
     }
 
 
     public void createResource(ResourceDto resourceDto) {
-        logger.info("Creating resource");
+        logger.info("Creating resource {}", resourceDto.getName());
         ResourceEntity resource = new ResourceEntity();
         resource.setName(resourceDto.getName());
         resource.setDescription(resourceDto.getDescription());
@@ -398,7 +398,7 @@ public class ResourceBean {
         resourceDao.persist(resource);
     }
     public ResourceDto convertCreatedResourceToDto(ResourceEntity resourceEntity) {
-        logger.info("Converting created resource to dto");
+
         ResourceDto resourceDto = new ResourceDto();
         resourceDto.setId(resourceEntity.getId());
         resourceDto.setName(resourceEntity.getName());
@@ -410,7 +410,7 @@ public class ResourceBean {
         resourceDto.setBrand(resourceEntity.getBrand());
         resourceDto.setStock(resourceEntity.getStock());
         resourceDto.setObservations(resourceEntity.getObservations());
-        logger.info("Resource converted to dto successfully");
+
         return resourceDto;
     }
     public String generateResourceIdentifier(ResourceDto resourceDto) {
@@ -434,13 +434,13 @@ public class ResourceBean {
     }
 
     public ResourceEntity findResourceByNameAndSupplier(String name, String supplier) {
-        logger.info("Finding resource by name and supplier");
+
         return resourceDao.findResourceByNameAndSupplier(name, supplier);
 
     }
 
     public ResourceDto findResourceById(int id) {
-        logger.info("Finding resource by id");
+
         return convertToDto(resourceDao.findResourceById(id));
     }
     public ResourceStatisticsDto getResourceStatistics() {

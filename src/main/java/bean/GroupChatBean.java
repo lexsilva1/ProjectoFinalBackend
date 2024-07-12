@@ -27,7 +27,7 @@ public class GroupChatBean {
     public GroupChatBean() {
     }
     public GroupChatDto convertToDto(ChatEntity chat) {
-        logger.info("Converting chat to dto");
+
         GroupChatDto chatDto = new GroupChatDto();
         chatDto.setProjectName(chat.getProject().getName());
         chatDto.setSender(chat.getSender().getFirstName());
@@ -35,18 +35,18 @@ public class GroupChatBean {
         chatDto.setTime(chat.getTime());
         chatDto.setSenderId(chat.getSender().getId());
         chatDto.setUserPhoto(chat.getSender().getUserPhoto());
-        logger.info("Chat converted to dto successfully");
+
         return chatDto;
     }
     public List<GroupChatDto> fetchProjectChat(String projectName) {
-        logger.info("Fetching project chat for project {}", projectName);
+
        ProjectEntity project= projectBean.findProjectByName(projectName);
         List<ChatEntity> chats = groupChatDao.getAllChatByProject(project);
         List<GroupChatDto> chatDtos = new ArrayList<>();
         for (ChatEntity chat : chats) {
             chatDtos.add(convertToDto(chat));
         }
-        logger.info("Project chat fetched successfully");
+
         return chatDtos;
     }
     public boolean createChat(String projectName, int senderId, String message) {

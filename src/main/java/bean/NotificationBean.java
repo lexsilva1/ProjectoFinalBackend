@@ -35,7 +35,7 @@ public class NotificationBean {
     }
 
     public NotificationDto convertToDto(NotificationEntity entity) {
-        logger.info("Converting notification to dto");
+
         NotificationDto dto = new NotificationDto();
         dto.setRead(entity.isRead());
         dto.setType(entity.getType().name());
@@ -44,25 +44,25 @@ public class NotificationBean {
         dto.setUserId(entity.getUser().getId());
         dto.setNotificationId(entity.getId());
         if(entity.getOtherUser() != null) {
-            logger.info("Other user found");
+
             dto.setOtherUserId(entity.getOtherUser().getId());
-            logger.info("Other user id set to {}", entity.getOtherUser().getId());
+
         }
         if(entity.getTask() != null) {
-            logger.info("Task found");
+
             dto.setTaskId(entity.getTask().getId());
-            logger.info("Task id set to {}", entity.getTask().getId());
+
             dto.setTaskName(entity.getTask().getTitle());
-            logger.info("Task name set to {}", entity.getTask().getTitle());
+
         }
         dto.setType(entity.getType().name());
         dto.setStatus(convertTypeTpStatus(entity.getType()));
         dto.setSeen(entity.isSeen());
-        logger.info("Notification converted to dto successfully");
+
         return dto;
     }
     public boolean createNotification(NotificationDto dto) {
-        logger.info("Creating notification");
+
         boolean created = false;
         NotificationEntity entity = new NotificationEntity();
         entity.setType(NotificationEntity.NotificationType.valueOf(dto.getType()));
@@ -70,28 +70,29 @@ public class NotificationBean {
         entity.setSeen(dto.isSeen());
         entity.setTime(LocalDateTime.now());
         entity.setUser(userDao.findUserById(dto.getUserId()));
+
         entity.setProject(projectDao.findProjectByName(dto.getProjectName()));
-        if(entity.getUser() == null || entity.getProject() == null) {
-            logger.error("User or project not found");
+        if(entity.getUser() == null ) {
+
             return created;
         }
         if(dto.getOtherUserId() != 0) {
-            logger.info("Other user found");
+
             entity.setOtherUser(userDao.findUserById(dto.getOtherUserId()));
-            logger.info("Other user set to {}", dto.getOtherUserId());
+
         }
         if(dto.getTaskId() != 0) {
-            logger.info("Task found");
+
             entity.setTask(taskBean.findTaskById(dto.getTaskId()));
-            logger.info("Task set to {}", dto.getTaskId());
+
         }
         notificationDao.persist(entity);
         created = true;
-        logger.info("Notification created successfully for user {} and project {}", entity.getUser().getEmail(), entity.getProject().getName());
+        logger.info("Notification created successfully for user {} and project {}", entity.getUser().getEmail());
         return created;
     }
     public List<NotificationDto> findNotifications(String projectName,String token, Boolean isRead) {
-        logger.info("Finding notifications");
+
         ProjectEntity project = projectDao.findProjectByName(projectName);
         UserEntity user = userDao.findUserByToken(token);
         List<NotificationEntity> entities = notificationDao.findNotifications(project, user,  isRead);
@@ -99,7 +100,7 @@ public class NotificationBean {
         for (NotificationEntity entity : entities) {
             dtos.add(convertToDto(entity));
         }
-        logger.info("Notifications found successfully");
+
         return dtos;
     }
     public boolean sendNotification (NotificationDto dto) {

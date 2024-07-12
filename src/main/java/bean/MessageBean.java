@@ -97,11 +97,11 @@ public void createDefaultMessage() {
         UserEntity receiver = userBean.findUserById(message.getReceiver().getId());
         MessageEntity messageEntity = new MessageEntity(message, sender, receiver);
         messageDao.createMessage(messageEntity);
-        logger.info("Message created successfully from {} to {}", sender.getFirstName(), receiver.getFirstName());
+        logger.info("Message created successfully");
         return messageEntity;
     }
     public List <MessageDto> findUserMessages(String token, int id) {
-        logger.info("Finding messages");
+
         UserEntity user = userBean.findUserByToken(token);
         UserEntity user2 = userBean.findUserById(id);
         List <MessageEntity> messages = messageDao.findMessagesByUser(user.getId(), user2.getId());
@@ -112,11 +112,11 @@ public void createDefaultMessage() {
             }
             messageDtos.add(convertToDto(message));
         }
-        logger.info("Messages found successfully");
+
         return messageDtos;
     }
     public MessageDto convertToDto(MessageEntity message) {
-        logger.info("Converting message to dto");
+
         MessageDto messageDto = new MessageDto();
         UserEntity sender = message.getSender();
         UserEntity receiver = message.getReceiver();
@@ -135,12 +135,12 @@ public void createDefaultMessage() {
         messageDto.setReceiver(receiverDto);
         messageDto.setTime(message.getTime());
         messageDto.setIsRead(message.isRead());
-        logger.info("Message converted to dto successfully");
+
         return messageDto;
     }
     public List <LastMessageDto> findLastMessages(String token) {
         UserEntity user = userBean.findUserByToken(token);
-        logger.info("Finding last messages from user {} with token {}", user.getFirstName(), token);
+
         List <MessageEntity> messages = messageDao.findLastMessagesByUser(user.getId());
         List <LastMessageDto> messageDtos = new ArrayList<>();
         for (MessageEntity message : messages) {
@@ -168,7 +168,7 @@ public void createDefaultMessage() {
 
             messageDtos.add(lastMessageDto);
         }
-        logger.info("Last messages found successfully");
+
         return messageDtos;
     }
     public void markAsRead(MessageEntity message) {

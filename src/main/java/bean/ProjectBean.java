@@ -50,6 +50,37 @@ public class ProjectBean {
 
     public void createDefaultProjects() {
         logger.info("Creating default projects");
+        if(projectDao.findProjectByName("System") == null){
+            ProjectEntity defaultProject = new ProjectEntity();
+            defaultProject.setName("System");
+            defaultProject.setImage("http://localhost:8080/ProjectoFinalImages/System.jpg?t=1720546993380");
+            defaultProject.setLab(labDao.findLabByLocation(LabEntity.Lab.Coimbra));
+            List<SkillEntity> skills = skillDao.findSkillByType(SkillEntity.SkillType.HARDWARE);
+            if (skills != null) {
+                defaultProject.setSkills(new LinkedHashSet<>(skills));
+            }
+            defaultProject.setStatus((ProjectEntity.Status.Finished));
+            defaultProject.setDescription("System is a project that aims to create a new hardware that will revolutionize the way we interact with technology.");
+            defaultProject.setMaxMembers(4);
+            List<InterestEntity> interests = interestDao.findInterestByType(InterestEntity.InterestType.CAUSES);
+            if (interests != null) {
+                defaultProject.setInterests(new LinkedHashSet<>(interests));
+            }
+
+            ProjectUserEntity defaultProjectUser = new ProjectUserEntity();
+            defaultProjectUser.setProject(defaultProject);
+            defaultProjectUser.setUser(userBean.findUserByEmail("admin@admin.com"));
+            defaultProjectUser.setProjectManager(true);
+            defaultProjectUser.setApprovalStatus(ProjectUserEntity.ApprovalStatus.CREATOR);
+            defaultProject.setProjectUsers(new LinkedHashSet<>(List.of(defaultProjectUser)));
+            defaultProject.setStartDate(LocalDateTime.now().minusDays(5));
+            defaultProject.setEndDate(LocalDateTime.now().plusDays(30));
+            defaultProject.setCreatedAt(LocalDateTime.now());
+            defaultProject.setMaxMembers(4);
+
+            projectDao.persist(defaultProject);
+            projectUserDao.persist(defaultProjectUser);
+        }
         if (projectDao.findProjectByName("Forge X") == null) {
             ProjectEntity defaultProject = new ProjectEntity();
             defaultProject.setName("Forge X");
@@ -526,12 +557,12 @@ public class ProjectBean {
 
 
     public ProjectEntity findProjectByName(String name) {
-        logger.info("Finding project by name");
+
         return projectDao.findProjectByName(name);
     }
 
     public ProjectDto convertToDto(ProjectEntity project) {
-        logger.info("Converting project to dto");
+
         ProjectDto projectDto = new ProjectDto();
         projectDto.setName(project.getName());
         projectDto.setDescription(project.getDescription());
@@ -566,50 +597,50 @@ public class ProjectBean {
         projectDto.setMaxTeamMembers(project.getMaxMembers());
         projectDto.setStartDate(project.getStartDate());
         projectDto.setEndDate(project.getEndDate());
-        logger.info("Project converted to dto");
+
         return projectDto;
     }
 
 
     public List<UserDto> findProjectUsers(ProjectEntity project) {
-        logger.info("Finding project users");
+
         List<UserEntity> projectUsers = projectUserDao.findAllProjectUsers(project);
         List<UserDto> users = new ArrayList<>();
         for (UserEntity user : projectUsers) {
             users.add(userBean.convertToDto(user));
         }
-        logger.info("Project users found");
+
         return users;
     }
     public List<ProjectUserDto> findTeamMembers(ProjectEntity project) {
-        logger.info("Finding team members");
+
         List<ProjectUserEntity> projectUsers = projectUserDao.findTeamMembers(project);
         List<ProjectUserDto> users = new ArrayList<>();
         for (ProjectUserEntity projectUser : projectUsers) {
             users.add(userBean.convertToProjectUserDto(projectUser));
         }
-        logger.info("Team members found");
+
         return users;
     }
 
     public List<SkillDto> findProjectSkills(ProjectEntity project) {
-        logger.info("Finding project skills");
+
         List<SkillEntity> projectSkills = projectDao.findProjectSkills(project);
         List<SkillDto> skills = new ArrayList<>();
         for (SkillEntity skill : projectSkills) {
             skills.add(convertToSkillDto(skill));
         }
-        logger.info("Project skills found");
+
         return skills;
     }
 
     public SkillDto convertToSkillDto(SkillEntity skill) {
-        logger.info("Converting skill to dto");
+
         SkillDto skillDto = new SkillDto();
         skillDto.setName(skill.getName());
         skillDto.setSkillType(skill.getSkillType().getDeclaringClass().getTypeName());
         skillDto.setId(skill.getId()); // Correct usage
-        logger.info("Skill converted to dto");
+        ;
         return skillDto;
     }
 
@@ -619,7 +650,9 @@ public class ProjectBean {
 
         List<ProjectDto> projectDtos = new ArrayList<>();
         for (ProjectEntity projectEntity : projectEntities) {
-            projectDtos.add(convertToDto(projectEntity));
+            if (!projectEntity.getName().equals("System")) {
+                projectDtos.add(convertToDto(projectEntity));
+            }
         }
         logger.info("Projects found");
         return projectDtos;

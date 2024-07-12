@@ -83,18 +83,18 @@ public class ProjectLogBean {
     }
 
     public List<ProjectLogDto> getProjectLogs(int projectId) {
-        logger.info("Finding project logs for project {}", projectId);
+
         List<ProjectLogEntity> logEntities = projectLogDao.findProjectLogsByProjectId(projectId);
         List<ProjectLogDto> logDtos = new ArrayList<>();
         for (ProjectLogEntity logEntity : logEntities) {
             logDtos.add(convertToDto(logEntity));
         }
-        logger.info("Project logs found successfully");
+
         return logDtos;
     }
 
     public ProjectLogDto convertToDto(ProjectLogEntity projectLogEntity) {
-        logger.info("Converting project log to dto");
+
         ProjectEntity project = projectBean.findProjectById(projectLogEntity.getProject_id());
         ProjectLogDto projectLogDto = new ProjectLogDto();
         projectLogDto.setId(projectLogEntity.getId());
@@ -107,7 +107,7 @@ public class ProjectLogBean {
         projectLogDto.setResourceId(projectLogEntity.getProject_resource_id());
         projectLogDto.setType(projectLogEntity.getType().name());
         projectLogDto.setStatus(projectLogEntity.getStatus());
-        logger.info("Project log converted to dto successfully");
+
         return projectLogDto;
     }
     public boolean createProjectLog(ProjectLogDto projectLogDto) {
