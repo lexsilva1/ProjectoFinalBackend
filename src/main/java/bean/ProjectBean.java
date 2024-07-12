@@ -613,7 +613,11 @@ public class ProjectBean {
         return users;
     }
     public List<ProjectUserDto> findProjectUsersByProject(ProjectEntity project) {
-       List<ProjectUserEntity>
+       List<ProjectUserEntity> projectUsers = projectUserDao.findTeamMembers(project);
+        List<ProjectUserDto> users = new ArrayList<>();
+        for (ProjectUserEntity projectUser : projectUsers) {
+            users.add(userBean.convertToProjectUserDto(projectUser));
+        }
         return users;
     }
     public List<ProjectUserDto> findTeamMembers(ProjectEntity project) {
