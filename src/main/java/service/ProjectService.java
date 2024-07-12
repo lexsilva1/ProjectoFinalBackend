@@ -349,7 +349,7 @@ public class ProjectService {
         userBean.setLastActivity(token);
         projectName = projectBean.decodeProjectName(projectName);
         projectBean.demoteUserFromProjectManager(token,projectName,userId);
-        notificationBean.sendNotification(new NotificationDto("DEMOTE",userId,projectName,false,LocalDateTime.now()));
+        notificationBean.sendNotification(new NotificationDto("DEMOTED",userId,projectName,false,LocalDateTime.now()));
         logger.info("User with IP address {} and token {} demoted user {} from project manager in project {}", ipAdress,token, userId, projectName);
         return Response.status(200).entity("demoted").build();
     }
@@ -481,7 +481,7 @@ public class ProjectService {
             return Response.status(404).entity("project not found").build();
         }
         logger.info("User with IP address {} and token {} found project users for project {}", ipAddress,token, projectName);
-        return Response.status(200).entity(projectBean.findProjectUsers(project)).build();
+        return Response.status(200).entity(projectBean.findProjectUsersByProject(project)).build();
     }
     @DELETE
     @Path("/{projectName}/ProjectUser")

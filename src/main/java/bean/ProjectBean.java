@@ -612,6 +612,10 @@ public class ProjectBean {
 
         return users;
     }
+    public List<ProjectUserDto> findProjectUsersByProject(ProjectEntity project) {
+       List<ProjectUserEntity>
+        return users;
+    }
     public List<ProjectUserDto> findTeamMembers(ProjectEntity project) {
 
         List<ProjectUserEntity> projectUsers = projectUserDao.findTeamMembers(project);
