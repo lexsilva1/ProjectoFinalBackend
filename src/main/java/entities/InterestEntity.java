@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Set;
-
+/**
+ * The entity class for the interests table.
+ */
 @Entity
 @Table(name = "interests")
 @NamedQuery(name = "InterestEntity.findInterestByName", query = "SELECT i FROM InterestEntity i WHERE i.name = :name")

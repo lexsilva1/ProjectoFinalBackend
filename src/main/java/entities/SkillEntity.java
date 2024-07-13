@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Set;
-
+/**
+ * The entity class for the Skills table.
+ */
 @Entity
 @Table(name = "Skills")
 @NamedQuery(name = "SkillEntity.findSkillByName", query = "SELECT s FROM SkillEntity s WHERE s.name = :name")

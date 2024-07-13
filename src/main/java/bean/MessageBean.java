@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The bean class for the message.
+
+ */
 @Stateless
 public class MessageBean {
     @EJB
@@ -26,7 +30,11 @@ public class MessageBean {
     private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(MessageBean.class);
     public MessageBean() {
     }
-public void createDefaultMessage() {
+
+    /**
+     * Create default messages.
+     */
+    public void createDefaultMessage() {
         logger.info("Creating default messages");
         UserEntity sender = userBean.findUserById(1);
         UserEntity receiver = userBean.findUserById(2);
@@ -91,6 +99,12 @@ public void createDefaultMessage() {
 
 
     }
+
+    /**
+     * Create message.
+     * @param message
+     * @return
+     */
     public MessageEntity createMessage(MessageDto message) {
         logger.info("Creating message");
         UserEntity sender = userBean.findUserById(message.getSender().getId());
@@ -100,6 +114,13 @@ public void createDefaultMessage() {
         logger.info("Message created successfully");
         return messageEntity;
     }
+
+    /**
+     * Find user messages.
+     * @param token
+     * @param id
+     * @return
+     */
     public List <MessageDto> findUserMessages(String token, int id) {
 
         UserEntity user = userBean.findUserByToken(token);
@@ -115,6 +136,12 @@ public void createDefaultMessage() {
 
         return messageDtos;
     }
+
+    /**
+     * Convert message to dto.
+     * @param message
+     * @return
+     */
     public MessageDto convertToDto(MessageEntity message) {
         if(message.getMessage()== null&& message.getSender() == null && message.getReceiver() == null && message.getTime() == null){
             return new MessageDto();
@@ -140,6 +167,12 @@ public void createDefaultMessage() {
 
         return messageDto;
     }
+
+    /**
+     * Find last messages.
+     * @param token
+     * @return
+     */
     public List <LastMessageDto> findLastMessages(String token) {
         UserEntity user = userBean.findUserByToken(token);
 
@@ -173,6 +206,10 @@ public void createDefaultMessage() {
 
         return messageDtos;
     }
+    /**
+     * Mark as read.
+     * @param message
+     */
     public void markAsRead(MessageEntity message) {
         logger.info("Marking message as read");
         message.setRead(true);

@@ -1,7 +1,9 @@
 package dto;
 
 import entities.UserEntity;
-
+/**
+ * The DTO class for the message user.
+ */
 public class MessageUserDto {
     private int id;
     private String firstName;

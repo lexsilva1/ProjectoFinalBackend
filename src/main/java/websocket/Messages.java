@@ -22,7 +22,9 @@ import service.ObjectMapperContextResolver;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * The WebSocket class for the messages.
+ */
 @Singleton
 @ServerEndpoint("/websocket/messages/{token}/{id}")
 public class Messages {
@@ -41,6 +43,11 @@ public class Messages {
     private final ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
     private final ObjectMapper mapper = contextResolver.getContext(ObjectMapper.class);
 
+    /**
+     * The method to send a message.
+     * @param conversationToken
+     * @param msg
+     */
     public void send(String conversationToken, String msg) {
         Session session = sessions.get(conversationToken);
         if (session != null) {
@@ -53,6 +60,12 @@ public class Messages {
         }
     }
 
+    /**
+     *  The method to open a WebSocket session.
+     * @param session
+     * @param token
+     * @param id
+     */
     @OnOpen
     public void toDoOnOpen(Session session, @PathParam("token") String token, @PathParam("id") int id) {
         System.out.println("A new messages WebSocket session is opened for client with token: " + token);
@@ -60,6 +73,11 @@ public class Messages {
         sessions.put(conversationToken, session);
     }
 
+    /**
+     * The method to close a WebSocket session.
+     * @param session
+     * @param reason
+     */
     @OnClose
     public void toDoOnClose(Session session, CloseReason reason) {
         System.out.println("Websocket session is closed with CloseCode: " + reason.getCloseCode() + ": " + reason.getReasonPhrase());
@@ -126,6 +144,11 @@ public class Messages {
         }
     }
 
+    /**
+     *  The method to handle an error.
+     * @param obj
+     * @return
+     */
     private String serializeToJson(Object obj) {
         try {
             return mapper.writeValueAsString(obj);

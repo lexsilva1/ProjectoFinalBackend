@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the user confirmation.
+ */
 public class UserConfirmation {
     private String firstName;
     private String lastName;

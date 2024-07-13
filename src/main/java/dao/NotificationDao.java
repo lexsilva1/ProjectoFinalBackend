@@ -14,7 +14,9 @@ import org.hibernate.query.criteria.spi.CriteriaBuilderExtension;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The DAO class for the notification.
+ */
 @Stateless
 public class NotificationDao extends AbstractDao<NotificationEntity>{
     @PersistenceContext
@@ -24,10 +26,19 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
         super(NotificationEntity.class);
     }
     private static final long serialVersionUID = 1L;
-
+/**
+     * Find a notification by id.
+     *
+     * @return the notification
+     */
     public NotificationEntity findNotificationById(int id) {
         return em.find(NotificationEntity.class, id);
     }
+    /**
+     * Find all notifications.
+     *
+     * @return the list of notifications
+     */
     public List<NotificationEntity> findNotificationByUser(UserEntity user) {
         return em.createNamedQuery("NotificationEntity.findNotificationByUser").setParameter("user", user)
                 .getResultList();
@@ -36,6 +47,11 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
         return em.createNamedQuery("NotificationEntity.findNotificationByProject").setParameter("project", project)
                 .getResultList();
     }
+    /**
+     * Find all notifications.
+     *
+     * @return the list of notifications
+     */
     public List<NotificationEntity> findNotifications(ProjectEntity project, UserEntity user, Boolean isRead) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<NotificationEntity> cq = cb.createQuery(NotificationEntity.class);

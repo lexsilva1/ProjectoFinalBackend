@@ -16,7 +16,9 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * The service class for the labs.
+ */
 @Path("/labs")
 public class LabService {
     @Context
@@ -27,6 +29,12 @@ public class LabService {
     UserBean userBean;
     private static final Logger logger = LogManager.getLogger(LabService.class);
 
+    /**
+     * The method to find all labs.
+     * @param token
+     * @param request
+     * @return
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)

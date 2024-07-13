@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the user.
+ */
 public class MyDto {
     private String firstName;
     private String lastName;

@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The bean class for the skill.
+ */
 @Stateless
 public class SkillBean {
     @Inject
@@ -24,6 +26,9 @@ public class SkillBean {
     @EJB
     private ProjectBean projectBean;
     private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(SkillBean.class);
+    /**
+     * Create default skills.
+     */
     public void createDefaultSkills(){
         logger.info("Creating default skills");
         if(skillDao.findSkillByName("Java") == null){
@@ -353,7 +358,11 @@ public class SkillBean {
         }
     }
 
-
+/**
+     * Find all skills.
+     *
+     * @return the list of skills
+     */
     public List<SkillDto> findAllSkills(){
 
         List<SkillEntity> skills = skillDao.findAllSkills();
@@ -364,7 +373,11 @@ public class SkillBean {
 
         return skillDtos;
     }
-
+/**
+     * converts a skill to dto
+ * @param skill
+ * @return skilldto
+     */
     public SkillDto toSkillDtos(SkillEntity skill){
 
         SkillDto skillDto = new SkillDto();
@@ -374,6 +387,11 @@ public class SkillBean {
 
         return skillDto;
     }
+    /**
+     * converts a list of skill dtos to a list of skill entities
+     * @param skillDtos
+     * @return
+     */
     public Set<SkillEntity> listDtoToEntity(Set<SkillDto> skillDtos){
 
         Set<SkillEntity> skills = new HashSet<>();
@@ -383,6 +401,11 @@ public class SkillBean {
 
         return skills;
     }
+    /**
+     * converts a skill dto to a skill entity
+     * @param skillDto
+     * @return
+     */
     public SkillEntity toSkillEntity(SkillDto skillDto){
 
         SkillEntity skill = new SkillEntity();
@@ -392,11 +415,20 @@ public class SkillBean {
 
         return skill;
     }
-
+/**
+     * Find a skill by name.
+     *
+     * @return the skill
+     */
     public SkillEntity findSkillByName(String name){
 
         return skillDao.findSkillByName(name);
     }
+/**
+     * Create a skill.
+     *
+     * @return true if the skill was created, false otherwise
+     */
     public boolean createSkill(SkillDto skillDto){
         logger.info("Creating skill {}", skillDto.getName());
         SkillEntity skill = new SkillEntity();
@@ -420,7 +452,11 @@ public class SkillBean {
         return true;
     }
 
-
+/**
+     * Add a skill to a user.
+     *
+     * @return true if the skill was added, false otherwise
+     */
     public boolean addSkillToUser(String token, String skillName){
         logger.info("Adding skill {} to user with token {}", skillName, token);
         SkillEntity skill = skillDao.findSkillByName(skillName);
@@ -431,7 +467,11 @@ public class SkillBean {
         logger.info("Skill {} found and added to user with token {}", skillName, token);
         return userBean.addSkillToUser(token, skill);
     }
-
+/**
+     * Remove a skill from a user.
+     *
+     * @return true if the skill was removed, false otherwise
+     */
     public boolean addSkilltoProject(String token, String projectName, String skillName){
         logger.info("Adding skill {} to project {}", skillName, projectName);
         SkillEntity skill = skillDao.findSkillByName(skillName);
@@ -442,6 +482,11 @@ public class SkillBean {
         logger.info("Skill {} found and added to project {}", skillName, projectName);
         return projectBean.addSkillToProject(token,projectName, skill);
     }
+    /**
+     * Remove a skill from a user.
+     *
+     * @return true if the skill was removed, false otherwise
+     */
     public boolean removeSkillFromProject(String token, String projectName, String skillName){
         logger.info("Removing skill {} from project {}", skillName, projectName);
         SkillEntity skill = skillDao.findSkillByName(skillName);
@@ -452,6 +497,11 @@ public class SkillBean {
         logger.info("Skill {} found and removed from project {}", skillName, projectName);
         return projectBean.removeSkillFromProject(token, projectName, skill);
     }
+    /**
+     * Remove a skill from a user.
+     *
+     * @return true if the skill was removed, false otherwise
+     */
     public List<String> findAllSkilltypes(){
 
         List<String> skillTypes = new ArrayList<>();
@@ -461,6 +511,11 @@ public class SkillBean {
 
         return skillTypes;
     }
+    /**
+     * Remove a skill from a user.
+     *
+     * @return true if the skill was removed, false otherwise
+     */
     public Set<SkillEntity> findSkillsByName(List<String> names){
 
         Set<String> skillNames = new HashSet<>(names);

@@ -1,7 +1,9 @@
 package dto;
 
 import java.time.LocalDateTime;
-
+/**
+ * The DTO class for the message.
+ */
 public class MessageDto {
     private String message;
     private MessageUserDto sender;

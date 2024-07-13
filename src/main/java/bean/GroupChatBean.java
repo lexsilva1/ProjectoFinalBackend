@@ -12,7 +12,9 @@ import jakarta.ws.rs.core.Context;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The bean class for the group chat.
+ */
 @Stateless
 public class GroupChatBean {
 
@@ -26,6 +28,12 @@ public class GroupChatBean {
 
     public GroupChatBean() {
     }
+    /**
+     * Convert the entity to a DTO.
+     *
+     * @param chat the entity
+     * @return the DTO
+     */
     public GroupChatDto convertToDto(ChatEntity chat) {
 
         GroupChatDto chatDto = new GroupChatDto();
@@ -38,6 +46,12 @@ public class GroupChatBean {
 
         return chatDto;
     }
+    /**
+     * Fetch project chat.
+     *
+     * @param projectName the project name
+     * @return the list
+     */
     public List<GroupChatDto> fetchProjectChat(String projectName) {
 
        ProjectEntity project= projectBean.findProjectByName(projectName);
@@ -49,6 +63,14 @@ public class GroupChatBean {
 
         return chatDtos;
     }
+
+    /**
+     * Create chat.
+     * @param projectName
+     * @param senderId
+     * @param message
+     * @return
+     */
     public boolean createChat(String projectName, int senderId, String message) {
         boolean created = false;
         logger.info("Creating chat for project {}", projectName);

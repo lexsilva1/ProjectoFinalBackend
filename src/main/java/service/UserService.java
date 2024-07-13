@@ -18,7 +18,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.String;
-
+/**
+ * The service class for the users.
+ */
 @Path("/users")
 public class UserService {
     @Context
@@ -29,7 +31,13 @@ public class UserService {
     TokenBean tokenBean;
 
     private static final Logger logger = LogManager.getLogger(UserService.class);
-    
+    /**
+     * The method to login.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/login")
     @Produces("application/json")
@@ -46,6 +54,12 @@ public class UserService {
             return Response.status(404).entity("user not found").build();
         }
     }
+    /**
+     * The method to logout.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/logout")
     @Produces("application/json")
@@ -60,6 +74,12 @@ public class UserService {
             return Response.status(404).entity("user not found").build();
         }
     }
+    /**
+     * The method to find all users.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("")
     @Produces("application/json")
@@ -73,6 +93,13 @@ public class UserService {
         logger.info("User with token {} and IP {} got all users successfully", token, ipAddress);
         return Response.status(200).entity(userBean.findAllUsers()).build();
     }
+    /**
+     * The method to register.
+     * @param email The email of the user.
+     * @param password The password of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/register")
     @Produces("application/json")
@@ -96,6 +123,13 @@ public class UserService {
         }
 
     }
+    /**
+     * The method to confirm the user.
+     * @param token The token of the user.
+     * @param userConfirmation The user confirmation.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/confirm")
     @Produces("application/json")
@@ -110,6 +144,13 @@ public class UserService {
         logger.info("User {} {} with IP address {} and token {} confirmed successfully", user.getFirstName(),user.getLastName(),ipAddress, token);
         return Response.status(200).entity(userBean.firstLogin(user)).build();
     }
+    /**
+     * The method to find user by id.
+     * @param token The token of the user.
+     * @param id The id of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{id}")
     @Produces("application/json")
@@ -128,7 +169,14 @@ public class UserService {
         }
         logger.info("User with IP address {} and token {} found user by id {}", ipAddress, token, id);
         return Response.status(200).entity(user).build();
-    }
+    }/**
+     * The method to update user.
+     * @param token The token of the user.
+     * @param id The id of the user.
+     * @param userDto The user to update.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{id}")
     @Produces("application/json")
@@ -148,6 +196,11 @@ public class UserService {
             return Response.status(404).entity("user not found").build();
         }
     }
+    /**
+     * method to reset password
+     * @param email The email of the user.
+     *
+     */
     @PUT
     @Path("/resetPassword")
     @Produces("application/json")
@@ -167,6 +220,13 @@ public class UserService {
         logger.info("User with IP address {} sent reset password to {}", ipAddress,email);
         return Response.status(200).entity("password reset").build();
     }
+    /**
+     * The method to confirm password reset.
+     * @param token The token of the user.
+     * @param passwordDto The password dto.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/confirmPasswordReset/{token}")
     @Produces("application/json")
@@ -189,6 +249,12 @@ public class UserService {
         logger.info("User with IP address {} confirmed password reset", ipAddress);
         return Response.status(200).entity("password reset").build();
     }
+    /**
+     * The method to set privacy.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/setPrivacy")
     @Produces("application/json")
@@ -208,6 +274,13 @@ public class UserService {
             return Response.status(404).entity("user not found").build();
         }
     }
+    /**
+     * The method to set admin status.
+     * @param token The token of the user.
+     * @param id The id of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/adminStatus")
     @Produces("application/json")

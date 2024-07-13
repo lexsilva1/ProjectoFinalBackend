@@ -1,7 +1,9 @@
 package dto;
 
 import entities.ProjectResourceEntity;
-
+/**
+ * The DTO class for the project resource.
+ */
 public class ProjectResourceDto {
 
     private int projectId;
@@ -11,6 +13,10 @@ public class ProjectResourceDto {
 
     public ProjectResourceDto() {
     }
+    /**
+     * Constructor for the project resource DTO.
+     * @param projectResourceEntity The project resource entity.
+     */
     public ProjectResourceDto(ProjectResourceEntity projectResourceEntity) {
         this.projectId = projectResourceEntity.getProject().getId();
         this.resourceId = projectResourceEntity.getResource().getId();

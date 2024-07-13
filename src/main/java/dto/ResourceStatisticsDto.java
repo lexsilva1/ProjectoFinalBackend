@@ -1,7 +1,9 @@
 package dto;
 
 import java.util.HashMap;
-
+/**
+ * The DTO class for the resource statistics.
+ */
 public class ResourceStatisticsDto {
     private HashMap<String,HashMap<String,Integer>> resourceQuantityPerLab;
     private HashMap<String,HashMap<String,Integer>>  resourceQuantityPerProject;

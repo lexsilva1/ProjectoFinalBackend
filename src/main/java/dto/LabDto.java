@@ -1,7 +1,9 @@
 package dto;
 
 import entities.LabEntity;
-
+/**
+ * The DTO class for the lab.
+ */
 public class LabDto {
     private String location;
 

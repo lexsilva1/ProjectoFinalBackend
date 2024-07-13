@@ -1,7 +1,9 @@
 package dto;
 
 import java.util.HashMap;
-
+/**
+ * The DTO class for the project statistics.
+ */
 public class ProjectStatistics {
     private int totalProjects;
     private HashMap<String,Integer> totalApprovedProjects;

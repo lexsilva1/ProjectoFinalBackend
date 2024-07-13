@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Set;
-
+/**
+ * The entity class for the project_user table.
+ */
 @Entity
 @Table(name = "project_user")
 @NamedQuery(name = "ProjectUserEntity.findProjectUserByUserAndProject", query = "SELECT pu FROM ProjectUserEntity pu WHERE pu.user = :user AND pu.project = :project")

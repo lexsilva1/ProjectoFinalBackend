@@ -8,7 +8,9 @@ import jakarta.inject.Inject;
 
 import java.time.LocalDateTime;
 import java.util.*;
-
+/**
+ * The bean class for the project.
+ */
 @Stateless
 public class ProjectBean {
     @Inject
@@ -47,7 +49,9 @@ public class ProjectBean {
     SystemVariablesBean systemVariablesBean;
     private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProjectBean.class);
 
-
+/**
+     * Create default projects
+     */
     public void createDefaultProjects() {
         logger.info("Creating default projects");
         if(projectDao.findProjectByName("System") == null){
@@ -555,12 +559,21 @@ public class ProjectBean {
 
     }
 
-
+    /**
+     * find project by name
+     * @param name
+     * @return ProjectEntity
+     */
     public ProjectEntity findProjectByName(String name) {
 
         return projectDao.findProjectByName(name);
     }
 
+    /**
+     * converts a ProjectEntity to a dto
+     * @param project
+     * @return
+     */
     public ProjectDto convertToDto(ProjectEntity project) {
 
         ProjectDto projectDto = new ProjectDto();
@@ -601,7 +614,11 @@ public class ProjectBean {
         return projectDto;
     }
 
-
+    /**
+     * find project users
+     * @param project
+     * @return
+     */
     public List<UserDto> findProjectUsers(ProjectEntity project) {
 
         List<UserEntity> projectUsers = projectUserDao.findAllProjectUsers(project);
@@ -612,6 +629,11 @@ public class ProjectBean {
 
         return users;
     }
+    /**
+     * find project users and converts them to dto
+     * @param project
+     * @return a list of ProjectUserDto
+     */
     public List<ProjectUserDto> findProjectUsersByProject(ProjectEntity project) {
        List<ProjectUserEntity> projectUsers = projectUserDao.findTeamMembers(project);
         List<ProjectUserDto> users = new ArrayList<>();
@@ -620,6 +642,12 @@ public class ProjectBean {
         }
         return users;
     }
+    /**
+     * find project teamMembers... resturn ProjectUser dto
+     *
+     * @param project
+     * @return
+     */
     public List<ProjectUserDto> findTeamMembers(ProjectEntity project) {
 
         List<ProjectUserEntity> projectUsers = projectUserDao.findTeamMembers(project);
@@ -630,7 +658,11 @@ public class ProjectBean {
 
         return users;
     }
-
+/**
+     * find project's skills
+     * @param project
+     * @return a List of skillDto objects
+     */
     public List<SkillDto> findProjectSkills(ProjectEntity project) {
 
         List<SkillEntity> projectSkills = projectDao.findProjectSkills(project);
@@ -641,7 +673,11 @@ public class ProjectBean {
 
         return skills;
     }
-
+/**
+     * conversts a skill entity to a dto
+ * @param skill
+ * @return a skillDto object
+     */
     public SkillDto convertToSkillDto(SkillEntity skill) {
 
         SkillDto skillDto = new SkillDto();
@@ -651,7 +687,17 @@ public class ProjectBean {
         ;
         return skillDto;
     }
-
+/**
+     * find projects
+ * @param projectName
+ * @param projectLab
+ * @param projectSkill
+ * @param projectInterest
+ * @param projectStatus
+ * @param projectUser
+ * @param token
+ * @return a list of ProjectDto objects
+     */
     public List<ProjectDto> findProjects(String projectName, String projectLab, String projectSkill, String projectInterest, int projectStatus, int projectUser, String token) {
         logger.info("Finding projects for user with token {}", token);
         List<ProjectEntity> projectEntities = projectDao.findProjects(projectName, projectLab, projectSkill, projectInterest, projectStatus, projectUser);
@@ -666,6 +712,12 @@ public class ProjectBean {
         return projectDtos;
     }
 
+    /**
+     * create project method
+     * @param projectDto
+     * @param token
+     * @return
+     */
     public boolean createProject(CreateProjectDto projectDto, String token) {
         logger.info("Creating project");
         if (projectDao.findProjectByName(projectDto.getName()) != null) {
@@ -786,6 +838,13 @@ public class ProjectBean {
         logger.info("Project created");
         return true;
     }
+
+    /**
+     * update projects lab and description
+     * @param projectDto
+     * @param projectName
+     * @return true or false, depending on the update
+     */
     public boolean updateProject(UpdateProjectDto projectDto,String projectName){
         logger.info("Updating project {}", projectName);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -805,7 +864,10 @@ public class ProjectBean {
         logger.info("Project {} updated", projectName);
         return true;
     }
-
+/**
+     * finds all project status
+ * @return a list of strings
+     */
     public List<String> findAllStatus() {
         logger.info("Finding all project status");
         List<String> status = new ArrayList<>();
@@ -815,6 +877,13 @@ public class ProjectBean {
         logger.info("Project status found");
         return status;
     }
+
+    /**
+     * find a user by token and project
+     * @param projectName
+     * @param token
+     * @return projectUser entity
+     */
     public ProjectUserEntity findUserByTokenAndProject(String projectName, String token) {
         logger.info("Finding user by token {} and project {}", token, projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -826,7 +895,13 @@ public class ProjectBean {
         logger.info("User found");
         return projectUserDao.findProjectUserByProjectAndUser(project, user);
     }
-
+/**
+     * Apply toa  project
+ * @param token
+ * @param projectName
+ * @return true or false, depending on the application
+ *
+     */
     public boolean applyToProject(String token, String projectName) {
         logger.info("Applying to project {}", projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -853,6 +928,13 @@ public class ProjectBean {
         return true;
     }
 
+    /**
+     * invite use rto a project
+     * @param token
+     * @param projectName
+     * @param userId
+     * @return true if the project user entity is created
+     */
     public boolean inviteToProject(String token, String projectName, int userId) {
         logger.info("Inviting user {} to project {}", userId, projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -885,7 +967,14 @@ public class ProjectBean {
         ACCEPT_INVITATION,
         ACCEPT_APPLICATION
     }
-
+/**
+     * accept request
+     * @param token
+     * @param projectName
+     * @param userId
+     * @param operationType
+     * @return true or false, depending on the acceptance
+     */
     public boolean acceptRequest(String token, String projectName, Integer userId, OperationType operationType) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -938,7 +1027,14 @@ public class ProjectBean {
         return true;
     }
 
-
+    /**
+     * reject request
+     * @param token
+     * @param projectName
+     * @param userId
+     * @param operationType
+     * @return
+     */
     public boolean rejectRequest(String token, String projectName, Integer userId, OperationType operationType) {
         UserEntity user = userBean.findUserByToken(token);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -989,6 +1085,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         ProjectUserEntity projectUser = projectUserDao.findProjectUserByProjectAndUser(project, user);
         return projectUser != null;
     }
+
+    /**
+     * leave project
+     * @param token
+     * @param projectName
+     * @return
+     */
     public boolean leaveProject(String token, String projectName) {
         logger.info("Leaving project {}", projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -1032,6 +1135,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         return true;
     }
 
+    /**
+     * find project creator by a task
+     * @param task
+     * @return User Dto
+     */
  public UserDto findProjectCreatorByTask(TaskEntity task) {
         logger.info("Finding project creator by task");
         ProjectEntity project = projectDao.findProjectByTask(task);
@@ -1041,6 +1149,13 @@ public boolean userBelongsToProject(String token, String projectName) {
 
     }
 
+    /**
+     * promote  a user to Project Manager
+     * @param token
+     * @param projectName
+     * @param userId
+     * @return
+     */
     public boolean promoteUserToProjectManager(String token, String projectName, int userId) {
         logger.info("Promoting user {} to project manager", userId);
         UserEntity user = userBean.findUserByToken(token);
@@ -1060,7 +1175,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Project user updated");
         return true;
     }
-
+/**
+     * demote user from project manager
+     * @param token
+     * @param projectName
+     * @param userId
+     * @return
+     */
     public boolean demoteUserFromProjectManager(String token, String projectName, int userId) {
         logger.info("Demoting user {} from project manager", userId);
         UserEntity user = userBean.findUserByToken(token);
@@ -1081,6 +1202,14 @@ public boolean userBelongsToProject(String token, String projectName) {
         return true;
     }
 
+    /**
+     * add resource to project
+     * @param token
+     * @param projectName
+     * @param resourceId
+     * @param quantity
+     * @return true if the projectResource entity is created
+     */
     public boolean addResourceToProject(String token, String projectName, int resourceId, int quantity) {
         logger.info("Adding resource to project");
         UserEntity user = userBean.findUserByToken(token);
@@ -1098,6 +1227,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Resource added to project");
         return true;
     }
+    /**
+     * remove resource from project
+     * @param token
+     * @param projectName
+     * @param resourceId
+     * @return true if the projectResource entity is removed
+     */
     public boolean removeResourceFromProject(String token, String projectName, int resourceId) {
         logger.info("Removing resource from project");
         UserEntity user = userBean.findUserByToken(token);
@@ -1112,6 +1248,15 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Resource removed from project");
         return true;
     }
+
+    /**
+     * updates a resources quantity in a project
+     * @param token
+     * @param projectName
+     * @param resourceId
+     * @param quantity
+     * @return
+     */
     public boolean updateResourceQuantity(String token, String projectName, int resourceId, int quantity) {
         logger.info("Updating resource quantity");
         UserEntity user = userBean.findUserByToken(token);
@@ -1128,6 +1273,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         return true;
     }
 
+    /**
+     * decodes the projects name
+     * @param projectName
+     * @return
+     */
     public String decodeProjectName(String projectName) {
         logger.info("Decoding project name");
         try {
@@ -1140,6 +1290,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         }
     }
 
+    /**
+     * adds  skill toa  project
+     * @param token
+     * @param projectName
+     * @param skill
+     * @return
+     */
     public boolean addSkillToProject(String token, String projectName, SkillEntity skill) {
         logger.info("Adding skill {} to project {}", skill.getName(), projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -1157,6 +1314,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         return true;
     }
 
+    /**
+     * removes a skill from a project
+     * @param token
+     * @param projectName
+     * @param skill
+     * @return
+     */
     public boolean removeSkillFromProject(String token, String projectName, SkillEntity skill) {
         logger.info("Removing skill {} from project {}", skill.getName(), projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -1173,6 +1337,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         return true;
         }
 
+    /**
+     * add a keyword to a project
+     * @param token
+     * @param projectName
+     * @param interest
+     * @return
+     */
     public boolean addInterestToProject(String token, String projectName, InterestEntity interest) {
         logger.info("Adding interest to project");
         UserEntity user = userBean.findUserByToken(token);
@@ -1188,6 +1359,14 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Interest added to project");
         return true;
     }
+
+    /**
+     * removes a skill from a project
+     * @param token
+     * @param projectName
+     * @param interest
+     * @return
+     */
     public boolean removeInterestFromProject(String token, String projectName, InterestEntity interest) {
         logger.info("Removing interest from project");
         UserEntity user = userBean.findUserByToken(token);
@@ -1203,6 +1382,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Interest removed from project");
         return true;
     }
+
+    /**
+     * gets resources by lab statistics
+     * @return  a hashmap of string and hashmap of string and integer
+     */
     public HashMap<String,HashMap<String,Integer>> getResourceQuantitiesByLab(){
         logger.info("Finding resource quantities by lab");
         List<LabEntity> labs = labDao.findAllLabs();
@@ -1227,6 +1411,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Resource quantities by lab found");
         return resources;
     }
+
+    /**
+     * gets resource quantities by project
+     * @return a hashmap of string and hashmap of string and integer
+     */
     public HashMap<String,HashMap<String,Integer>> resourceQuantitiesByProject(){
         logger.info("Finding resource quantities by project");
         List<ProjectEntity> projects = projectDao.findAllProjects();
@@ -1242,6 +1431,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Resource quantities by project found");
         return resourcesPerProject;
     }
+
+    /**
+     * finds resource quantities
+     * @return a hashmap of string and integer
+     */
     public HashMap<String,Integer> findResourceQuantities(){
         logger.info("Finding resource quantities");
         List<ProjectResourceEntity> projectResources = projectResourceDao.findAllProjectResources();
@@ -1257,6 +1451,10 @@ public boolean userBelongsToProject(String token, String projectName) {
         return resourceQuantities;
     }
 
+    /**
+     * gets project statistics
+     * @return a project statistics object
+     */
     public ProjectStatistics getProjectStatistics() {
         logger.info("Getting project statistics");
         ProjectStatistics projectStatistics = new ProjectStatistics();
@@ -1278,6 +1476,12 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Project statistics found");
         return projectStatistics;
     }
+
+    /**
+     * finds a project's task
+     * @param projectName
+     * @return return a project task Dto
+     */
     public ProjectTasksDto findProjectTasks(String projectName) {
         logger.info("Finding project {} tasks", projectName);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -1296,6 +1500,12 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Project tasks found");
         return projectTasksDto;
     }
+
+    /**
+     * adds a task toa  project
+     * @param projectName
+     * @param task
+     */
     public void addTaskToProject( String projectName, TaskEntity task) {
         logger.info("Adding task to project");
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -1310,6 +1520,12 @@ public boolean userBelongsToProject(String token, String projectName) {
         projectDao.persist(project);
         logger.info("Task added to project");
     }
+
+    /**
+     * status converter
+     * @param status
+     * @return returns the integers associated with the status enums
+     */
     public int convertStatus(String status){
         int newStatus;
         switch (status){
@@ -1363,6 +1579,12 @@ public boolean userBelongsToProject(String token, String projectName) {
         }
         return newStatus;
     }
+
+    /**
+     * converts from entity enum status
+     * @param status
+     * @return String
+     */
     public String convertStatusToEntityStatus(int status){
         String newStatus;
         switch (status){
@@ -1389,6 +1611,14 @@ public boolean userBelongsToProject(String token, String projectName) {
         }
         return newStatus;
     }
+
+    /**
+     * updates the status of a project
+     * @param token
+     * @param projectName
+     * @param status
+     * @returntrue is the update is successful
+     */
     public boolean updateProjectStatus(String token, String projectName, String status) {
         logger.info("Updating project {} status to {}", projectName, status);
         UserEntity user = userBean.findUserByToken(token);
@@ -1441,6 +1671,14 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Project status updated");
         return true;
     }
+
+    /**
+     * removes a projectUSer from teh project
+     * @param token
+     * @param projectName
+     * @param userId
+     * @return true if the user is removed
+     */
     public boolean removeProjectUser(String token, String projectName, int userId) {
         logger.info("Removing user {} from project {}", userId, projectName);
         UserEntity user = userBean.findUserByToken(token);
@@ -1478,6 +1716,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("User {} removed from project {} by {}", userToRemove.getEmail(), projectName, user.getEmail());
         return true;
     }
+
+    /**
+     * checks if a user is a project manager
+     * @param token
+     * @param projectName
+     * @return
+     */
     public boolean isProjectManager(String token, String projectName){
         logger.info("Checking if user is project manager");
         UserEntity user = userBean.findUserByToken(token);
@@ -1490,6 +1735,11 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("User is project manager");
         return projectUser.isProjectManager();
     }
+    /**
+     * gets project resources
+     * @param projectName
+     * @return a list of project resources
+     */
     public List<ProjectResourceEntity> getProjectResources(String projectName){
         logger.info("Finding project {} resources", projectName);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -1500,10 +1750,22 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Project {} resources found", projectName);
         return projectResourceDao.findProjectResources(project.getId());
     }
+
+    /**
+     * finda a project by id
+     * @param id
+     * @return a project Entity
+     */
     public ProjectEntity findProjectById(int id){
         logger.info("Finding project by id");
         return projectDao.findProjectById(id);
     }
+
+    /**
+     * gets project logs
+     * @param projectName
+     * @return
+     */
     public List<ProjectLogDto> getProjectLogs(String projectName){
         logger.info("Finding project {} logs", projectName);
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -1514,6 +1776,13 @@ public boolean userBelongsToProject(String token, String projectName) {
         logger.info("Project {} logs found", projectName);
        return projectLogBean.getProjectLogs(project.getId());
     }
+
+    /**
+     *
+     * adds a project log to a project
+     * @param dto
+     * @return
+     */
     public ProjectLogDto addProjectLog(ProjectLogDto dto){
         logger.info("Adding a log to project {}", dto.getProject());
         if( projectLogBean.createProjectLog(dto)){
@@ -1526,6 +1795,11 @@ public boolean userBelongsToProject(String token, String projectName) {
 
 
     }
+
+    /**
+     * Checks teh maxMembers of a project
+     * @param maxMembers
+     */
     public void checkMaxMembers(int maxMembers){
         logger.info("Checking project max members");
         List<ProjectEntity> exceeded= projectDao.findProjectsByMaxMembers(maxMembers);

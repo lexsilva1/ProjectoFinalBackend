@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * The entity class for the chat table.
 
+ */
 @Entity
 @Table(name = "chat")
 @NamedQuery(name = "ChatEntity.getChatByProject", query = "SELECT c FROM ChatEntity c WHERE c.project = :project")

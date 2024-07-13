@@ -1,7 +1,9 @@
 package dto;
 
 import java.time.LocalDateTime;
-
+/**
+ * The DTO class for the group chat.
+ */
 public class GroupChatDto {
     private String projectName;
     private String sender;

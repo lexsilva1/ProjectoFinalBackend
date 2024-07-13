@@ -12,11 +12,24 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 
+/**
+ * The image servlet.
+
+ */
 @WebServlet("/ProjectoFinalImages/*")
 public class ImageServlet extends HttpServlet {
 
     private static final String SERVER_IMAGE_DIRECTORY = "C:/Users/xanos/OneDrive/Desktop/AoR/PAJ/wildfly/wildfly-30.0.1.Final/bin/ProjectoFinalImages"; // Change this to your server directory path
 
+    /**
+     * Process the HTTP GET request.
+     * @param req an {@link HttpServletRequest} object that contains the request the client has made of the servlet
+     *
+     * @param resp an {@link HttpServletResponse} object that contains the response the servlet sends to the client
+     *
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();

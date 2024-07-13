@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+/**
+ * The entity class for the message table.
+ */
 @Entity
 @Table(name = "message")
 @NamedQuery(name = "MessageEntity.findMessageByUser", query = "SELECT m FROM MessageEntity m WHERE m.sender = :sender and m.receiver = :receiver")

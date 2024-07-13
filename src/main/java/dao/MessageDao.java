@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+/**
+ * The DAO class for the message.
+ */
 @Stateless
 public class MessageDao  extends AbstractDao<MessageEntity>{
 @PersistenceContext
@@ -18,7 +20,11 @@ private static final long serialVersionUID = 1L;
     public MessageDao() {
         super(MessageEntity.class);
     }
-
+/**
+     * Find messages between users by their id.
+     *
+     * @return the message
+     */
     public List<MessageEntity> findMessagesByUser(int id, int id2) {
         UserEntity user = em.find(UserEntity.class, id);
         UserEntity user2 = em.find(UserEntity.class, id2);
@@ -29,6 +35,11 @@ private static final long serialVersionUID = 1L;
                 .setParameter("user2", user2)
                 .getResultList();
     }
+    /**
+     * Find last messages by user.
+     *
+     * @return the list of messages
+     */
     public List<MessageEntity> findLastMessagesByUser(int id) {
         return em.createQuery(
                         "SELECT m FROM MessageEntity m " +
@@ -45,6 +56,11 @@ private static final long serialVersionUID = 1L;
     public MessageEntity findMessageByProject(int id) {
         return em.find(MessageEntity.class, id);
     }
+    /**
+     * Find all messages.
+     *
+     * @return the list of messages
+     */
     public void createMessage(MessageEntity message) {
        em.persist(message);
     }

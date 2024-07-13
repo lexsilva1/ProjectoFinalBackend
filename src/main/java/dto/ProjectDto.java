@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The DTO class for the project.
+ */
 public class ProjectDto {
     private String name;
     private String description;

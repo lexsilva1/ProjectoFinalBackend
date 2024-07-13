@@ -13,10 +13,18 @@ public class SystemVariablesDao extends AbstractDao<SystemVariablesEntity>{
         super(SystemVariablesEntity.class);
     }
     private static final long serialVersionUID = 1L;
-
+/**
+     * Find all system variables.
+     *
+     * @return the list of system variables
+     */
     public SystemVariablesEntity findSystemVariableById(int id) {
         return em.find(SystemVariablesEntity.class, id);
     }
+    /**
+     * Create system variables.
+     *
+     */
     public void create(int timeout, int maxUsers) {
         em.persist(new SystemVariablesEntity(timeout, maxUsers));
     }

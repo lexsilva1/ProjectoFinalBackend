@@ -22,7 +22,9 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * The service class for the photo uploads.
+ */
 @Path("/upload")
 public class PhotoUploadService {
     @Context
@@ -35,6 +37,13 @@ public class PhotoUploadService {
     TokenBean tokenBean;
     private static final Logger logger = LogManager.getLogger(PhotoUploadService.class);
 
+    /**
+     *  The method to upload a photo.
+     * @param token
+     * @param input
+     * @param request
+     * @return
+     */
     @POST
     @Path("/userPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -89,7 +98,14 @@ public class PhotoUploadService {
         logger.error("User with IP address {} and token {} failed to upload a photo", ipAddress, token);
         return Response.status(400).entity("No file found").build();
     }
-
+/**
+     * The method to upload a photo to a project.
+     * @param token The token of the user.
+     * @param name The name of the project.
+     * @param input The input.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/projectPhoto")
     @Consumes(MediaType.MULTIPART_FORM_DATA)

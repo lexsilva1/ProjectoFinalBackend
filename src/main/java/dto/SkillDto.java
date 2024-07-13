@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the skill.
+ */
 public class SkillDto {
     private int id;
     private String name;

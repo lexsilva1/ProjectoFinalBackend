@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the interest.
+ */
 public class InterestDto {
     private int id;
     private String name;

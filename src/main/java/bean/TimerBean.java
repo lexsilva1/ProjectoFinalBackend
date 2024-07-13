@@ -15,7 +15,9 @@ import websocket.Notifications;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
+/**
+ * The bean class for the timer.
+ */
 @Singleton
 public class TimerBean {
 
@@ -28,11 +30,15 @@ public class TimerBean {
     private TokenBean tokenBean;
     @Inject
     SystemVariablesBean systemVariablesBean;
-
+/**
+     * Check for timeouts.
+     */
     private Gson gson = new Gson();
     private static final Logger logger = LogManager.getLogger(TimerBean.class);
     @Schedule(hour = "*", minute = "*", second = "*/30", persistent = false)
-
+/**
+     * Check for timeouts.
+     */
     public void checkTimeouts() {
         logger.info("Checking for timeouts...");
         System.out.println("Checking for timeouts...");

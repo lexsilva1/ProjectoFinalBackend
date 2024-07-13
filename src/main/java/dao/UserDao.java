@@ -12,7 +12,9 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+/**
+ * The DAO class for the user.
+ */
 @Stateless
 public class UserDao extends AbstractDao<UserEntity>{
     @PersistenceContext
@@ -30,6 +32,11 @@ public class UserDao extends AbstractDao<UserEntity>{
     public void updateUser(UserEntity userEntity) {
         em.merge(userEntity);
     }
+    /**
+     * Find all users.
+     *
+     * @return the list of users
+     */
     public UserEntity findUserByEmail(String email) {
         try {
             return (UserEntity) em.createNamedQuery("User.findUserByEmail").setParameter("email", email)
@@ -48,6 +55,11 @@ public class UserDao extends AbstractDao<UserEntity>{
             return null;
         }
     }
+    /**
+     * Find all users.
+     *
+     * @return the list of users
+     */
     public UserEntity findUserById(int id) {
         try {
             return (UserEntity) em.createNamedQuery("User.findUserById").setParameter("id", id)
@@ -57,6 +69,11 @@ public class UserDao extends AbstractDao<UserEntity>{
             return null;
         }
     }
+    /**
+     * Find all users.
+     *
+     * @return the list of users
+     */
     public UserEntity findUserByToken(String token) {
         try {
             return (UserEntity) em.createNamedQuery("User.findUserByToken").setParameter("token", token)

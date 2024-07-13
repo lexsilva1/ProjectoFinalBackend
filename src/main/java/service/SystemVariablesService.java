@@ -11,7 +11,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * The service class for the system variables.
+ */
 @Path("/systemVariables")
 public class SystemVariablesService {
     @Context
@@ -23,6 +25,13 @@ public class SystemVariablesService {
     @EJB
     private ProjectBean projectBean;
     private static final Logger logger = LogManager.getLogger(SystemVariablesService.class);
+    /**
+     * The method to set the session timeout.
+     * @param token The token of the user.
+     * @param timeout The timeout to set.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/timeout")
     @Produces("application/json")
@@ -41,6 +50,12 @@ public class SystemVariablesService {
         logger.info("User with IP address {} set session timeout to {}", ipAddress, timeout);
         return Response.status(200).entity("timeout set").build();
     }
+    /**
+     * The method to set the maximum number of users.
+     * @param token The token of the user.
+     * @param maxUsers The maximum number of users.
+     * @return The response.
+     */
     @POST
     @Path("/maxUsers")
     @Produces("application/json")
@@ -54,6 +69,12 @@ public class SystemVariablesService {
         }
         return Response.status(405).entity("max users exceeded").build();
     }
+    /**
+     * The method to get the system variables.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/")
     @Produces("application/json")
@@ -78,6 +99,12 @@ public class SystemVariablesService {
         logger.info("User with IP address {} and token {} set system variables to {} users and {} timeout", ipAddress,token,systemVariables.getMaxUsers(),systemVariables.getTimeout());
         return Response.status(200).entity("Systems variables updated.").build();
     }
+    /**
+     * The method to get the system variables.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("")
     @Produces("application/json")

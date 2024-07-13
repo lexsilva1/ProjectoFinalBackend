@@ -11,7 +11,9 @@ import jakarta.inject.Inject;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The bean class for the project log.
+ */
 @Stateless
 public class ProjectLogBean {
     @Inject
@@ -23,6 +25,9 @@ public class ProjectLogBean {
     private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(ProjectLogBean.class);
     public ProjectLogBean() {
     }
+    /**
+     * Create default logs.
+     */
     public void createDefaultLogs() {
         logger.info("Creating default logs");
         if(projectLogDao.findProjectLogByProjectId(1) == null) {
@@ -82,6 +87,11 @@ public class ProjectLogBean {
 
     }
 
+    /**
+     * Get project logs.
+     * @param projectId
+     * @return a lesi of the project's logs
+     */
     public List<ProjectLogDto> getProjectLogs(int projectId) {
 
         List<ProjectLogEntity> logEntities = projectLogDao.findProjectLogsByProjectId(projectId);
@@ -92,7 +102,11 @@ public class ProjectLogBean {
 
         return logDtos;
     }
-
+/**
+     * convert project log entity to dto
+ * @param projectLogEntity
+ * @return
+ * */
     public ProjectLogDto convertToDto(ProjectLogEntity projectLogEntity) {
 
         ProjectEntity project = projectBean.findProjectById(projectLogEntity.getProject_id());
@@ -110,6 +124,11 @@ public class ProjectLogBean {
 
         return projectLogDto;
     }
+    /**
+     * Create project log.
+     * @param projectLogDto
+     * @return true if successful, false otherwise
+     */
     public boolean createProjectLog(ProjectLogDto projectLogDto) {
         logger.info("Creating project log");
         ProjectLogEntity projectLogEntity = new ProjectLogEntity();

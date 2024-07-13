@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+/**
+ * The entity class for the notifications table.
+ */
 @Entity
 @Table(name = "notifications")
 @NamedQuery(name = "NotificationEntity.findNotificationByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user")

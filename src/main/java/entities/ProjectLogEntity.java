@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+/**
+ * The entity class for the project_logs table.
+ */
 @Entity
 @Table(name = "project_logs")
 @NamedQuery(name = "ProjectLogEntity.getLogsByProject", query = "SELECT p FROM ProjectLogEntity p WHERE p.project_id = :project_id ORDER BY p.date DESC")

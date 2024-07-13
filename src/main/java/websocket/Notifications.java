@@ -23,7 +23,9 @@ import service.ObjectMapperContextResolver;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * The WebSocket class for the notifications.
+ */
 @Singleton
 @ServerEndpoint("/websocket/notifications/{token}")
 public class Notifications {
@@ -37,10 +39,17 @@ public class Notifications {
     ProjectBean projectBean;
     @EJB
     TokenBean tokenBean;
-
+    /**
+     * The map of sessions.
+     */
     HashMap<String, Session> sessions = new HashMap<String, Session>();
     private ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
 
+    /**
+     *  The method to send a notification.
+     * @param token
+     * @param msg
+     */
     public void send(String token, String msg) {
         Session session = sessions.get(token);
         if (session != null) {
@@ -52,6 +61,10 @@ public class Notifications {
             }
         }
     }
+    /**
+     * The method to send a notification.
+     * @param notificationDto The notification DTO.
+     */
     public void sendNotification(NotificationDto notificationDto) {
         ObjectMapper mapper = contextResolver.getContext(null);
         String msg = null;
@@ -73,17 +86,31 @@ public class Notifications {
         }
     }
 
+    /**
+     * The method to get a session.
+     * @param token
+     * @return
+     */
     public Session getSession(String token) {
         return sessions.get(token);
     }
 
+    /**
+     *  The method to open a WebSocket session.
+     * @param session
+     * @param token
+     */
     @OnOpen
     public void toDoOnOpen(Session session, @PathParam("token") String token) {
         System.out.println("A new Notifications WebSocket session is opened for client with token: " + token);
         sessions.put(token, session);
         System.out.println(sessions.keySet());
     }
-
+/**
+     * The method to close a WebSocket session.
+     * @param session
+     * @param reason
+     */
     @OnClose
     public void toDoOnClose(Session session, CloseReason reason) {
         System.out.println("Websocket session is closed with CloseCode: " + reason.getCloseCode() + ": " + reason.getReasonPhrase());
@@ -95,7 +122,11 @@ public class Notifications {
 
         }
     }
-
+/**
+     * This method is called when a message is received from the client
+     * @param session
+     * @param msg
+     */
     @OnMessage
     public void toDoOnMessage(Session session, String msg) {
         ObjectMapper mapper = contextResolver.getContext(null);

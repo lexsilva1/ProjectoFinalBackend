@@ -15,7 +15,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * The bean class for the notification.
+ */
 @Stateless
 
 public class NotificationBean {
@@ -33,7 +35,12 @@ public class NotificationBean {
 
     public NotificationBean() {
     }
-
+/**
+     * Convert the entity to a DTO.
+     *
+     * @param entity the entity
+     * @return the DTO
+     */
     public NotificationDto convertToDto(NotificationEntity entity) {
 
         NotificationDto dto = new NotificationDto();
@@ -61,6 +68,12 @@ public class NotificationBean {
 
         return dto;
     }
+
+    /**
+     * Create a notification.
+     * @param dto
+     * @return
+     */
     public boolean createNotification(NotificationDto dto) {
 
         boolean created = false;
@@ -91,6 +104,14 @@ public class NotificationBean {
         logger.info("Notification created successfully for user {} and project {}", entity.getUser().getEmail());
         return created;
     }
+
+    /**
+     * Find notifications.
+     * @param projectName
+     * @param token
+     * @param isRead
+     * @return
+     */
     public List<NotificationDto> findNotifications(String projectName,String token, Boolean isRead) {
 
         ProjectEntity project = projectDao.findProjectByName(projectName);
@@ -103,6 +124,12 @@ public class NotificationBean {
 
         return dtos;
     }
+
+    /**
+     * Send a notification.
+     * @param dto
+     * @return
+     */
     public boolean sendNotification (NotificationDto dto) {
         logger.info("Sending notification");
         boolean sent = false;
@@ -115,12 +142,24 @@ public class NotificationBean {
         }
         return sent;
     }
+
+    /**
+     * Find notification by id.
+     * @param id
+     * @return
+     */
     public NotificationEntity findNotificationById(int id) {
         logger.info("Finding notification by id");
         NotificationEntity entity = notificationDao.findNotificationById(id);
         logger.info("Notification found successfully");
         return entity;
     }
+    /**
+     * Update notification message.
+     * @param id
+     * @param message
+     * @return
+     */
     public NotificationDto updateNotificationMessage( int id, String message) {
         NotificationEntity entity = notificationDao.findNotificationById(id);
         logger.info("Updating notification {} message to {}",id, message);
@@ -131,6 +170,12 @@ public class NotificationBean {
         logger.info("Notification message updated successfully");
         return convertToDto (entity);
     }
+
+    /**
+     * Update notification seen.
+     * @param id
+     * @return
+     */
     public NotificationDto updateNotificationSeen( int id) {
         NotificationEntity entity = notificationDao.findNotificationById(id);
         logger.info("Updating notification {} seen",id);
@@ -139,6 +184,9 @@ public class NotificationBean {
         logger.info("Notification seen updated successfully");
         return convertToDto (entity);
     }
+    /**
+     * convert notification type to status to string
+     */
     public String convertTypeTpStatus(NotificationEntity.NotificationType type){
         logger.info("Converting notification type to status");
         String status = "";
@@ -169,6 +217,12 @@ public class NotificationBean {
         logger.info("Notification type converted to status successfully");
     return status;
     }
+
+    /**
+     * Mark notification as read.
+     * @param notificationId
+     * @return
+     */
     public boolean markAsRead(int notificationId) {
         logger.info("Marking notification {} as read", notificationId);
         NotificationEntity entity = notificationDao.findNotificationById(notificationId);
@@ -177,6 +231,12 @@ public class NotificationBean {
         logger.info("Notification marked as read successfully");
         return true;
     }
+
+    /**
+     * Mark all notifications as seen.
+     * @param token
+     * @return
+     */
     public boolean markAllAsSeen( String token) {
         logger.info("Marking all notifications as seen");
         UserEntity user = userDao.findUserByToken(token);

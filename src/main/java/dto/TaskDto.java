@@ -2,7 +2,9 @@ package dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-
+/**
+ * The DTO class for the task.
+ */
 public class TaskDto {
 
     private int id;

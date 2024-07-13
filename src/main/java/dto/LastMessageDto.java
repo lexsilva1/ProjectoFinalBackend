@@ -1,7 +1,9 @@
 package dto;
 
 import java.time.LocalDateTime;
-
+/**
+ * The DTO class for the last message.
+ */
 public class LastMessageDto {
     private MessageUserDto sender;
     private String message;

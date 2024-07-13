@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the resource.
+ */
 public class ResourceDto {
     private int id;
     private String name;

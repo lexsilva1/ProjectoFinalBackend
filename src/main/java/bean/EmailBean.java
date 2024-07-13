@@ -14,7 +14,9 @@ import org.apache.logging.log4j.core.util.JsonUtils;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Properties;
-
+/**
+ * The bean class for the email.
+ */
 @Stateless
 public class EmailBean {
 
@@ -30,6 +32,13 @@ public class EmailBean {
     public EmailBean() {
     }
 
+    /**
+     * Send email.
+     * @param to
+     * @param subject
+     * @param body
+     * @return
+     */
     public boolean sendEmail(String to, String subject, String body) {
         boolean sent = false;
 
@@ -66,7 +75,11 @@ public class EmailBean {
         logger.info("Email sent to " + to + ": " + sent);
         return sent;
     }
-
+/**
+     * Send confirmation email.
+     * @param user
+     * @return
+     */
     public boolean sendConfirmationEmail(UserEntity user) {
         boolean sent = false;
 
@@ -93,6 +106,11 @@ public class EmailBean {
         //logger.info("Confirmation email sent to " + userEmail + ": " + sent);
         return sent;
     }
+    /**
+     * Send password reset email.
+     * @param user
+     * @return
+     */
    public boolean sendPasswordResetEmail(UserEntity user) {
         boolean sent = false;
 

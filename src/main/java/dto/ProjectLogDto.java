@@ -4,7 +4,9 @@ import entities.ProjectEntity;
 import entities.UserEntity;
 
 import java.time.LocalDateTime;
-
+/**
+ * The DTO class for the project log.
+ */
 public class ProjectLogDto {
     private int id;
     private String log;

@@ -1,7 +1,9 @@
 package dto;
 
 import java.time.LocalDateTime;
-
+/**
+ * The DTO class for the notification.
+ */
 public class NotificationDto {
 
     private String type;

@@ -6,7 +6,9 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 
 import java.util.List;
-
+/**
+ * The DAO class for the lab.
+ */
 @Stateless
 public class LabDao extends AbstractDao<LabEntity>{
     @PersistenceContext
@@ -30,6 +32,11 @@ public class LabDao extends AbstractDao<LabEntity>{
         }
 
     }
+    /**
+     * Find all labs.
+     *
+     * @return the list of labs
+     */
     public List<LabEntity> findAllLabs() {
         try {
             return em.createNamedQuery("LabEntity.findAllLabs").getResultList();

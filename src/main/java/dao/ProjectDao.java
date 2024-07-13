@@ -9,7 +9,9 @@ import jakarta.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * The DAO class for the project.
+ */
 @Stateless
 public class ProjectDao extends AbstractDao<ProjectEntity> {
     @PersistenceContext
@@ -18,6 +20,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
     ProjectDao() {
         super(ProjectEntity.class);
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public ProjectEntity findProjectByName(String name) {
         try {
             return (ProjectEntity) em.createNamedQuery("ProjectEntity.findProjectByName").setParameter("name", name)
@@ -63,6 +70,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public List<ProjectEntity> findAllProjects() {
         try {
             return em.createNamedQuery("ProjectEntity.findAllProjects")
@@ -72,6 +84,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public List<SkillEntity> findProjectSkills(ProjectEntity project) {
         try {
             return em.createNamedQuery("ProjectEntity.findProjectSkills").setParameter("project", project)
@@ -81,6 +98,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public List<ProjectEntity> findProjects(String projectName, String projectLab, String projectSkill, String projectInterest, int projectStatus, int projectUser) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ProjectEntity> cq = cb.createQuery(ProjectEntity.class);
@@ -113,6 +135,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
 
         return em.createQuery(cq).getResultList();
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public ProjectEntity findProjectById(int id) {
         try {
             return (ProjectEntity) em.createNamedQuery("ProjectEntity.findProjectById").setParameter("id", id)
@@ -122,6 +149,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String, Integer> getProjectsByLab() {
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p GROUP BY p.lab.location").getResultList();
         HashMap<String, Integer> projectsByLab = new HashMap<>();
@@ -130,6 +162,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String,Integer> getApprovedProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
                 .setParameter("status", ProjectEntity.Status.Approved)
@@ -140,6 +177,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String,Integer> getCompletedProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
                 .setParameter("status", ProjectEntity.Status.Finished)
@@ -150,7 +192,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
-
+/**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String,Integer> getCancelledProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
                 .setParameter("status", ProjectEntity.Status.Cancelled)
@@ -161,6 +207,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String,Integer> getReadyProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
                 .setParameter("status", ProjectEntity.Status.Ready)
@@ -171,6 +222,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String,Integer> getInProgressProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
                 .setParameter("status", ProjectEntity.Status.In_Progress)
@@ -181,6 +237,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public HashMap<String,Integer> getPlanningProjectsByLab(){
         List<Object[]> results = em.createQuery("SELECT p.lab.location, COUNT(p) FROM ProjectEntity p WHERE p.status = :status GROUP BY p.lab.location")
                 .setParameter("status", ProjectEntity.Status.Planning)
@@ -191,10 +252,20 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         }
         return projectsByLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public double getAverageMembersPerProject(){
         List<Object> results = em.createQuery("SELECT AVG(p.maxMembers) FROM ProjectEntity p").getResultList();
         return (double) results.get(0);
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public double getAverageExecutionTime(){
         List<Object> results = em.createQuery("SELECT AVG(FUNCTION('DATEDIFF', p.endDate, p.startDate)) FROM ProjectEntity p").getResultList();
         return  (double) results.get(0);
@@ -208,6 +279,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public ProjectEntity findProjectByTask(TaskEntity task) {
         try {
             return (ProjectEntity) em.createNamedQuery("ProjectEntity.findProjectByTask").setParameter("task", task)
@@ -217,6 +293,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
             return null;
         }
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public ResourceEntity findMostUsedResource() {
         List<Object[]> results = em.createQuery(
                 "SELECT r, COUNT(r) FROM ProjectEntity p JOIN p.resources r GROUP BY r ORDER BY COUNT(r) DESC"
@@ -230,6 +311,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         // The first element in the results list is the most used resource
         return (ResourceEntity) results.get(0)[0];
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public SkillEntity findMostUsedSkill() {
         List<Object[]> results = em.createQuery(
                 "SELECT s, COUNT(s) FROM ProjectEntity p JOIN p.skills s GROUP BY s ORDER BY COUNT(s) DESC"
@@ -242,6 +328,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
         // The first element in the results list is the most used skill
         return (SkillEntity) results.get(0)[0];
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public InterestEntity findMostUsedInterest() {
         List<Object[]> results = em.createQuery(
                 "SELECT i, COUNT(i) FROM ProjectEntity p JOIN p.interests i GROUP BY i ORDER BY COUNT(i) DESC"
@@ -266,6 +357,11 @@ public class ProjectDao extends AbstractDao<ProjectEntity> {
 
         return mostCommonResourcesPerLab;
     }
+    /**
+     * Find all projects.
+     *
+     * @return the list of projects
+     */
     public List<ProjectEntity> findProjectsByMaxMembers(int maxMembers) {
         try {
             return em.createNamedQuery("ProjectEntity.findProjectsByMaxMembers").setParameter("maxMembers", maxMembers)

@@ -15,6 +15,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * The bean class for the photo upload.
+
+ */
 @Stateless
 public class PhotoUploadBean {
     @EJB
@@ -30,6 +34,10 @@ public class PhotoUploadBean {
     public PhotoUploadBean() {
     }
 
+    /**
+     * Ensure directory exists.
+     * @param path
+     */
     private void ensureDirectoryExists(Path path) {
         logger.info("Ensuring directory exists: {}", path);
         if (!Files.exists(path)) {
@@ -44,6 +52,12 @@ public class PhotoUploadBean {
         }
     }
 
+    /**
+     * Resize image.
+     * @param originalImagePath
+     * @param resizedImagePath
+     * @throws IOException
+     */
     public void resizeImage(Path originalImagePath, Path resizedImagePath) throws IOException {
         logger.info("Resizing image: {} to {}", originalImagePath, resizedImagePath);
         BufferedImage originalImage = ImageIO.read(originalImagePath.toFile());
@@ -53,6 +67,12 @@ public class PhotoUploadBean {
         ImageIO.write(resizedImage, "jpg", resizedImagePath.toFile());
     }
 
+    /**
+     * Check if image is valid.
+     * @param imagePath
+     * @return
+     * @throws IOException
+     */
     public boolean isImageValid(Path imagePath) throws IOException {
         logger.info("Checking if image is valid: {}", imagePath);
         String mimeType = Files.probeContentType(imagePath);
@@ -60,6 +80,11 @@ public class PhotoUploadBean {
         return "image/jpeg".equals(mimeType) || "image/png".equals(mimeType);
     }
 
+    /**
+     *      * Upload photo.
+     * @param filePath
+     * @return
+     */
     public String uploadPhoto(Path filePath) {
         logger.info("Uploading photo: {}", filePath);
         try {
@@ -81,6 +106,12 @@ public class PhotoUploadBean {
             return null;
         }
     }
+
+    /**
+     * Confirm user by token.
+     * @param token
+     * @return
+     */
     public UserEntity confirmUserByToken(String token) {
         logger.info("Confirming user by token: {}", token);
         UserEntity user = userBean.findUserByToken(token);
@@ -92,6 +123,12 @@ public class PhotoUploadBean {
         return userBean.findUserByToken(token);
         }
     }
+
+    /**
+     * Find project by name.
+     * @param name
+     * @return
+     */
     public ProjectEntity findProjectByName(String name) {
         logger.info("Project {} found",name); return projectBean.findProjectByName(name);
     }

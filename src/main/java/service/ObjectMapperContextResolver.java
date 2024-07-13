@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.ws.rs.ext.ContextResolver;
 import jakarta.ws.rs.ext.Provider;
-
+/**
+ * The class to resolve the object mapper.
+ */
 @Provider
 public class ObjectMapperContextResolver implements ContextResolver<ObjectMapper> {
 

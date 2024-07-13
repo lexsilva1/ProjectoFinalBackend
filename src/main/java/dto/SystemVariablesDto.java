@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the system variables.
+ */
 public class SystemVariablesDto {
     private int timeout;
     private int maxUsers;

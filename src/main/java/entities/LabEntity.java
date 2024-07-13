@@ -3,7 +3,9 @@ package entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-
+/**
+ * The entity class for the Labs table.
+ */
 @Entity
 @Table(name = "Labs")
 @NamedQuery(name = "LabEntity.findLabByLocation", query = "SELECT l FROM LabEntity l WHERE l.location = :location")

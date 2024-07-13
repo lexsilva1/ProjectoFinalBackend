@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The service class for the projects.
+ */
 @Path("/projects")
 public class ProjectService {
     @Context
@@ -44,7 +46,19 @@ public class ProjectService {
     ResourceBean resourceBean;
     private static final Logger logger = LogManager.getLogger(ProjectService.class);
 
-
+    /**
+     *  The method to find all projects.
+     * @param token
+     * @param projectName
+     * @param projectLab
+     * @param projectSkill
+     * @param projectInterest
+     * @param projectStatus
+     * @param projectUser
+     * @param request
+     * @return
+     * @throws UnsupportedEncodingException
+     */
     @GET
     @Path("")
     @Produces("application/json")
@@ -59,6 +73,13 @@ public class ProjectService {
 
         return Response.status(200).entity(projectBean.findProjects( projectName,projectLab,projectSkill,projectInterest,projectStatus,projectUser,token)).build();
     }
+    /**
+     * The method to find all project users.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/projectUsers")
     @Produces("application/json")
@@ -80,6 +101,13 @@ public class ProjectService {
         }
 
     }
+    /**
+     * The method to find all project tasks.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/projectSkills")
     @Produces("application/json")
@@ -100,6 +128,13 @@ public class ProjectService {
         }
 
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectDto The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/")
     @Produces("application/json")
@@ -120,13 +155,26 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} created project {}", ipAddress, token, projectDto.getName());
         return Response.status(201).entity("created").build();
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/allStatus")
     @Produces ("application/json")
     public Response findAllStatus(){
         return Response.status(200).entity(projectBean.findAllStatus()).build();
     }
-
+/**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/tasks")
     @Produces("application/json")
@@ -159,6 +207,13 @@ public class ProjectService {
         }
 
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{projectName}")
     @Produces("application/json")
@@ -181,6 +236,13 @@ public class ProjectService {
             return Response.status(200).entity(projectDto).build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{projectName}/status")
     @Produces("application/json")
@@ -202,7 +264,13 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
-
+/**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/apply")
     @Produces("application/json")
@@ -223,6 +291,13 @@ public class ProjectService {
             return Response.status(405).entity("you cannot apply to this project").build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/invite")
     @Produces("application/json")
@@ -244,7 +319,13 @@ public class ProjectService {
             return Response.status(405).entity("you cannot invite to this project").build();
         }
     }
-
+/**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/accept")
     @Produces("application/json")
@@ -285,7 +366,13 @@ public class ProjectService {
     }
 
 
-
+/**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
 
     @DELETE
     @Path("/{projectName}/reject")
@@ -314,6 +401,13 @@ public class ProjectService {
         }
 
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{projectName}/promote")
     @Produces("application/json")
@@ -336,6 +430,13 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{projectName}/demote")
     @Produces("application/json")
@@ -353,6 +454,13 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} demoted user {} from project manager in project {}", ipAdress,token, userId, projectName);
         return Response.status(200).entity("demoted").build();
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/leave")
     @Produces("application/json")
@@ -370,6 +478,13 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} left project {}", ipAddress,token, projectName);
         return Response.status(200).entity("left").build();
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{projectName}")
     @Produces("application/json")
@@ -397,6 +512,12 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("statistics")
     @Produces("application/json")
@@ -412,7 +533,13 @@ public class ProjectService {
         return Response.status(200).entity(projectBean.getProjectStatistics()).build();
     }
 
-
+/**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{projectName}/tasks")
     @Produces("application/json")
@@ -433,6 +560,13 @@ public class ProjectService {
             return Response.status(200).entity(projectBean.findProjectTasks(projectName)).build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{projectName}/tasks")
     @Produces("application/json")
@@ -463,6 +597,13 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{projectName}/projectUsers")
     @Produces("application/json")
@@ -483,6 +624,13 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} found project users for project {}", ipAddress,token, projectName);
         return Response.status(200).entity(projectBean.findProjectUsersByProject(project)).build();
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @DELETE
     @Path("/{projectName}/ProjectUser")
     @Produces("application/json")
@@ -506,6 +654,13 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{projectName}/chat")
     @Produces("application/json")
@@ -521,6 +676,13 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} found project chat for project {}", ipAddress,token, projectName);
         return Response.status(200).entity(groupChatBean.fetchProjectChat(projectName)).build();
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{projectName}/logs")
     @Produces("application/json")
@@ -536,6 +698,13 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} found project logs for project {}", ipAddress,token, projectName);
         return Response.status(200).entity(projectBean.getProjectLogs(projectName)).build();
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/logs")
     @Produces("application/json")
@@ -560,6 +729,14 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * The method to find all project interests.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param taskId The id of the task.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{projectName}/ProjectCreatorByTask")
     @Produces("application/json")
@@ -580,6 +757,14 @@ public class ProjectService {
         logger.info("User with IP address {} and token {} found project {} creator by task {}", ipAddress,token, projectName, taskId);
         return Response.status(200).entity(projectBean.findProjectCreatorByTask(task)).build();
     }
+    /**
+     * the method to add Resource to a project.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param  resourceId The id of the resource.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/{projectName}/resources")
     @Produces("application/json")
@@ -603,6 +788,14 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * the method to remove Resource from a project.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param  resourceId The id of the resource.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @DELETE
     @Path("/{projectName}/resources")
     @Produces("application/json")
@@ -626,6 +819,14 @@ public class ProjectService {
             return Response.status(400).entity("something went wrong").build();
         }
     }
+    /**
+     * the method to update Resource in a project.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param  resourceId The id of the resource.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{projectName}/resources")
     @Produces("application/json")

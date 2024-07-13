@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the password.
+ */
 public class PasswordDto {
     private String password;
     private String confirmPassword;

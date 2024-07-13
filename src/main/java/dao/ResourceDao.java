@@ -18,7 +18,11 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
     public ResourceDao() {
         super(ResourceEntity.class);
     }
-
+/**
+     * Find a resource by name.
+     * @param name
+     * @return
+     */
     public ResourceEntity findResourceByName(String name) {
         try {
             return (ResourceEntity) em.createNamedQuery("Resource.findResourceByName").setParameter("name", name)
@@ -28,6 +32,11 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
             return null;
         }
     }
+    /**
+     * Find a resource by id.
+     * @param id
+     * @return
+     */
  public ResourceEntity findResourceById(int id) {
         try {
             return (ResourceEntity) em.createNamedQuery("Resource.findResourceById").setParameter("id", id)
@@ -37,7 +46,11 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
             return null;
         }
     }
-
+/**
+     * Find all resources.
+     *
+     * @return the list of resources
+     */
     public List<ResourceEntity> findAllResources(String name, String identifier, String supplier, String type) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<ResourceEntity> cq = cb.createQuery(ResourceEntity.class);
@@ -56,11 +69,20 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
 
         return em.createQuery(cq).getResultList();
     }
-
+/**
+     * Find all resources.
+     *
+     * @return the list of resources
+     */
     public int countResources() {
         return ((Number) em.createNamedQuery("Resource.countResources").getSingleResult()).intValue();
 
     }
+    /**
+     * Find a resource by identifier.
+     * @param identifier
+     * @return
+     */
     public ResourceEntity findResourceByIdentifier(String identifier) {
         try {
             return (ResourceEntity) em.createNamedQuery("Resource.findResourceByIdentifier").setParameter("identifier", identifier)
@@ -70,6 +92,12 @@ public class ResourceDao extends AbstractDao<ResourceEntity> {
             return null;
         }
     }
+    /**
+     * Find a resource by name and supplier.
+     * @param name
+     * @param supplier
+     * @return
+     */
     public ResourceEntity findResourceByNameAndSupplier(String name, String supplier) {
         try {
             return (ResourceEntity) em.createNamedQuery("Resource.findREsourceByNameAndSupplier").setParameter("name", name)

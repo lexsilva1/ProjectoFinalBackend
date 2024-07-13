@@ -1,7 +1,9 @@
 package dto;
 
 import java.util.Set;
-
+/**
+ * The DTO class for the project tasks.
+ */
 public class ProjectTasksDto {
     private String projectName;
     private Set<TaskDto> tasks;

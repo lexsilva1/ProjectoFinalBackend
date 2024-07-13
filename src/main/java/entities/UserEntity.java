@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Set;
 
 import jakarta.persistence.*;
+/**
+ * The entity class for the Users table.
+ */
 @Entity
 @Table(name="Users")
 @NamedQuery(name = "User.findUserByEmail", query = "SELECT u FROM UserEntity u WHERE u.email = :email")

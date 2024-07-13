@@ -6,7 +6,9 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
-
+/**
+ * The entity class for the Projects table.
+ */
 @Entity
 @Table(name = "Projects")
 @NamedQuery(name = "ProjectEntity.findProjectByName", query = "SELECT p FROM ProjectEntity p WHERE p.name = :name")

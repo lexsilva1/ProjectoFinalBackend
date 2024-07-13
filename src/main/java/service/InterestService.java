@@ -10,7 +10,9 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-
+/**
+ * The service class for the interests.
+ */
 @Path("/interests")
 public class InterestService {
     @Context
@@ -28,6 +30,13 @@ public class InterestService {
         logger.info("User with IP address {} is trying to find all interests", ipAddress);
         return Response.status(200).entity(interestBean.findAllInterests()).build();
     }
+    /**
+     * The method to create an interest.
+     * @param token The token of the user.
+     * @param interestDto The interest to create.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("")
     @Produces("application/json")
@@ -86,6 +95,13 @@ public class InterestService {
 
 
     }
+    /**
+     * The method to delete an interest.
+     * @param token The token of the user.
+     * @param interestDto The interest to delete.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @DELETE
     @Path("/removeInterest")
     @Produces("application/json")
@@ -116,12 +132,23 @@ public class InterestService {
             }
         }
     }
+    /**
+     * The method to find all interest types.
+     * @return The response.
+     */
     @GET
     @Path("/types")
     @Produces("application/json")
     public Response findAllInterestTypes() {
         return Response.status(200).entity(interestBean.findAllInterestTypes()).build();
     }
+    /**
+     * The method to create a keyword.
+     * @param token The token of the user.
+     * @param interestDto The keyword to create.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/createKeyword")
     @Produces("application/json")

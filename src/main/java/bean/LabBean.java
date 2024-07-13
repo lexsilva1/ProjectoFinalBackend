@@ -8,7 +8,9 @@ import jakarta.inject.Inject;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * The bean class for the lab.
+ */
 @Stateless
 public class LabBean {
 @Inject
@@ -17,6 +19,9 @@ private static final org.apache.logging.log4j.Logger logger = org.apache.logging
     public LabBean() {
     }
 
+    /**
+     * Create default locations.
+     */
     public void createDefaultLocations() {
         // Create default locations
         logger.info("Creating default locations");
@@ -53,6 +58,11 @@ private static final org.apache.logging.log4j.Logger logger = org.apache.logging
         }
 
     }
+
+    /**
+     * Find all labs.
+     * @return
+     */
     public List<LabDto> findAllLabs() {
 
         List<LabEntity> labEntities = labDao.findAllLabs();
@@ -63,6 +73,12 @@ private static final org.apache.logging.log4j.Logger logger = org.apache.logging
 
         return labDtos;
     }
+
+    /**
+     * Convert lab to dto.
+     * @param labEntity
+     * @return
+     */
     public LabDto convertToDto(LabEntity.Lab labEntity) {
 
         LabDto labDto = new LabDto();

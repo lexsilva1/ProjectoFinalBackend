@@ -12,7 +12,9 @@ import websocket.Notifications;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
-
+/**
+ * The user bean class.
+ */
 @Stateless
 public class UserBean {
     @Inject
@@ -421,7 +423,10 @@ public class UserBean {
         }
     }
 
-
+/**
+     * removes a user
+ * @param email
+     */
     public void removeUser(String email) {
         logger.info("Removing user with email {}", email);
         UserEntity user = userDao.findUserByEmail(email);
@@ -430,7 +435,11 @@ public class UserBean {
             userDao.remove(user);
         }
     }
-
+/**
+     * find all users
+ * return a list of dto
+ * @return
+     */
     public List<UserDto> findAllUsers() {
 
         userDao.findAll();
@@ -442,11 +451,22 @@ public class UserBean {
         }
         return userDtos;
     }
-public List<UserEntity> getAllUsers() {
+
+    /**
+     * find all users
+     * @return
+     */
+    public List<UserEntity> getAllUsers() {
 
     return userDao.findAll();
 }
 
+    /**
+     * converts the logged user to a dto
+     * @param user
+     * @param token
+     * @return
+     */
     public MyDto convertToMyDto(UserEntity user, String token) {
 
         MyDto myDto = new MyDto();
@@ -633,7 +653,12 @@ public List<UserEntity> getAllUsers() {
 
 
 
-
+/**
+     * Converts a user to a dto
+     *
+     * @param user
+     * @return
+     */
     public UserDto convertToDto(UserEntity user) {
 
         UserDto userDto = new UserDto();
@@ -666,7 +691,12 @@ public List<UserEntity> getAllUsers() {
 
         return userDto;
     }
-
+/**
+     * Converts a projectuser to a dto
+     *
+     * @param projectUser
+     * @return
+     */
     public ProjectUserDto convertToProjectUserDto(ProjectUserEntity projectUser) {
 
         ProjectUserDto projectUserDto = new ProjectUserDto();
@@ -680,12 +710,22 @@ public List<UserEntity> getAllUsers() {
 
         return projectUserDto;
     }
-
+/**
+     * finds a user by id
+     *
+     * @param id
+     * @return
+     */
     public UserEntity findUserById(int id) {
 
         return userDao.findUserById(id);
     }
-
+/**
+     * finds a user by id and converts to dto
+     *
+     * @param id
+     * @return
+     */
     public UserDto findUserDtoById(int id) {
 
         UserEntity user = findUserById(id);
@@ -693,6 +733,13 @@ public List<UserEntity> getAllUsers() {
 
         return convertToDto(user);
     }
+
+    /**
+     * updates the status of a user to and from admin
+     * @param token
+     * @param id
+     * @return
+     */
     public boolean setAdminStatus(String token, int id) {
         logger.info("Setting admin status for user with id {}", id);
         UserEntity user = findUserByToken(token);
@@ -738,7 +785,11 @@ public List<UserEntity> getAllUsers() {
         return false;
     }
 
-
+/**
+     * updates the user's informations
+     * @param id
+     * @return
+     */
     public boolean updateUser(int id, UserDto userDto) {
         logger.info("Updating user with id {}", id);
         UserEntity user = findUserById(id);
@@ -757,6 +808,11 @@ public List<UserEntity> getAllUsers() {
         return true;
     }
 
+    /**
+     * sets last activity on the session token
+     * @param token
+     */
+
     public void setLastActivity(String token) {
         logger.info("Setting last activity for user with token {}", token);
         TokenEntity tokenEntity = tokenBean.findTokenByToken(token);
@@ -764,6 +820,12 @@ public List<UserEntity> getAllUsers() {
         tokenBean.updateToken(tokenEntity);
     }
 
+    /**
+     * adss a skill to the User
+     * @param token
+     * @param skill
+     * @return
+     */
     public boolean addSkillToUser(String token, SkillEntity skill) {
         logger.info("Adding skill to user with token {}", token);
         UserEntity user = findUserByToken(token);
@@ -776,6 +838,13 @@ public List<UserEntity> getAllUsers() {
         logger.info("Skill added to user successfully");
         return true;
     }
+
+    /**
+     * removes a skill from the User
+     * @param token
+     * @param skill
+     * @return
+     */
     public boolean removeSkillFromUser(String token, SkillEntity skill) {
         logger.info("Removing skill from user with token {}", token);
         UserEntity user = findUserByToken(token);
@@ -792,6 +861,13 @@ public List<UserEntity> getAllUsers() {
         logger.info("Skill removed from user successfully");
         return true;
     }
+
+    /**
+     * adds an interest to the User
+     * @param token
+     * @param interest
+     * @return
+     */
     public boolean addInterestToUser(String token, InterestEntity interest) {
         logger.info("Adding interest to user with token {}", token);
         UserEntity user = findUserByToken(token);
@@ -804,6 +880,12 @@ public List<UserEntity> getAllUsers() {
         logger.info("Interest added to user successfully");
         return true;
     }
+    /**
+     * removes an interest from the User
+     * @param token
+     * @param interest
+     * @return
+     */
     public boolean removeInterestFromUser(String token, InterestEntity interest) {
         logger.info("Removing interest from user with token {}", token);
         UserEntity user = findUserByToken(token);
@@ -819,6 +901,12 @@ public List<UserEntity> getAllUsers() {
         logger.info("Interest {} removed from user successfully from user with token {}", interest.getName(), token);
         return true;
     }
+
+    /**
+     * resets the password
+     * @param user
+     * @return
+     */
     public boolean resetPassword(UserEntity user) {
         logger.info("Resetting password for user with email {}", user.getEmail());
         tokenBean.createPasswordToken(encryptHelper.generateToken(), user);
@@ -828,6 +916,13 @@ public List<UserEntity> getAllUsers() {
         logger.info("Password reset successfully");
         return true;
     }
+
+    /**
+     * confirms the password reset
+     * @param auxToken
+     * @param password
+     * @return
+     */
     public boolean confirmPasswordReset(String auxToken, PasswordDto password) {
         logger.info("Confirming password reset for user with token {}", auxToken);
         UserEntity user = tokenBean.findUserByToken(auxToken);
@@ -842,6 +937,12 @@ public List<UserEntity> getAllUsers() {
         logger.info("Password reset confirmed successfully");
         return true;
     }
+
+    /**
+     * set the profile as private or public
+     * @param token
+     * @return
+     */
     public boolean setPrivate(String token){
         logger.info("Setting privacy for user with token {}", token);
         UserEntity user = findUserByToken(token);

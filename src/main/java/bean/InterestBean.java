@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The bean class for the interest.
+ */
 @Stateless
 public class InterestBean {
     @Inject
@@ -25,7 +27,9 @@ public class InterestBean {
 
     public InterestBean() {
     }
-
+/**
+     * Create default interests.
+     */
     public void createDefaultInterests() {
         // Create default interests
         logger.info("Creating default interests");
@@ -215,7 +219,10 @@ public class InterestBean {
         }
 
     }
-
+/**
+     * Find all interests.
+     * @return
+     */
     public List<InterestDto> findAllInterests() {
 
         List<InterestEntity> interests = interestDao.findAllInterests();
@@ -230,6 +237,11 @@ public class InterestBean {
 
         return interestDtos;
     }
+    /**
+     * Convert list of interest entities to list of interest dtos.
+     * @param interests
+     * @return
+     */
     public Set<InterestEntity> listDtoToEntity(Set<InterestDto> interests){
 
         Set<InterestEntity> interestEntities = new HashSet<>();
@@ -239,7 +251,11 @@ public class InterestBean {
 
         return interestEntities;
     }
-
+/**
+     * Convert interest entity to interest dto.
+     * @param interest
+     * @return
+     */
     public InterestDto toInterestDto(InterestEntity interest) {
 
         InterestDto interestDto = new InterestDto();
@@ -249,6 +265,11 @@ public class InterestBean {
 
         return interestDto;
     }
+    /**
+     * Convert interest dto to interest entity.
+     * @param interestDto
+     * @return
+     */
     public InterestEntity toInterestEntity(InterestDto interestDto){
 
         InterestEntity interest = new InterestEntity();
@@ -259,10 +280,20 @@ public class InterestBean {
         return interest;
     }
 
+    /**
+     * Find interest by name.
+     * @param name
+     * @return
+     */
     public InterestEntity findInterestByName(String name) {
 
         return interestDao.findInterestByName(name);
     }
+    /**
+     * Create interest.
+     * @param interestDto
+     * @return
+     */
     public boolean createInterest(InterestDto interestDto){
         logger.info("Creating interest");
         if(interestDao.findInterestByName(interestDto.getName()) != null){
@@ -295,6 +326,13 @@ public class InterestBean {
         return true;
     }
 
+    /**
+     * Add interest to project.
+     * @param token
+     * @param projectName
+     * @param interestName
+     * @return
+     */
     public boolean addInterestToProject(String token, String projectName, String interestName){
         logger.info("Adding interest to project");
         if(interestName == null || interestName.isEmpty()){
@@ -314,6 +352,14 @@ public class InterestBean {
         logger.info("Interest {} added to project {} successfully by user with token {}", interestName, projectName, token);
         return true;
     }
+
+    /**
+     * Remove interest from project.
+     * @param token
+     * @param projectName
+     * @param interestName
+     * @return
+     */
     public boolean removeInterestFromProject(String token ,String projectName, String interestName){
         logger.info("Removing interest from project");
         InterestEntity interest = interestDao.findInterestByName(interestName);
@@ -329,6 +375,13 @@ public class InterestBean {
         logger.info("Interest {} removed from project {} successfully by user with token {}", interestName, projectName, token);
         return true;
     }
+
+    /**
+     * Add interest to user.
+     * @param token
+     * @param interestName
+     * @return
+     */
     public boolean addInterestToUser(String token, String interestName){
         logger.info("Adding interest to user");
         InterestEntity interest = interestDao.findInterestByName(interestName);
@@ -340,6 +393,13 @@ public class InterestBean {
         logger.info("Interest {} added to user with token {} successfully", interestName, token);
         return true;
     }
+
+    /**
+     *  Remove interest from user.
+     * @param token
+     * @param interestName
+     * @return
+     */
     public boolean removeInterestFromUser(String token, String interestName){
         logger.info("Removing interest from user");
         InterestEntity interest = interestDao.findInterestByName(interestName);
@@ -351,6 +411,11 @@ public class InterestBean {
         logger.info("Interest {} removed from user with token {} successfully", interestName, token);
         return true;
     }
+
+    /**
+     * Find all interest Types
+     * @return
+     */
     public List<String> findAllInterestTypes(){
 
         List<String> interestTypes = new ArrayList<>();

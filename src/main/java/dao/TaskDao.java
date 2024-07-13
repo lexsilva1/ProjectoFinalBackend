@@ -12,7 +12,9 @@ import jakarta.persistence.criteria.Root;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The DAO class for the task.
+ */
 @Stateless
 public class TaskDao extends AbstractDao<TaskEntity>{
 
@@ -88,6 +90,11 @@ public class TaskDao extends AbstractDao<TaskEntity>{
         cq.where(cb.equal(task.get("title"), "Final Presentation"));
         return em.createQuery(cq).getSingleResult();
     }
+    /**
+     * Find all tasks.
+     *
+     * @return the list of tasks
+     */
     public List<TaskEntity> findTasksByResponsibleUser(UserEntity user) {
         try {
             return em.createNamedQuery("TaskEntity.findTasksByResponsibleUser").setParameter("responsibleUser", user)

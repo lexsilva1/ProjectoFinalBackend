@@ -11,7 +11,9 @@ import jakarta.ejb.Stateless;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
+/**
+ * The bean class for the resource.
+ */
 @Stateless
 public class ResourceBean {
     @EJB
@@ -23,7 +25,9 @@ public class ResourceBean {
     private static final org.apache.logging.log4j.Logger logger = org.apache.logging.log4j.LogManager.getLogger(ResourceBean.class);
     public ResourceBean() {
     }
-
+/**
+     * Create default resources.
+     */
     public void createDefaultResources() {
         logger.info("Creating default resources");
         if(resourceDao.findResourceByIdentifier("CPU-001") == null) {
@@ -352,6 +356,12 @@ public class ResourceBean {
         }
 
     }
+    /**
+     * Convert resource entity to dto.
+     *
+     * @param resourceEntity the resource entity
+     * @return the resource dto
+     */
     public ResourceDto convertToDto(ResourceEntity resourceEntity) {
 
         ResourceDto resourceDto = new ResourceDto();
@@ -368,7 +378,15 @@ public class ResourceBean {
 
         return resourceDto;
     }
-
+/**
+     * Find all resources.
+     *
+     * @param name      the name
+     * @param identifier the identifier
+     * @param supplier   the supplier
+     * @param type       the type
+     * @return the list of resources
+     */
 
     public List<ResourceDto> findAllResources(String name, String identifier, String supplier, String type) {
 
@@ -381,7 +399,11 @@ public class ResourceBean {
         return dtos;
     }
 
-
+/**
+     * Create resource.
+     *
+     * @return the list of resources
+     */
     public void createResource(ResourceDto resourceDto) {
         logger.info("Creating resource {}", resourceDto.getName());
         ResourceEntity resource = new ResourceEntity();
@@ -397,6 +419,12 @@ public class ResourceBean {
         logger.info("Resource created successfully");
         resourceDao.persist(resource);
     }
+    /**
+     * Convert created resource to dto.
+     *
+     * @param resourceEntity the resource entity
+     * @return the resource dto
+     */
     public ResourceDto convertCreatedResourceToDto(ResourceEntity resourceEntity) {
 
         ResourceDto resourceDto = new ResourceDto();
@@ -413,6 +441,12 @@ public class ResourceBean {
 
         return resourceDto;
     }
+    /**
+     * Generate resource identifier.
+     *
+     * @param resourceDto the resource dto
+     * @return the string
+     */
     public String generateResourceIdentifier(ResourceDto resourceDto) {
         logger.info("Generating resource identifier");
         if (resourceDto.getIdentifier() == null || resourceDto.getIdentifier().isEmpty()) {
@@ -432,17 +466,32 @@ public class ResourceBean {
         logger.info("Resource identifier is not null or empty");
         return resourceDto.getIdentifier();
     }
-
+/**
+     * Find resource by name.
+     *
+     * @param name the name
+     * @return the resource entity
+     */
     public ResourceEntity findResourceByNameAndSupplier(String name, String supplier) {
 
         return resourceDao.findResourceByNameAndSupplier(name, supplier);
 
     }
-
+/**
+     * Find resource by id.
+     *
+     * @param id the identifier
+     * @return the resource entity
+     */
     public ResourceDto findResourceById(int id) {
 
         return convertToDto(resourceDao.findResourceById(id));
     }
+    /**
+     * get statistics related to resources being used
+     *
+     * @return a statistics dto
+     */
     public ResourceStatisticsDto getResourceStatistics() {
         logger.info("Getting resource statistics");
     ResourceStatisticsDto resourceStatisticsDto = new ResourceStatisticsDto();
@@ -452,6 +501,13 @@ public class ResourceBean {
     logger.info("Resource statistics retrieved successfully");
     return resourceStatisticsDto;
     }
+    /**
+     * Update resource.
+     *
+     * @param resourceId the resource id
+     * @param resourceDto the resource dto
+     * @return true if successful, false otherwise
+     */
     public boolean updateResource(int resourceId, ResourceDto resourceDto) {
         logger.info("Updating resource");
         ResourceEntity resourceEntity = resourceDao.findResourceById(resourceId);

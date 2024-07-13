@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the single string.
+ */
 public class SingleString {
     private String message;
 

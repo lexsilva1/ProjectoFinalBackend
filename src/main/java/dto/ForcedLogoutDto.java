@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the forced logout.
+ */
 public class ForcedLogoutDto {
     private String type;
     private String Message;

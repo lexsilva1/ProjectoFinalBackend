@@ -7,7 +7,9 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
-
+/**
+ * The DAO class for the project user.
+ */
 @Stateless
 public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
     @PersistenceContext
@@ -34,6 +36,11 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
+    /**
+     * Find all project users.
+     *
+     * @return the list of project users
+     */
     public List<UserEntity> findAllProjectUsers(ProjectEntity project) {
         try {
             return em.createNamedQuery("ProjectUserEntity.findAllProjectUsers").setParameter("project", project)
@@ -43,6 +50,11 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
+    /**
+     * Find all team members.
+     *
+     * @return the list of team members
+     */
     public List<ProjectUserEntity> findTeamMembers(ProjectEntity project) {
         try {
             return em.createNamedQuery("ProjectUserEntity.findProjectUserByProject").setParameter("project", project)
@@ -52,6 +64,11 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
+    /**
+     * Find all project users.
+     *
+     * @return the list of project users
+     */
     public ProjectUserEntity findProjectUserByProjectAndUser(ProjectEntity project, UserEntity user) {
         try {
             return (ProjectUserEntity) em.createNamedQuery("ProjectUserEntity.findProjectUserByUserAndProject").setParameter("project", project)
@@ -61,6 +78,11 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
+    /**
+     * Find all project users.
+     *
+     * @return the list of project users
+     */
     public List<ProjectUserEntity> findProjectManagers(ProjectEntity project) {
         try {
             return em.createNamedQuery("ProjectUserEntity.findProjectManagers").setParameter("project", project)
@@ -70,6 +92,11 @@ public class ProjectUserDao extends AbstractDao<ProjectUserEntity>{
             return null;
         }
     }
+    /**
+     * Find all project users.
+     *
+     * @return the list of project users
+     */
     public ProjectUserEntity findProjectCreator(ProjectEntity project) {
         try {
             return (ProjectUserEntity) em.createNamedQuery("ProjectUserEntity.findProjectCreator").setParameter("project", project)

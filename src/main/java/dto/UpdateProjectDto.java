@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the user confirmation.
+ */
 public class UpdateProjectDto {
     private String lab;
     private String description;

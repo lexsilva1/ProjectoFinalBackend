@@ -3,7 +3,9 @@ package entities;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-
+/**
+ * The entity class for the resources table.
+ */
 @Entity
 @Table(name = "resources")
 @NamedQuery(name = "Resource.findResourceById", query = "SELECT r FROM ResourceEntity r WHERE r.id = :id")

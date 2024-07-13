@@ -11,7 +11,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * The service class for the notifications.
+ */
 @Path("/notifications")
 public class NotificationService {
     @Context
@@ -23,6 +25,14 @@ public class NotificationService {
     @EJB
     TokenBean tokenBean;
     private static final Logger logger = LogManager.getLogger(NotificationService.class);
+    /**
+     * The method to find all notifications.
+     * @param token The token of the user.
+     * @param projectName The name of the project.
+     * @param isRead The status of the notification.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("")
     @Produces("application/json")
@@ -38,6 +48,13 @@ public class NotificationService {
         return Response.status(200).entity(notificationBean.findNotifications(projectName, token,isRead)).build();
 
     }
+    /**
+     * The method to mark a notification as read.
+     * @param token The token of the user.
+     * @param notificationId The id of the notification.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/read/{notificationId}")
     @Produces("application/json")
@@ -51,6 +68,12 @@ public class NotificationService {
         userBean.setLastActivity(token);
         return Response.status(200).entity(notificationBean.markAsRead(notificationId)).build();
     }
+    /**
+     * The method to mark all notifications as seen.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/seen")
     @Produces("application/json")

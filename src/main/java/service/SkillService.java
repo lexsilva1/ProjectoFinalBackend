@@ -16,7 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.List;
-
+/**
+ * The service class for the skills.
+ */
 @Path("/skills")
 public class SkillService {
     @Context
@@ -30,12 +32,23 @@ public class SkillService {
     @Inject
     private TokenBean tokenBean;
     private static final Logger logger = LogManager.getLogger(SkillService.class);
+    /**
+     * The method to find all skills.
+     * @return The response.
+     */
     @GET
     @Path("")
     @Produces(MediaType.APPLICATION_JSON)
     public Response findAllSkills() {
         return Response.status(200).entity(skillBean.findAllSkills()).build();
     }
+    /**
+     * The method to create a skill.
+     * @param token The token of the user.
+     * @param skillDto The skill to create.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("")
     @Produces("application/json")
@@ -93,6 +106,13 @@ public class SkillService {
             }
         }
     }
+    /**
+     * The method to remove a skill.
+     * @param token The token of the user.
+     * @param skillDto The skill to remove.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @DELETE
     @Path("/removeSkill")
     @Produces("application/json")
@@ -125,6 +145,11 @@ public class SkillService {
         }
 
     }
+    /**
+     * The method to find all skill types.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/types")
     @Produces("application/json")
@@ -133,13 +158,24 @@ public class SkillService {
         logger.info("User with IP address {} is trying to get all skill types", ipAddress);
         return Response.status(200).entity(skillBean.findAllSkilltypes()).build();
     }
+    /**
+     * The method to find all skills by name.
+     * @param names The names of the skills.
+     * @return The response.
+     */
     @GET
     @Path("/tests")
     @Produces("application/json")
     public Response test(List<String> names) {
         return Response.status(200).entity(skillBean.findSkillsByName(names)).build();
 
-    }
+    }/**
+     * The method to create a skill for a project.
+     * @param token The token of the user.
+     * @param skillDto The skill to create.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("/createSkill")
     @Produces("application/json")

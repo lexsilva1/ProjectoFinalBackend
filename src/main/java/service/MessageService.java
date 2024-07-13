@@ -11,7 +11,9 @@ import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * The service class for the messages.
+ */
 @Path("/messages")
 public class MessageService {
     @Context
@@ -23,6 +25,14 @@ public class MessageService {
     @EJB
     private TokenBean tokenBean;
     private static final Logger logger = LogManager.getLogger(MessageService.class);
+
+    /**
+     * The method to create a message.
+     * @param token The token of the user.
+     * @param message The message to create.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("")
     @Produces("application/json")
@@ -38,6 +48,13 @@ public class MessageService {
         logger.info("User with IP address {} and token {} created a message", ipAddress, token);
         return Response.status(200).build();
     }
+    /**
+     * The method to find all messages.
+     * @param token The token of the user.
+     * @param id The id of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/{id}")
     @Produces("application/json")
@@ -52,7 +69,12 @@ public class MessageService {
         logger.info("User with IP address {} and token {} found all messages", ipAddress, token);
         return Response.status(200).entity(messageBean.findUserMessages(token,id)).build();
     }
-
+/**
+     * The method to find last messages.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("")
     @Produces("application/json")

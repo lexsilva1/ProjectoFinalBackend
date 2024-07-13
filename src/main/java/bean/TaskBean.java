@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The bean class for the task.
+ */
 @Stateless
 public class TaskBean {
     @EJB
@@ -29,7 +31,11 @@ public class TaskBean {
     public TaskBean() {
     }
 
-
+/**
+     * Find all tasks.
+     *
+     * @return the list of tasks
+     */
     public boolean createTask(String token, String projectname, TaskDto taskDto) {
         logger.info("Creating task {} for project {}", taskDto.getTitle(), projectname);
         TaskEntity task = new TaskEntity();
@@ -108,6 +114,11 @@ public class TaskBean {
         return true;
 
     }
+    /**
+     * create the last task of a project
+     *
+     * @return the list of tasks
+     */
     public TaskEntity createLastTask(String token, CreateProjectDto project, UserEntity user, List<Integer> users) {
         logger.info("Creating final task for project {}", project.getName());
         TaskEntity task = new TaskEntity();
@@ -137,6 +148,12 @@ public class TaskBean {
         logger.info("Final task created successfully");
         return task;
     }
+
+    /**
+     * converts task to dto
+     * @param task
+     * @return
+     */
     public TaskDto toTasktoDto(TaskEntity task) {
 
         TaskDto taskDto = new TaskDto();
@@ -164,6 +181,11 @@ public class TaskBean {
 
         return taskDto;
     }
+    /**
+     * Find task by id.
+     *
+     * @return the list of tasks
+     */
     public TaskDto getTaskById(int id) {
 
         TaskEntity task = taskDao.find(id);
@@ -174,6 +196,14 @@ public class TaskBean {
 
         return toTasktoDto(task);
     }
+
+    /**
+     * update task
+     * @param token
+     * @param projectName
+     * @param taskDto
+     * @return
+     */
     public boolean updateTask(String token, String projectName, TaskDto taskDto) {
         logger.info("User {} updating task {}", token,taskDto.getTitle());
         TaskEntity task = taskDao.find(taskDto.getId());

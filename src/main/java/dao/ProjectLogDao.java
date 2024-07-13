@@ -12,7 +12,11 @@ public class ProjectLogDao extends AbstractDao{
     private EntityManager em;
     private static final long serialVersionUID = 1L;
     public ProjectLogDao() { super(ProjectLogEntity.class);}
-
+/**
+     * Find all project logs from a specific project.
+     *
+     * @return the list of project logs
+     */
     public ProjectLogEntity findProjectLogByProjectId(int projectId) {
         try {
             return (ProjectLogEntity) em.createNamedQuery("ProjectLogEntity.getLogsByProject").setParameter("project_id", projectId)
@@ -21,7 +25,14 @@ public class ProjectLogDao extends AbstractDao{
         } catch (Exception e) {
             return null;
         }
-    }public List<ProjectLogEntity> findProjectLogsByProjectId(int projectId) {
+
+    }
+    /**
+     * Find projects logs by project id.
+     *
+     * @return the list of project logs
+     */
+    public List<ProjectLogEntity> findProjectLogsByProjectId(int projectId) {
         try {
             return em.createNamedQuery("ProjectLogEntity.getLogsByProject").setParameter("project_id", projectId)
                     .getResultList();
@@ -30,6 +41,11 @@ public class ProjectLogDao extends AbstractDao{
             return null;
         }
     }
+    /**
+     *Create a project log.
+     * @param projectLogEntity
+     * @return
+     */
     public boolean create(ProjectLogEntity projectLogEntity) {
         try {
             em.persist(projectLogEntity);

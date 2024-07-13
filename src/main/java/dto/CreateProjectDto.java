@@ -2,7 +2,9 @@ package dto;
 
 import java.time.LocalDateTime;
 import java.util.Set;
-
+/**
+ * The DTO class for creating a project.
+ */
 public class CreateProjectDto {
     private String name;
     private String description;

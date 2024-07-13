@@ -1,5 +1,7 @@
 package dto;
-
+/**
+ * The DTO class for the project user.
+ */
 public class ProjectUserDto {
     private int id;
     private String firstName;

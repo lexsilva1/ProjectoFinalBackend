@@ -8,7 +8,9 @@ import jakarta.persistence.PersistenceContext;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The DAO class for the interest.
+ */
 @Stateless
 public class InterestDao extends AbstractDao<InterestEntity> {
     @PersistenceContext
@@ -17,6 +19,11 @@ public class InterestDao extends AbstractDao<InterestEntity> {
     public InterestDao() {
         super(InterestEntity.class);
     }
+    /**
+     * Find a interest by name.
+     * @param name
+     * @return
+     */
     public InterestEntity findInterestByName(String name) {
         try {
             return (InterestEntity) em.createNamedQuery("InterestEntity.findInterestByName").setParameter("name", name)
@@ -26,6 +33,11 @@ public class InterestDao extends AbstractDao<InterestEntity> {
             return null;
         }
     }
+    /**
+     * Find a interest by type.
+     * @param type
+     * @return
+     */
     public List<InterestEntity> findInterestByType(InterestEntity.InterestType type) {
         try {
             return em.createNamedQuery("InterestEntity.findInterestByType").setParameter("interestType", type)
@@ -34,6 +46,11 @@ public class InterestDao extends AbstractDao<InterestEntity> {
             return null;
         }
     }
+    /**
+     * Find all interests.
+     *
+     * @return the list of interests
+     */
     public List<InterestEntity> findAllInterests() {
         try {
             return em.createNamedQuery("InterestEntity.findAllInterests").getResultList();

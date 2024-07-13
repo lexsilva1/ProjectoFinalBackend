@@ -9,7 +9,9 @@ import jakarta.ejb.Startup;
 import jakarta.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * The bean class for the startup.
+ */
 @Singleton
 @Startup
 @DependsOn({"UserBean", "TimerBean", "LabBean"})
@@ -36,7 +38,9 @@ public class StartupBean {
     @Inject
     SystemVariablesBean systemVariablesBean;
     private static final Logger logger = LogManager.getLogger(StartupBean.class);
-
+/**
+     * Initialize the startup bean.
+     */
     @PostConstruct
     public void init() {
         logger.info("Creating default data");

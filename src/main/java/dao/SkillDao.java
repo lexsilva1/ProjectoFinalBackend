@@ -8,7 +8,9 @@ import jakarta.persistence.PersistenceContext;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
+/**
+ * The DAO class for the skill.
+ */
 @Stateless
 public class SkillDao extends AbstractDao<SkillEntity>
 {
@@ -17,6 +19,11 @@ public class SkillDao extends AbstractDao<SkillEntity>
     public SkillDao() {
         super(SkillEntity.class);
     }
+    /**
+     * Find a skill by name.
+     * @param name
+     * @return
+     */
     public SkillEntity findSkillByName(String name) {
         try {
             return (SkillEntity) em.createNamedQuery("SkillEntity.findSkillByName").setParameter("name", name)
@@ -26,6 +33,11 @@ public class SkillDao extends AbstractDao<SkillEntity>
             return null;
         }
     }
+    /**
+     * Find a skill by type.
+     * @param type
+     * @return
+     */
     public List<SkillEntity> findSkillByType(SkillEntity.SkillType type) {
         try {
             return em.createNamedQuery("SkillEntity.findSkillByType").setParameter("skillType", type)
@@ -35,6 +47,11 @@ public class SkillDao extends AbstractDao<SkillEntity>
             return null;
         }
     }
+    /**
+     * Find all skills.
+     *
+     * @return the list of skills
+     */
     public List<SkillEntity> findAllSkills() {
         try {
             return em.createNamedQuery("SkillEntity.findAllSkills").getResultList();
@@ -42,6 +59,11 @@ public class SkillDao extends AbstractDao<SkillEntity>
             return null;
         }
     }
+    /**
+     * Find skills by name.
+     * @param names
+     * @return
+     */
     public Set<SkillEntity> findSkillsByName(Set<String> names) {
         try {
             List<SkillEntity> skillList = em.createQuery(

@@ -14,7 +14,9 @@ import jakarta.ws.rs.core.Response;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
+/**
+ * The service class for the resources.
+ */
 @Path("/resources")
 public class ResourceService {
     @Context
@@ -29,6 +31,16 @@ public class ResourceService {
     private TokenBean tokenBean;
     private static final Logger logger = LogManager.getLogger(ResourceService.class);
 
+    /**
+     * The method to find all resources.
+     * @param token
+     * @param resourceName
+     * @param resourceType
+     * @param resourceIdentifier
+     * @param supplier
+     * @param request
+     * @return
+     */
     @GET
     @Path("")
     @Produces("application/json")
@@ -43,6 +55,13 @@ public class ResourceService {
         logger.info("User with IP address {} and token {} found resources", ipAddress, token);
         return Response.status(200).entity(resourceBean.findAllResources(resourceName,resourceIdentifier,supplier,resourceType)).build();
     }
+    /**
+     * The method to create a resource.
+     * @param token The token of the user.
+     * @param resourceDto The resource to create.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @POST
     @Path("")
     @Produces("application/json")
@@ -65,6 +84,12 @@ public class ResourceService {
         logger.info("User with IP address {} and token {} created a resource", ipAddress, token);
         return Response.status(200).entity(resourceDtoToSend).build();
     }
+    /**
+     * The method to get resource statistics.
+     * @param token The token of the user.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @GET
     @Path("/statistics")
     @Produces("application/json")
@@ -79,6 +104,14 @@ public class ResourceService {
         logger.info("User with IP address {} and token {} got resource statistics", ipAddress, token);
         return Response.status(200).entity(resourceBean.getResourceStatistics()).build();
     }
+    /**
+     * The method to update a resource.
+     * @param token The token of the user.
+     * @param resourceId The id of the resource.
+     * @param resourceDto The resource to update.
+     * @param request The HTTP request.
+     * @return The response.
+     */
     @PUT
     @Path("/{resourceId}")
     @Consumes("application/json")

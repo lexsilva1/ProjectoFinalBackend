@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-
+/**
+ * The entity class for the Tokens table.
+ */
 @Entity
 @Table(name = "Tokens")
 @NamedQuery(name = "TokenEntity.findTokenByToken", query = "SELECT t FROM TokenEntity t WHERE t.token = :token ")

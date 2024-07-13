@@ -3,7 +3,9 @@ package dto;
 import entities.UserEntity;
 
 import java.util.List;
-
+/**
+ * The DTO class for the user.
+ */
 public class UserDto {
     private int userId;
 
