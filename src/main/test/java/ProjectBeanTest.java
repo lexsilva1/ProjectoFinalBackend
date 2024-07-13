@@ -55,7 +55,7 @@ class ProjectBeanTest {
     private ProjectUserEntity projectUserEntity;
     private ProjectEntity projectEntity;
     private ProjectResourceDto projectResourceDto; // Added ProjectResourceDto
-
+    private TaskEntity taskEntity; // Added TaskEntity
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -232,5 +232,183 @@ class ProjectBeanTest {
 
         assertFalse(projectBean.isProjectManager("token", "ProjectName"));
     }
+    @Test
+    void testFindProjectTasks_ValidProjectWithTasks() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        tasks.add(taskEntity);
+        projectEntity.setTasks(tasks);
 
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size());
+    }
+
+    @Test
+    void testFindProjectTasks_ProjectWithNoTasks() {
+        projectEntity.setTasks(new HashSet<>());
+
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertTrue(result.getTasks().isEmpty());
+    }
+
+    @Test
+    void testFindProjectTasks_ProjectDoesNotExist() {
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(null);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNull(result);
+    }
+
+
+    @Test
+    void testFindProjectTasks_ExceptionInFindProjectByName() {
+        when(projectDao.findProjectByName("ProjectName")).thenThrow(new RuntimeException("DB error"));
+
+        assertThrows(RuntimeException.class, () -> projectBean.findProjectTasks("ProjectName"));
+    }
+
+
+    @Test
+    void testFindProjectTasks_CaseSensitivityInProjectNames() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        tasks.add(taskEntity);
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("projectname")).thenReturn(projectEntity);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("projectname");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size());
+    }
+
+    @Test
+    void testFindProjectTasks_MultipleTasksInProject() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        tasks.add(taskEntity);
+        TaskEntity anotherTask = new TaskEntity();
+        anotherTask.setTitle("AnotherTaskName");
+        tasks.add(anotherTask);
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+        when(taskBean.toTasktoDto(anotherTask)).thenReturn(new TaskDto());
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(2, result.getTasks().size());
+    }
+
+    @Test
+    void testFindProjectTasks_SingleTaskInProject() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        tasks.add(taskEntity);
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size());
+    }
+
+    @Test
+    void testFindProjectTasks_DuplicateTasksInProject() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        tasks.add(taskEntity);
+        tasks.add(taskEntity); // Duplicate task
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size()); // Set should handle duplicates
+    }
+
+    @Test
+    void testFindProjectTasks_SpecialCharactersInProjectName() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        tasks.add(taskEntity);
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("Project@123")).thenReturn(projectEntity);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("Project@123");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size());
+    }
+
+    @Test
+    void testFindProjectTasks_EmptyStringProjectName() {
+        when(projectDao.findProjectByName("")).thenReturn(null);
+
+        ProjectTasksDto result = projectBean.findProjectTasks("");
+
+        assertNull(result);
+    }
+
+    @Test
+    void testFindProjectTasks_VeryLongProjectName() {
+        String longProjectName = "a".repeat(256);
+        when(projectDao.findProjectByName(longProjectName)).thenReturn(null);
+
+        ProjectTasksDto result = projectBean.findProjectTasks(longProjectName);
+
+        assertNull(result);
+    }
+
+    @Test
+    void testFindProjectTasks_InactiveTasksInProject() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        TaskEntity inactiveTask = new TaskEntity();
+        tasks.add(inactiveTask);
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+        when(taskBean.toTasktoDto(inactiveTask)).thenReturn(new TaskDto());
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size());
+    }
+
+    @Test
+    void testFindProjectTasks_TasksWithNullAttributes() {
+        Set<TaskEntity> tasks = new HashSet<>();
+        TaskEntity taskWithNullAttributes = new TaskEntity();
+        taskWithNullAttributes.setTitle(null);
+        tasks.add(taskWithNullAttributes);
+        projectEntity.setTasks(tasks);
+
+        when(projectDao.findProjectByName("ProjectName")).thenReturn(projectEntity);
+        when(taskBean.toTasktoDto(taskWithNullAttributes)).thenReturn(new TaskDto());
+
+        ProjectTasksDto result = projectBean.findProjectTasks("ProjectName");
+
+        assertNotNull(result);
+        assertEquals("ProjectName", result.getProjectName());
+        assertEquals(1, result.getTasks().size());
+    }
 }

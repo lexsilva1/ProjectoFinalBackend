@@ -400,6 +400,19 @@ public class SkillBean {
     public boolean createSkill(SkillDto skillDto){
         logger.info("Creating skill {}", skillDto.getName());
         SkillEntity skill = new SkillEntity();
+        if(skillDao.findSkillByName(skillDto.getName()) != null){
+            logger.error("Skill {} already exists", skillDto.getName());
+            return false;
+        }
+        if(skillDto.getName() == null || skillDto.getSkillType() == null){
+            logger.error("Skill name or skill type is null");
+            return false;
+        }
+        List<String> skillTypes = findAllSkilltypes();
+        if(!skillTypes.contains(skillDto.getSkillType())){
+            logger.error("Skill type {} not found", skillDto.getSkillType());
+            return false;
+        }
         skill.setName(skillDto.getName());
         skill.setSkillType(SkillEntity.SkillType.valueOf(skillDto.getSkillType()));
         skillDao.persist(skill);

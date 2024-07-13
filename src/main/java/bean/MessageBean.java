@@ -116,7 +116,9 @@ public void createDefaultMessage() {
         return messageDtos;
     }
     public MessageDto convertToDto(MessageEntity message) {
-
+        if(message.getMessage()== null&& message.getSender() == null && message.getReceiver() == null && message.getTime() == null){
+            return new MessageDto();
+        }
         MessageDto messageDto = new MessageDto();
         UserEntity sender = message.getSender();
         UserEntity receiver = message.getReceiver();

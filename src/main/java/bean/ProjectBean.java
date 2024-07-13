@@ -1288,6 +1288,7 @@ public boolean userBelongsToProject(String token, String projectName) {
         ProjectTasksDto projectTasksDto = new ProjectTasksDto();
         projectTasksDto.setProjectName(project.getName());
         Set<TaskDto> tasks = new HashSet<>();
+
         for (TaskEntity task : project.getTasks()) {
             tasks.add(taskBean.toTasktoDto(task));
         }

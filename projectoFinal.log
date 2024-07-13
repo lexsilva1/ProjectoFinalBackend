@@ -1,3 +1,168 @@
-22:01:03.665 [main] INFO - Updating resource
-22:01:03.677 [main] INFO - Getting resource statistics
-22:01:03.683 [main] INFO - Updating resource
+05:24:11.947 [main] INFO - Marking message as read
+05:24:11.966 [main] INFO - Creating message
+05:24:11.966 [main] INFO - Message created successfully
+05:24:12.113 [main] INFO - Removing skill Java from project Project A
+05:24:12.113 [main] INFO - Skill Java found and removed from project Project A
+05:24:12.124 [main] INFO - Removing skill Java from project Project A
+05:24:12.124 [main] ERROR - Skill Java not found
+05:24:12.129 [main] INFO - Creating skill Tubernites
+05:24:12.130 [main] INFO - Skill Tubernites created successfully
+05:24:12.134 [main] INFO - Adding skill Java to user with token token
+05:24:12.134 [main] ERROR - Skill Java not found
+05:24:12.138 [main] INFO - Adding skill Java to project Project A
+05:24:12.139 [main] ERROR - Skill Java not found
+05:24:12.142 [main] INFO - Creating skill null
+05:24:12.143 [main] ERROR - Skill name or skill type is null
+05:24:12.153 [main] INFO - Adding skill Java to project Project A
+05:24:12.153 [main] INFO - Skill Java found and added to project Project A
+05:24:12.158 [main] INFO - Creating skill Java
+05:24:12.159 [main] ERROR - Skill name or skill type is null
+05:24:12.162 [main] INFO - Adding skill Java to user with token token
+05:24:12.162 [main] INFO - Skill Java found and added to user with token token
+05:24:12.168 [main] INFO - Creating skill Java
+05:24:12.168 [main] ERROR - Skill type INVALID not found
+05:24:12.270 [main] INFO - Notification created successfully for user {} and project {}
+05:24:12.284 [main] INFO - Marking notification 1 as read
+05:24:12.284 [main] INFO - Notification marked as read successfully
+05:24:12.288 [main] INFO - Converting notification type to status
+05:24:12.288 [main] INFO - Notification type converted to status successfully
+05:24:12.290 [main] INFO - Converting notification type to status
+05:24:12.291 [main] INFO - Notification type converted to status successfully
+05:24:12.294 [main] INFO - Finding notification by id
+05:24:12.294 [main] INFO - Notification found successfully
+05:24:12.463 [main] INFO - Confirming user with token invalidToken
+05:24:12.463 [main] ERROR - User not found
+05:24:12.472 [main] INFO - Registering user with email email@example.com
+05:24:12.473 [main] INFO - Email sent successfully
+05:24:12.473 [main] INFO - User registered? true
+05:24:12.479 [main] INFO - Registering user with email email@example.com
+05:24:12.480 [main] INFO - Email sent successfully
+05:24:12.480 [main] INFO - User registered? true
+05:24:12.486 [main] INFO - Checking if password is valid
+05:24:12.486 [main] ERROR - Password does not contain lowercase letters
+05:24:12.492 [main] INFO - Checking if password is valid
+05:24:12.493 [main] ERROR - Password is too short
+05:24:12.498 [main] INFO - Confirming user with token testToken
+05:24:12.498 [main] INFO - User found, confirming user
+05:24:12.499 [main] INFO - User confirmed successfully
+05:24:12.503 [main] INFO - Checking if email is valid
+05:24:12.508 [main] INFO - Checking if password is valid
+05:24:12.508 [main] ERROR - Password is too short
+05:24:12.512 [main] INFO - Checking if password is valid
+05:24:12.512 [main] ERROR - Password does not contain numbers
+05:24:12.520 [main] INFO - Checking if email is valid
+05:24:12.525 [main] INFO - Registering user with email email@example.com
+05:24:12.526 [main] INFO - User registered? false
+05:24:12.531 [main] INFO - Checking if email is valid
+05:24:12.537 [main] INFO - Checking if email is valid
+05:24:12.543 [main] INFO - Registering user with email email@example.com
+05:24:12.544 [main] INFO - Email sent successfully
+05:24:12.544 [main] INFO - User registered? true
+05:24:12.549 [main] INFO - Checking if password is valid
+05:24:12.553 [main] INFO - Checking if password is valid
+05:24:12.554 [main] ERROR - Password does not contain lowercase letters
+05:24:12.557 [main] INFO - Checking if password is valid
+05:24:12.558 [main] ERROR - Password is too short
+05:24:12.561 [main] INFO - Checking if email is valid
+05:24:12.569 [main] INFO - Checking if password is valid
+05:24:12.569 [main] ERROR - Password is too short
+05:24:12.574 [main] INFO - Confirming user with token testToken
+05:24:12.574 [main] INFO - User found, confirming user
+05:24:12.574 [main] INFO - User confirmed successfully
+05:24:12.577 [main] INFO - Checking if password is valid
+05:24:12.577 [main] ERROR - Password does not contain uppercase letters
+05:24:12.582 [main] INFO - Registering user with email 
+05:24:12.582 [main] ERROR - Email or password is empty
+05:24:12.582 [main] INFO - Registering user with email email@example.com
+05:24:12.582 [main] ERROR - Email or password is empty
+05:24:12.586 [main] INFO - Confirming user with token testToken
+05:24:12.586 [main] INFO - User found, confirming user
+05:24:12.586 [main] INFO - User confirmed successfully
+05:24:12.619 [main] INFO - Creating interest
+05:24:12.620 [main] ERROR - Interest type is invalid
+05:24:12.625 [main] INFO - Adding interest to user
+05:24:12.626 [main] INFO - Interest Music added to user with token token successfully
+05:24:12.628 [main] INFO - Creating interest
+05:24:12.629 [main] ERROR - Interest type is null
+05:24:12.631 [main] INFO - Creating interest
+05:24:12.631 [main] INFO - Interest created successfully
+05:24:12.638 [main] INFO - Creating interest
+05:24:12.638 [main] ERROR - Interest name is null
+05:24:12.640 [main] INFO - Removing interest from user
+05:24:12.641 [main] INFO - Interest Music removed from user with token token successfully
+05:24:12.666 [main] INFO - Setting session timeout to 45
+05:24:12.666 [main] INFO - Timeout set to 45
+05:24:12.669 [main] INFO - Creating default system variables
+05:24:12.671 [main] INFO - Creating default system variables
+05:24:12.883 [main] INFO - Creating project
+05:24:12.883 [main] ERROR - Project already exists
+05:24:12.887 [main] INFO - Finding project ProjectName tasks
+05:24:12.888 [main] INFO - Project tasks found
+05:24:12.892 [main] INFO - Finding project aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa tasks
+05:24:12.892 [main] ERROR - Project not found
+05:24:12.896 [main] INFO - Removing user 1 from project ProjectName
+05:24:12.896 [main] ERROR - User, project or project user not found
+05:24:12.900 [main] INFO - Adding task to project
+05:24:12.900 [main] ERROR - Project not found
+05:24:12.904 [main] INFO - Checking project max members
+05:24:12.909 [main] INFO - Finding project projectname tasks
+05:24:12.909 [main] INFO - Project tasks found
+05:24:12.914 [main] INFO - Finding project Project@123 tasks
+05:24:12.914 [main] INFO - Project tasks found
+05:24:12.921 [main] INFO - Finding project ProjectName tasks
+05:24:12.925 [main] INFO - Finding project ProjectName tasks
+05:24:12.926 [main] INFO - Project tasks found
+05:24:12.929 [main] INFO - Finding project ProjectName tasks
+05:24:12.929 [main] INFO - Project tasks found
+05:24:12.933 [main] INFO - Creating project
+05:24:12.937 [main] INFO - Checking if user is project manager
+05:24:12.938 [main] ERROR - User, project or project user not found
+05:24:12.941 [main] INFO - Checking if user is project manager
+05:24:12.941 [main] ERROR - User, project or project user not found
+05:24:12.946 [main] INFO - Adding a log to project null
+05:24:12.946 [main] ERROR - Project log not added
+05:24:12.951 [main] INFO - Creating project
+05:24:12.951 [main] ERROR - Project already exists
+05:24:12.954 [main] INFO - Creating project
+05:24:12.954 [main] ERROR - Project already exists
+05:24:12.957 [main] INFO - Finding project ProjectName tasks
+05:24:12.958 [main] INFO - Project tasks found
+05:24:12.961 [main] INFO - Finding project ProjectName tasks
+05:24:12.962 [main] INFO - Project tasks found
+05:24:12.965 [main] INFO - Removing user 1 from project ProjectName
+05:24:12.966 [main] ERROR - User, project or project user not found
+05:24:12.969 [main] INFO - Finding project  tasks
+05:24:12.969 [main] ERROR - Project not found
+05:24:12.973 [main] INFO - Finding project ProjectName tasks
+05:24:12.973 [main] ERROR - Project not found
+05:24:12.976 [main] INFO - Removing user 1 from project ProjectName
+05:24:12.978 [main] INFO - Reassigning tasks
+05:24:12.978 [main] INFO - User null removed from project ProjectName by null
+05:24:12.984 [main] INFO - Checking if user is project manager
+05:24:12.984 [main] ERROR - User, project or project user not found
+05:24:12.988 [main] INFO - Removing user 1 from project ProjectName
+05:24:12.988 [main] ERROR - User, project or project user not found
+05:24:12.992 [main] INFO - Finding project ProjectName tasks
+05:24:12.993 [main] INFO - Project tasks found
+05:24:12.998 [main] INFO - Finding project ProjectName tasks
+05:24:12.998 [main] INFO - Project tasks found
+05:24:13.003 [main] INFO - Creating task Task Title for project ProjectName
+05:24:13.004 [main] INFO - Task created successfully
+05:24:13.010 [main] INFO - Creating task Task Title for project projectName
+05:24:13.010 [main] INFO - Responsible user set to creator
+05:24:13.010 [main] INFO - Start date is null, setting to current date
+05:24:13.010 [main] INFO - End date is null, setting to project end date
+05:24:13.010 [main] INFO - Users not found, setting to creator
+05:24:13.011 [main] INFO - Task created successfully
+05:24:13.013 [main] INFO - Creating task null for project ProjectName
+05:24:13.014 [main] ERROR - Title is null
+05:24:13.016 [main] INFO - Creating task null for project NonExistentProject
+05:24:13.016 [main] ERROR - Title is null
+05:24:13.018 [main] INFO - User token updating task Updated Task Title
+05:24:13.018 [main] INFO - Start date set to 2024-07-13T05:24:13.018212600
+05:24:13.019 [main] INFO - End date set to 2024-07-14T05:24:13.018212600
+05:24:13.019 [main] INFO - Setting dependencies
+05:24:13.019 [main] INFO - Setting users
+05:24:13.019 [main] INFO - Task updated successfully
+05:24:13.021 [main] INFO - User token updating task null
+05:24:13.021 [main] ERROR - Task not found

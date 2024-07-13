@@ -8,6 +8,12 @@ public class SkillDto {
 
     public SkillDto() {
     }
+    public SkillDto(int id, String name, String skillType) {
+        this.id = id;
+        this.name = name;
+        this.skillType = skillType;
+
+    }
 
     public int getId() {
         return id;

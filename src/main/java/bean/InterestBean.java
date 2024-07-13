@@ -265,8 +265,30 @@ public class InterestBean {
     }
     public boolean createInterest(InterestDto interestDto){
         logger.info("Creating interest");
+        if(interestDao.findInterestByName(interestDto.getName()) != null){
+            logger.error("Interest already exists");
+            return false;
+        }
+        if(interestDto.getInterestType() == null){
+            logger.error("Interest type is null");
+            return false;
+        }
+        if(interestDto.getName() == null || interestDto.getName().isEmpty()){
+            logger.error("Interest name is null");
+            return false;
+        }
+        if(interestDto.getInterestType() == null || interestDto.getInterestType().isEmpty()){
+            logger.error("Interest type is null");
+            return false;
+        }
+
         InterestEntity interest = new InterestEntity();
         interest.setName(interestDto.getName());
+        List<String> interestTypes = findAllInterestTypes();
+        if(!interestTypes.contains(interestDto.getInterestType())){
+            logger.error("Interest type is invalid");
+            return false;
+        }
         interest.setInterestType(InterestEntity.InterestType.valueOf(interestDto.getInterestType()));
         interestDao.persist(interest);
         logger.info("Interest created successfully");
@@ -275,9 +297,17 @@ public class InterestBean {
 
     public boolean addInterestToProject(String token, String projectName, String interestName){
         logger.info("Adding interest to project");
+        if(interestName == null || interestName.isEmpty()){
+            logger.error("Interest name is null");
+            return false;
+        }
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
             logger.error("Interest not found");
+            return false;
+        }
+        if(projectBean.findProjectByName(projectName) == null){
+            logger.error("Project not found");
             return false;
         }
         projectBean.addInterestToProject(token, projectName, interest);
@@ -289,6 +319,10 @@ public class InterestBean {
         InterestEntity interest = interestDao.findInterestByName(interestName);
         if(interest == null){
             logger.error("Interest not found");
+            return false;
+        }
+        if(projectBean.findProjectByName(projectName) == null){
+            logger.error("Project not found");
             return false;
         }
         projectBean.removeInterestFromProject(token, projectName, interest);
