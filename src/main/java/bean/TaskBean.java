@@ -92,6 +92,7 @@ public class TaskBean {
             task.setTaskUsers(users);
             logger.info("Users not found, setting to creator");
         }else {
+            System.out.println("taskDto.getUsers(): " + taskDto.getUsers());
             Set users = new HashSet();
             for (Integer i : taskDto.getUsers()) {
                 UserEntity u = userBean.findUserById(i);

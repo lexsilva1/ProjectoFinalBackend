@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "NotificationEntity.findUnreadNotificationsByUser", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user AND n.isRead = false")
 @NamedQuery(name = "NotificationEntity.findNotificationById", query = "SELECT n FROM NotificationEntity n WHERE n.id = :id")
 @NamedQuery(name = "NotificationEntity.findLastNotificationIdByUser", query = "SELECT n.id FROM NotificationEntity n WHERE n.user = :user ORDER BY n.id DESC")
+@NamedQuery(name= "NotificationEntity.findNotificationByProjectAndType", query = "SELECT n FROM NotificationEntity n WHERE n.project = :project AND n.type = :type")
+@NamedQuery(name = "NotificationEntity.findNotificationByProjectAndUserAndType", query = "SELECT n FROM NotificationEntity n WHERE n.project = :project AND n.user = :user AND n.type = :type")
+@NamedQuery(name = "NotificationEntity.findLastNotificationByUserAndType", query = "SELECT n FROM NotificationEntity n WHERE n.user = :user AND n.type = :type ORDER BY n.id DESC")
 public class NotificationEntity implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

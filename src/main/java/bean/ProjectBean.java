@@ -619,12 +619,12 @@ public class ProjectBean {
      * @param project
      * @return
      */
-    public List<UserDto> findProjectUsers(ProjectEntity project) {
+    public List<ProjectUserDto> findProjectUsers(ProjectEntity project) {
 
-        List<UserEntity> projectUsers = projectUserDao.findAllProjectUsers(project);
-        List<UserDto> users = new ArrayList<>();
-        for (UserEntity user : projectUsers) {
-            users.add(userBean.convertToDto(user));
+        List<ProjectUserEntity> projectUsers = projectUserDao.findAllProjectUsers(project);
+        List<ProjectUserDto> users = new ArrayList<>();
+        for (ProjectUserEntity user : projectUsers) {
+            users.add(userBean.convertToProjectUserDto(user));
         }
 
         return users;
@@ -845,22 +845,32 @@ public class ProjectBean {
      * @param projectName
      * @return true or false, depending on the update
      */
-    public boolean updateProject(UpdateProjectDto projectDto,String projectName){
+    public boolean updateProject(UpdateProjectDto projectDto,String projectName,String token) {
         logger.info("Updating project {}", projectName);
         ProjectEntity project = projectDao.findProjectByName(projectName);
-        if(project == null){
+        UserEntity user = userBean.findUserByToken(token);
+        if (project == null) {
             logger.error("Project not found");
             return false;
         }
-        if(projectDto.getLab()!= null){
+        if (projectDto.getLab() != null) {
             project.setLab(labDao.findLabByLocation(LabEntity.Lab.valueOf(projectDto.getLab())));
             logger.info("Project lab updated to {}", projectDto.getLab());
         }
-        if(projectDto.getDescription() != null){
+        if (projectDto.getDescription() != null) {
             project.setDescription(projectDto.getDescription());
             logger.info("Project description updated to {}", projectDto.getDescription());
         }
         projectDao.persist(project);
+        List<ProjectUserEntity> users = projectUserDao.findAllProjectUsers(project);
+        for (ProjectUserEntity user1 : users) {
+            if (user1.getUser().getId() != user.getId() && (user1.getApprovalStatus() == ProjectUserEntity.ApprovalStatus.MEMBER || user1.getApprovalStatus() == ProjectUserEntity.ApprovalStatus.CREATOR)){
+                NotificationDto notificationDto = new NotificationDto("PROJECT_INFO", user1.getUser().getId(), project.getName(), false, LocalDateTime.now(), user.getId());
+                notificationBean.sendNotification(notificationDto);
+                logger.info("Notification sent to user {}", user.getEmail());
+            }
+        }
+
         logger.info("Project {} updated", projectName);
         return true;
     }
@@ -1130,7 +1140,7 @@ public boolean userBelongsToProject(String token, String projectName) {
         ProjectLogDto projectLogDto = new ProjectLogDto(user, project, "User " + user.getFirstName() + " left project");
         projectLogDto.setType("USER_LEFT");
         projectLogBean.createProjectLog(projectLogDto);
-        notificationBean.sendNotification(new NotificationDto("USER_LEFT", projectUserDao.findProjectCreator(project).getUser().getId(), projectName, false, LocalDateTime.now()));
+        notificationBean.sendNotification(new NotificationDto("USER_LEFT", projectUserDao.findProjectCreator(project).getUser().getId(), projectName, false, LocalDateTime.now(), user.getId()));
         logger.info("Notification sent to project creator");
         return true;
     }

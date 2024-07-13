@@ -630,7 +630,7 @@ public class UserBean {
             user.setLocation(labDao.findLabByLocation(LabEntity.Lab.valueOf(userConfirmation.getLabLocation())));
             user.setRole(UserEntity.Role.User);
             user.setIsConfirmed(LocalDate.now());
-            user.setPrivacy(false);
+            user.setPrivacy(true);
             tokenBean.removeToken(auxToken);
             userDao.merge(user);
             logger.info("User confirmed successfully");

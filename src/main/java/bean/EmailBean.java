@@ -85,7 +85,7 @@ public class EmailBean {
 
         String userEmail = user.getEmail();
         String subject = "ForgeXpereimental Projects - Account Confirmation";
-        String confirmationLink = "http://localhost:3000/Confirmation/" + tokenBean.findTokenByUserAndType(user, "REGISTER").getToken();
+        String confirmationLink = "https://localhost:3000/Confirmation/" + tokenBean.findTokenByUserAndType(user, "REGISTER").getToken();
         String body = "You have registered with ForgeXpereimental Projects "  + ",\n\n"
                 + "Please click on the link below to confirm your account.\n\n"
                 + "Confirmation Link: " + confirmationLink;
@@ -116,7 +116,7 @@ public class EmailBean {
 
         String userEmail = user.getEmail();
         String subject = "Scrum - Password Reset";
-        String resetLink = "http://localhost:3000/PasswordReset/" + tokenBean.findTokenByUserAndType(user, "PASSWORD_RESET").getToken();
+        String resetLink = "https://localhost:3000/PasswordReset/" + tokenBean.findTokenByUserAndType(user, "PASSWORD_RESET").getToken();
         String body = "You have requested a password reset for your Scrum Platform account " + user.getFirstName() + ",\n\n"
                 + "Please click on the link below to reset your password.\n\n"
                 + "Password Reset Link: " + resetLink;

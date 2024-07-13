@@ -214,7 +214,7 @@ class UserBeanTest {
         assertEquals("testPhoto.jpg", confirmedUser.getUserPhoto());
         assertNotNull(confirmedUser.getLocation());
         assertEquals(UserEntity.Role.User, confirmedUser.getRole());
-        assertFalse(confirmedUser.getPrivacy());
+        assertTrue(confirmedUser.getPrivacy());
         assertEquals(LocalDate.now(), confirmedUser.getIsConfirmed());
         verify(tokenBean, times(1)).removeToken(testToken);
     }

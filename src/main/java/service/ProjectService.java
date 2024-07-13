@@ -156,11 +156,9 @@ public class ProjectService {
         return Response.status(201).entity("created").build();
     }
     /**
-     * The method to find all project interests.
-     * @param token The token of the user.
-     * @param projectName The name of the project.
-     * @param request The HTTP request.
-     * @return The response.
+     *the method finds all project statuses
+     *
+     * @return The list of all types os statuses
      */
     @GET
     @Path("/allStatus")
@@ -169,7 +167,7 @@ public class ProjectService {
         return Response.status(200).entity(projectBean.findAllStatus()).build();
     }
 /**
-     * The method to find all project interests.
+     * this method creates tasks for project
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -208,7 +206,7 @@ public class ProjectService {
 
     }
     /**
-     * The method to find all project interests.
+     * The method to finda specific project using the project name
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -237,7 +235,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method updates the project status
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -265,7 +263,7 @@ public class ProjectService {
         }
     }
 /**
-     * The method to find all project interests.
+     * The method to apply to a project
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -292,7 +290,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to invite a user to a project
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -320,7 +318,7 @@ public class ProjectService {
         }
     }
 /**
-     * The method to find all project interests.
+     * The method to accept a user to a project
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -367,7 +365,7 @@ public class ProjectService {
 
 
 /**
-     * The method to find all project interests.
+     * The method to reject an invitation / application
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -402,7 +400,7 @@ public class ProjectService {
 
     }
     /**
-     * The method to find all project interests.
+     * The method to find promote a user to project manager
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -431,7 +429,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to demote a user from project manager
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -455,7 +453,7 @@ public class ProjectService {
         return Response.status(200).entity("demoted").build();
     }
     /**
-     * The method to find all project interests.
+     * The method for a user to leave a project
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -479,7 +477,7 @@ public class ProjectService {
         return Response.status(200).entity("left").build();
     }
     /**
-     * The method to find all project interests.
+     * The method to update a project's information
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -501,10 +499,11 @@ public class ProjectService {
             return Response.status(403).entity("not a manager").build();
         }
         userBean.setLastActivity(token);
-        if(projectBean.updateProject(projectDto,projectName)) {
+        if(projectBean.updateProject(projectDto,projectName,token)) {
             ProjectLogDto projectLogDto = new ProjectLogDto(userBean.findUserByToken(token), projectBean.findProjectByName(projectName), "Project updated");
             projectLogDto.setType("UPDATE_PROJECT_DETAILS");
             projectLogBean.createProjectLog(projectLogDto);
+
             logger.info("User with IP address {} and token {} updated project {}", ipAddress,token, projectName);
             return Response.status(200).entity("project updated").build();
         }else {
@@ -513,7 +512,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to find project related statistics
      * @param token The token of the user.
      * @param request The HTTP request.
      * @return The response.
@@ -534,7 +533,7 @@ public class ProjectService {
     }
 
 /**
-     * The method to find all project interests.
+     * The method to find all project tasks
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -561,7 +560,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to update a task
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -598,7 +597,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to find all project users.
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -625,7 +624,7 @@ public class ProjectService {
         return Response.status(200).entity(projectBean.findProjectUsersByProject(project)).build();
     }
     /**
-     * The method to find all project interests.
+     * The method to remove a user from the project
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -655,7 +654,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to find all project chat messages
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -677,7 +676,7 @@ public class ProjectService {
         return Response.status(200).entity(groupChatBean.fetchProjectChat(projectName)).build();
     }
     /**
-     * The method to find all project interests.
+     * The method to find all project logs
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -699,7 +698,7 @@ public class ProjectService {
         return Response.status(200).entity(projectBean.getProjectLogs(projectName)).build();
     }
     /**
-     * The method to find all project interests.
+     * The method to create a project log
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param request The HTTP request.
@@ -730,7 +729,7 @@ public class ProjectService {
         }
     }
     /**
-     * The method to find all project interests.
+     * The method to find the creator of a task
      * @param token The token of the user.
      * @param projectName The name of the project.
      * @param taskId The id of the task.

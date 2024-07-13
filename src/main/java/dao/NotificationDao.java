@@ -18,15 +18,17 @@ import java.util.List;
  * The DAO class for the notification.
  */
 @Stateless
-public class NotificationDao extends AbstractDao<NotificationEntity>{
+public class NotificationDao extends AbstractDao<NotificationEntity> {
     @PersistenceContext
     private EntityManager em;
 
     public NotificationDao() {
         super(NotificationEntity.class);
     }
+
     private static final long serialVersionUID = 1L;
-/**
+
+    /**
      * Find a notification by id.
      *
      * @return the notification
@@ -34,6 +36,7 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
     public NotificationEntity findNotificationById(int id) {
         return em.find(NotificationEntity.class, id);
     }
+
     /**
      * Find all notifications.
      *
@@ -43,10 +46,12 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
         return em.createNamedQuery("NotificationEntity.findNotificationByUser").setParameter("user", user)
                 .getResultList();
     }
+
     public List<NotificationEntity> findNotificationByProject(ProjectEntity project) {
         return em.createNamedQuery("NotificationEntity.findNotificationByProject").setParameter("project", project)
                 .getResultList();
     }
+
     /**
      * Find all notifications.
      *
@@ -58,21 +63,46 @@ public class NotificationDao extends AbstractDao<NotificationEntity>{
         Root<NotificationEntity> root = cq.from(NotificationEntity.class);
         cq.select(root);
         List<Predicate> predicates = new ArrayList<>();
-        if(project != null) {
+        if (project != null) {
             predicates.add(cb.equal(root.get("project"), project));
         }
-        if(user != null) {
+        if (user != null) {
             predicates.add(cb.equal(root.get("user"), user));
         }
-        if(isRead != null) {
+        if (isRead != null) {
             predicates.add(cb.equal(root.get("isRead"), isRead));
         }
         cq.where(cb.and(predicates.toArray(new Predicate[0])));
         cq.orderBy(cb.desc(root.get("time"))); // Order by time in descending order
         return em.createQuery(cq).getResultList();
     }
+
     public int findLastNotificationIdByUser(UserEntity user) {
         return em.createNamedQuery("NotificationEntity.findLastNotificationIdByUser", Integer.class).getSingleResult();
     }
 
+    public NotificationEntity findNotificationByProjectAndType(ProjectEntity project, NotificationEntity.NotificationType type) {
+        List<NotificationEntity> notifications = em.createNamedQuery("NotificationEntity.findNotificationByProjectAndType", NotificationEntity.class)
+                .setParameter("project", project)
+                .setParameter("type", type)
+                .getResultList();
+
+        return notifications.isEmpty() ? null : notifications.get(0);
+    }
+
+    public NotificationEntity findNotificationByProjectAndUserAndType(ProjectEntity project, UserEntity user, NotificationEntity.NotificationType type) {
+        return em.createNamedQuery("NotificationEntity.findNotificationByProjectAndUserAndType", NotificationEntity.class)
+                .setParameter("project", project)
+                .setParameter("user", user)
+                .setParameter("type", type)
+                .getSingleResult();
+    }
+
+    public NotificationEntity findLastNotificationByUserAndType(UserEntity user, NotificationEntity.NotificationType type) {
+        List<NotificationEntity> lastNotifications = em.createNamedQuery("NotificationEntity.findLastNotificationByUserAndType", NotificationEntity.class)
+                .setParameter("user", user)
+                .setParameter("type", type)
+                .getResultList();
+        return lastNotifications.isEmpty() ? null : lastNotifications.get(0);
+    }
 }

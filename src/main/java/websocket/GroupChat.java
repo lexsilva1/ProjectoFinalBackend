@@ -1,22 +1,25 @@
 package websocket;
 
-import bean.GroupChatBean;
-import bean.ProjectBean;
-import bean.UserBean;
+import bean.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.GroupChatDto;
-import entities.ProjectEntity;
-import entities.UserEntity;
+import dto.NotificationDto;
+import dto.UserDto;
+import entities.*;
 import jakarta.ejb.EJB;
 import jakarta.ejb.Singleton;
+import jakarta.inject.Inject;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
 import service.ObjectMapperContextResolver;
 
+import javax.mail.internet.HeaderTokenizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+
 /**
  * The WebSocket class for the group chat.
  */
@@ -29,6 +32,12 @@ public class GroupChat {
     private GroupChatBean groupChatBean;
     @EJB
     private ProjectBean projectBean;
+    @Inject
+    private Notifications notifications;
+    @EJB
+    private NotificationBean notificationBean;
+    @EJB
+    private TokenBean tokenBean;
     private final HashMap<String, Session> sessions = new HashMap<>();
     private final ObjectMapperContextResolver contextResolver = new ObjectMapperContextResolver();
     private final ObjectMapper mapper = contextResolver.getContext(ObjectMapper.class);
@@ -60,6 +69,8 @@ public class GroupChat {
         for (String key : sessions.keySet()) {
             if (key.startsWith(projectName + "/")) {
                 projectSessions.add(sessions.get(key));
+            }else {
+
             }
         }
         return projectSessions;
@@ -117,11 +128,34 @@ public class GroupChat {
         UserEntity sender = userBean.findUserByToken(token);
         ProjectEntity project = projectBean.findProjectByName(projectName);
         boolean created = groupChatBean.createChat(projectName, sender.getId(), message);
+
         if(!created) {
             return;
         }
         GroupChatDto groupChatDto = new GroupChatDto(project.getName(), sender.getFirstName(), sender.getId(),sender.getUserPhoto(), message);
         sendChat(projectName, groupChatDto);
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setProjectName(projectName);
+        Set<ProjectUserEntity> projectUsers = (projectBean.findProjectByName(projectName).getProjectUsers());
+        List<Session> projectSessions = getSessionsByProjectName(projectName);
+        System.out.println("projectSessions: " + projectSessions);
+        for (ProjectUserEntity projectUser : projectUsers) {
+            if (projectUser.getUser().getId() != sender.getId()) {
+                List<TokenEntity> tokens = tokenBean.findActiveTokensByUser(projectUser.getUser());
+                System.out.println("tokens: " + tokens);
+                for(Session session : projectSessions) {
+                    for(TokenEntity tokenEntity : tokens) {
+                        System.out.println("session: " + session);
+                        if (!session.equals(sessions.get(projectName + "/" + tokenEntity.getToken()))) {
+                            System.out.println("Sending notification to user: " + projectUser.getUser().getFirstName());
+                            notificationDto.setUserId(projectUser.getUser().getId());
+                            notificationDto.setType(NotificationEntity.NotificationType.CHAT.name());
+                            notificationBean.sendNotification(notificationDto);
+                        }
+                    }
+                }
+            }
+        }
 
 
     }

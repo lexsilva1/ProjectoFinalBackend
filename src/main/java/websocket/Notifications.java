@@ -140,6 +140,10 @@ public class Notifications {
 
         notificationBean.createNotification(notificationDto);
         }
+        System.out.println("Message received: " + notificationDto);
+        if(notificationDto == null) {
+            return;
+        }
         UserEntity user = userBean.findUserById(notificationDto.getUserId());
         List<TokenEntity> tokens = tokenBean.findTokensByUser(user);
         for (TokenEntity token : tokens) {

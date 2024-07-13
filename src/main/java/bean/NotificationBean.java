@@ -136,6 +136,8 @@ public class NotificationBean {
 
         if(createNotification(dto)) {
             logger.info("Notification created");
+            NotificationEntity entity = notificationDao.findLastNotificationByUserAndType(userDao.findUserById(dto.getUserId()), NotificationEntity.NotificationType.valueOf(dto.getType()));
+            dto.setNotificationId(entity.getId());
             notifications.sendNotification(dto);
             logger.info("Notification sent to user {} successfully", dto.getUserId());
             sent = true;
@@ -166,6 +168,16 @@ public class NotificationBean {
         entity.setType(NotificationEntity.NotificationType.valueOf(message));
         entity.setRead(true);
         entity.setSeen(true);
+        notificationDao.merge(entity);
+        logger.info("Notification message updated successfully");
+        return convertToDto (entity);
+    }
+    public NotificationDto updateChatNotification(String ProjectName) {
+        NotificationEntity entity = notificationDao.findNotificationByProjectAndType(projectDao.findProjectByName(ProjectName), NotificationEntity.NotificationType.CHAT);
+        logger.info("Updating notification {} message to {}",entity.getId(), entity.getType());
+        entity.setType(NotificationEntity.NotificationType.CHAT);
+        entity.setRead(false);
+        entity.setSeen(false);
         notificationDao.merge(entity);
         logger.info("Notification message updated successfully");
         return convertToDto (entity);

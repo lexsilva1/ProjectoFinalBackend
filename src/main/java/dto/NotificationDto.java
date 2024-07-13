@@ -16,7 +16,7 @@ public class NotificationDto {
     private int taskId;
     private String taskName;
     private String status;
-    private boolean seen;
+    private boolean isSeen;
 
     public NotificationDto() {
     }
@@ -27,7 +27,7 @@ public class NotificationDto {
         this.projectName = projectName;
         this.isRead = isRead;
         this.time = time;
-        this.seen = false;
+        this.isSeen = false;
     }
     public NotificationDto(String type,int userId, String projectName, boolean isRead, String status){
         this.type = type;
@@ -35,9 +35,19 @@ public class NotificationDto {
         this.projectName = projectName;
         this.isRead = isRead;
         this.status = status;
-        this.seen = false;
+        this.isSeen = false;
         this.time = LocalDateTime.now();
     }
+    public NotificationDto(String type, int userId, String projectName, boolean isRead, LocalDateTime time, int otherUserId) {
+        this.type = type;
+        this.userId = userId;
+        this.projectName = projectName;
+        this.isRead = isRead;
+        this.time = time;
+        this.isSeen = false;
+        this.otherUserId = otherUserId;
+    }
+
 
 
     public String getType() {
@@ -122,10 +132,10 @@ public class NotificationDto {
     }
 
     public boolean isSeen() {
-        return seen;
+        return isSeen;
     }
 
     public void setSeen(boolean seen) {
-        this.seen = seen;
+        this.isSeen = seen;
     }
 }
